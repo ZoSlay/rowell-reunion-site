@@ -1,0 +1,107 @@
+/* Reset and base */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    color: #2c2c2c;
+    line-height: 1.6;
+    background-color: #faf9f6;
+}
+
+/* Hero / Header */
+.hero {
+    background-color: #3b5d3b;
+    color: #faf9f6;
+    text-align: center;
+    padding: 4rem 1.5rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.hero .tagline {
+    font-size: 1.15rem;
+    font-style: italic;
+    opacity: 0.9;
+}
+
+/* Main content */
+main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+section {
+    margin-bottom: 2.5rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #3b5d3b;
+    border-bottom: 2px solid #d4c9a8;
+    padding-bottom: 0.35rem;
+}
+
+p {
+    margin-bottom: 0.75rem;
+}
+
+/* Detail cards */
+.detail-cards {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    flex: 1 1 200px;
+    background-color: #f0ece2;
+    border-radius: 6px;
+    padding: 1.25rem;
+}
+
+.card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+    color: #3b5d3b;
+}
+
+/* Contact */
+.contact-email a {
+    color: #3b5d3b;
+    font-weight: bold;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid #e0dcd3;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .hero {
+        padding: 2.5rem 1rem;
+    }
+
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+
+    .detail-cards {
+        flex-direction: column;
+    }
+}
