@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register — Saturday Evening Banquet</title>
+    <title>Feedback — Rowell Family Reunion</title>
     <style>
         /* Reset and base */
         *,
@@ -56,14 +56,6 @@
             font-weight: bold;
             border-bottom: 2px solid #C8902A;
             padding-bottom: 2px;
-        }
-
-        .site-nav .nav-disabled {
-            color: #FAF3E0;
-            opacity: 0.4;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 0.95rem;
-            cursor: default;
         }
 
         /* Hero Banner */
@@ -143,7 +135,14 @@
 
         .form-group textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 120px;
+        }
+
+        .form-group .char-count {
+            font-size: 0.8rem;
+            color: #888;
+            text-align: right;
+            margin-top: 0.25rem;
         }
 
         .error-msg {
@@ -152,33 +151,6 @@
             font-size: 0.8rem;
             margin-top: 0.25rem;
             min-height: 1rem;
-        }
-
-        /* Payment info card */
-        .payment-info {
-            background-color: #FAF3E0;
-            border-left: 4px solid #C8902A;
-            border-radius: 5px;
-            padding: 1.25rem;
-            margin: 1.5rem 0;
-        }
-
-        .payment-info h3 {
-            color: #7B2D42;
-            font-size: 1.1rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .payment-info p {
-            font-size: 0.9rem;
-            margin-bottom: 0.4rem;
-            line-height: 1.5;
-        }
-
-        .payment-info .amount {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #C8902A;
         }
 
         /* Submit button */
@@ -232,7 +204,7 @@
             font-size: 1.05rem;
         }
 
-        .btn-update {
+        .btn-new-feedback {
             display: block;
             width: 100%;
             background-color: #C8902A;
@@ -248,7 +220,7 @@
             margin-top: 1.5rem;
         }
 
-        .btn-update:hover {
+        .btn-new-feedback:hover {
             background-color: #a87520;
         }
 
@@ -306,90 +278,61 @@
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="events.html">Events</a></li>
-            <li><a href="register-banquet.html" class="nav-active">Registration</a></li>
+            <li><a href="register-banquet.html">Registration</a></li>
             <li><a href="merchandise.html">Merchandise</a></li>
-            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="feedback.html" class="nav-active">Feedback</a></li>
         </ul>
     </nav>
 
     <header class="hero-banner">
-        <h1>Saturday Evening Banquet Dinner</h1>
-        <p class="subtitle">Saturday, July 18, 2026</p>
+        <h1>Share Your Feedback</h1>
+        <p class="subtitle">Help us make our reunion the best it can be</p>
     </header>
 
     <main>
         <div class="form-card" id="form-section">
-            <h2>Register for Banquet</h2>
-            <form id="banquet-form" novalidate>
+            <h2>Submit Feedback</h2>
+            <form id="feedback-form" novalidate>
                 <div class="form-group">
-                    <label for="full-name">Full Name <span class="required">*</span></label>
-                    <input type="text" id="full-name" name="fullName" required>
-                    <span class="error-msg" id="error-fullName"></span>
+                    <label for="feedback-name">Name <span class="required">*</span></label>
+                    <input type="text" id="feedback-name" name="name" required>
+                    <span class="error-msg" id="error-name"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email <span class="required">*</span></label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="feedback-email">Email</label>
+                    <input type="email" id="feedback-email" name="email">
                     <span class="error-msg" id="error-email"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input type="tel" id="phone" name="phone">
-                </div>
-
-                <div class="form-group">
-                    <label for="guests">Number of Guests <span class="required">*</span></label>
-                    <input type="number" id="guests" name="guests" min="1" required>
-                    <span class="error-msg" id="error-guests"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="meal">Meal Preference <span class="required">*</span></label>
-                    <select id="meal" name="meal" required>
-                        <option value="">Select meal preference</option>
-                        <option value="Chicken">Chicken</option>
-                        <option value="Beef">Beef</option>
-                        <option value="Vegetarian">Vegetarian</option>
-                        <option value="To Be Determined">To Be Determined</option>
+                    <label for="feedback-category">Category <span class="required">*</span></label>
+                    <select id="feedback-category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="Website Suggestion">Website Suggestion</option>
+                        <option value="Event Idea">Event Idea</option>
+                        <option value="General Comment">General Comment</option>
+                        <option value="Future Reunion">Future Reunion</option>
                     </select>
-                    <span class="error-msg" id="error-meal"></span>
+                    <span class="error-msg" id="error-category"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="dietary">Dietary Restrictions</label>
-                    <textarea id="dietary" name="dietary" rows="3" placeholder="e.g. nut allergy, gluten-free, halal"></textarea>
+                    <label for="feedback-message">Message <span class="required">*</span></label>
+                    <textarea id="feedback-message" name="message" rows="5" placeholder="Share your suggestions, comments, or ideas (10–2000 characters)" required></textarea>
+                    <div class="char-count" id="char-count">0 / 2000</div>
+                    <span class="error-msg" id="error-message"></span>
                 </div>
 
-                <div class="form-group">
-                    <label for="accessibility">Special Accessibility Needs</label>
-                    <textarea id="accessibility" name="accessibility" rows="3" placeholder="Let us know if you have any accessibility requirements"></textarea>
-                </div>
-
-                <div class="payment-info">
-                    <h3>Payment Information</h3>
-                    <p class="amount">Amount: <!-- PLACEHOLDER: replace with actual cost --></p>
-                    <p>Send payment via Zelle or Venmo</p>
-                    <p>To: <!-- PLACEHOLDER: add Zelle/Venmo contact --></p>
-                    <p>Memo: "Rowell Reunion - Banquet - [Your Name]"</p>
-                </div>
-
-                <button type="submit" class="btn-submit">Register for Banquet</button>
+                <button type="submit" class="btn-submit">Submit Feedback</button>
             </form>
         </div>
 
         <div class="confirmation" id="confirmation-section" hidden>
-            <h2>Registration Confirmed</h2>
+            <h2>Feedback Submitted</h2>
             <div id="summary"></div>
-            <div class="payment-info">
-                <h3>Payment Reminder</h3>
-                <p class="amount">Amount: <!-- PLACEHOLDER: replace with actual cost --></p>
-                <p>Send payment via Zelle or Venmo</p>
-                <p>To: <!-- PLACEHOLDER: add Zelle/Venmo contact --></p>
-                <p>Memo: "Rowell Reunion - Banquet - [Your Name]"</p>
-            </div>
-            <p class="closing-msg">We look forward to seeing you!</p>
-            <button type="button" class="btn-update" id="btn-update">Update Registration</button>
+            <p class="closing-msg">Thank you for helping us improve the reunion experience!</p>
+            <button type="button" class="btn-new-feedback" id="btn-new-feedback">Submit Another</button>
         </div>
     </main>
 
@@ -399,12 +342,14 @@
 
     <script>
         (function () {
-            var STORAGE_KEY = 'rowellBanquetReg';
-            var form = document.getElementById('banquet-form');
+            var STORAGE_KEY = 'rowellFeedback';
+            var form = document.getElementById('feedback-form');
             var formSection = document.getElementById('form-section');
             var confirmationSection = document.getElementById('confirmation-section');
             var summaryDiv = document.getElementById('summary');
-            var btnUpdate = document.getElementById('btn-update');
+            var btnNewFeedback = document.getElementById('btn-new-feedback');
+            var messageField = document.getElementById('feedback-message');
+            var charCount = document.getElementById('char-count');
 
             function getErrorEl(field) {
                 return document.getElementById('error-' + field);
@@ -417,59 +362,78 @@
                 }
             }
 
+            function updateCharCount() {
+                var len = messageField.value.length;
+                charCount.textContent = len + ' / 2000';
+            }
+
+            messageField.addEventListener('input', updateCharCount);
+
             function validate() {
                 clearErrors();
                 var valid = true;
-                var fullName = form.fullName.value.trim();
+                var name = form.name.value.trim();
                 var email = form.email.value.trim();
-                var guests = form.guests.value.trim();
-                var meal = form.meal.value;
+                var category = form.category.value;
+                var message = form.message.value.trim();
 
-                if (!fullName) {
-                    getErrorEl('fullName').textContent = 'Full name is required.';
+                if (!name) {
+                    getErrorEl('name').textContent = 'Name is required.';
                     valid = false;
                 }
-                if (!email) {
-                    getErrorEl('email').textContent = 'Email is required.';
-                    valid = false;
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                     getErrorEl('email').textContent = 'Please enter a valid email address.';
                     valid = false;
                 }
-                if (!guests || parseInt(guests, 10) < 1) {
-                    getErrorEl('guests').textContent = 'At least 1 guest is required.';
+                if (!category) {
+                    getErrorEl('category').textContent = 'Please select a category.';
                     valid = false;
                 }
-                if (!meal) {
-                    getErrorEl('meal').textContent = 'Please select a meal preference.';
+                if (!message) {
+                    getErrorEl('message').textContent = 'Message is required.';
+                    valid = false;
+                } else if (message.length < 10) {
+                    getErrorEl('message').textContent = 'Message must be at least 10 characters.';
+                    valid = false;
+                } else if (message.length > 2000) {
+                    getErrorEl('message').textContent = 'Message must be 2000 characters or fewer.';
                     valid = false;
                 }
                 return valid;
             }
 
-            function getData() {
-                return {
-                    fullName: form.fullName.value.trim(),
-                    email: form.email.value.trim(),
-                    phone: form.phone.value.trim(),
-                    guests: form.guests.value.trim(),
-                    meal: form.meal.value,
-                    dietary: form.dietary.value.trim(),
-                    accessibility: form.accessibility.value.trim()
-                };
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
             }
 
-            function showConfirmation(data) {
+            function getEntries() {
+                var saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        var parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) return parsed;
+                    } catch (e) {
+                        // ignore corrupt data
+                    }
+                }
+                return [];
+            }
+
+            function saveEntry(entry) {
+                var entries = getEntries();
+                entries.push(entry);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+            }
+
+            function showConfirmation(entry) {
                 summaryDiv.textContent = '';
 
                 var fields = [
-                    { label: 'Name', value: data.fullName },
-                    { label: 'Email', value: data.email },
-                    { label: 'Phone', value: data.phone || 'Not provided' },
-                    { label: 'Number of Guests', value: data.guests },
-                    { label: 'Meal Preference', value: data.meal },
-                    { label: 'Dietary Restrictions', value: data.dietary || 'None' },
-                    { label: 'Accessibility Needs', value: data.accessibility || 'None' }
+                    { label: 'Name', value: entry.name },
+                    { label: 'Email', value: entry.email || 'Not provided' },
+                    { label: 'Category', value: entry.category },
+                    { label: 'Message', value: entry.message },
+                    { label: 'Submitted', value: new Date(entry.timestamp).toLocaleString() }
                 ];
 
                 for (var i = 0; i < fields.length; i++) {
@@ -489,40 +453,30 @@
                 confirmationSection.hidden = false;
             }
 
-            function prefillForm(data) {
-                form.fullName.value = data.fullName || '';
-                form.email.value = data.email || '';
-                form.phone.value = data.phone || '';
-                form.guests.value = data.guests || '';
-                form.meal.value = data.meal || '';
-                form.dietary.value = data.dietary || '';
-                form.accessibility.value = data.accessibility || '';
-            }
-
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 if (!validate()) return;
-                var data = getData();
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                showConfirmation(data);
+
+                var entry = {
+                    id: generateId(),
+                    name: form.name.value.trim(),
+                    email: form.email.value.trim(),
+                    category: form.category.value,
+                    message: form.message.value.trim(),
+                    timestamp: new Date().toISOString()
+                };
+
+                saveEntry(entry);
+                showConfirmation(entry);
             });
 
-            btnUpdate.addEventListener('click', function () {
+            btnNewFeedback.addEventListener('click', function () {
+                form.reset();
+                updateCharCount();
+                clearErrors();
                 confirmationSection.hidden = true;
                 formSection.hidden = false;
             });
-
-            // On load: check localStorage
-            var saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    var data = JSON.parse(saved);
-                    prefillForm(data);
-                    showConfirmation(data);
-                } catch (e) {
-                    // ignore corrupt data
-                }
-            }
         })();
     </script>
 </body>
