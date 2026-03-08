@@ -1,0 +1,56 @@
+[
+  {
+    "id": "shirt-adult",
+    "name": "Rowell Reunion T-Shirt (Adult)",
+    "description": "Classic crew-neck tee featuring the 2026 Rowell Family Reunion logo. Available in sizes S–3XL.",
+    "category": "Shirts",
+    "price": 25.00,
+    "image": "",
+    "availability": "available"
+  },
+  {
+    "id": "shirt-kids",
+    "name": "Rowell Reunion T-Shirt (Kids)",
+    "description": "Youth-sized crew-neck tee with the reunion logo. Available in sizes YS–YXL.",
+    "category": "Shirts",
+    "price": 20.00,
+    "image": "",
+    "availability": "available"
+  },
+  {
+    "id": "mug-classic",
+    "name": "Reunion Coffee Mug",
+    "description": "11 oz ceramic mug with the Rowell Family Reunion crest on both sides.",
+    "category": "Mugs",
+    "price": 15.00,
+    "image": "",
+    "availability": "available"
+  },
+  {
+    "id": "mug-travel",
+    "name": "Insulated Travel Tumbler",
+    "description": "20 oz stainless steel tumbler with reunion branding. Keeps drinks hot or cold for hours.",
+    "category": "Mugs",
+    "price": 22.00,
+    "image": "",
+    "availability": "available"
+  },
+  {
+    "id": "book-keepsake",
+    "name": "Family Keepsake Book",
+    "description": "Hardcover book documenting Rowell family history, photos, and stories across generations.",
+    "category": "Keepsake Book",
+    "price": 35.00,
+    "image": "",
+    "availability": "available"
+  },
+  {
+    "id": "book-memory",
+    "name": "Reunion Memory Journal",
+    "description": "Guided journal with prompts for recording reunion memories, family recipes, and messages from relatives.",
+    "category": "Keepsake Book",
+    "price": 18.00,
+    "image": "",
+    "availability": "available"
+  }
+]
