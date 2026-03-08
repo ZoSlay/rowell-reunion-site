@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Saturday Evening Banquet</title>
+    <style>
+        /* Reset and base */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #2C2C2C;
+            line-height: 1.6;
+            background-color: #FAF3E0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        /* Navigation */
+        .site-nav {
+            background-color: #7B2D42;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+        }
+
+        .site-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .site-nav a {
+            color: #FAF3E0;
+            text-decoration: none;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .site-nav a:hover {
+            opacity: 0.8;
+        }
+
+        .site-nav .nav-active {
+            font-weight: bold;
+            border-bottom: 2px solid #C8902A;
+            padding-bottom: 2px;
+        }
+
+        .site-nav .nav-disabled {
+            color: #FAF3E0;
+            opacity: 0.4;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 0.95rem;
+            cursor: default;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            text-align: center;
+            padding: 3.5rem 1.5rem 3rem;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-banner .subtitle {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Main content */
+        main {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Form card */
+        .form-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-card h2 {
+            color: #7B2D42;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group .required {
+            color: #a03030;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2A7B7B;
+            box-shadow: 0 0 0 3px rgba(42, 123, 123, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .error-msg {
+            display: block;
+            color: #a03030;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            min-height: 1rem;
+        }
+
+        /* Payment info card */
+        .payment-info {
+            background-color: #FAF3E0;
+            border-left: 4px solid #C8902A;
+            border-radius: 5px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-info h3 {
+            color: #7B2D42;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .payment-info p {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+
+        .payment-info .amount {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #C8902A;
+        }
+
+        /* Submit button */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: #2A7B7B;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background-color: #1f6060;
+        }
+
+        /* Confirmation */
+        .confirmation {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .confirmation h2 {
+            color: #7B2D42;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .confirmation .summary-item {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .confirmation .summary-label {
+            font-weight: 600;
+        }
+
+        .confirmation .closing-msg {
+            margin-top: 1.5rem;
+            font-style: italic;
+            color: #7B2D42;
+            font-size: 1.05rem;
+        }
+
+        .btn-update {
+            display: block;
+            width: 100%;
+            background-color: #C8902A;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1.5rem;
+        }
+
+        .btn-update:hover {
+            background-color: #a87520;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #e0dcd3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-banner {
+                padding: 2.5rem 1rem 2rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-banner .subtitle {
+                font-size: 1rem;
+            }
+
+            .site-nav ul {
+                gap: 1rem;
+            }
+
+            .form-card,
+            .confirmation {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .hero-banner h1 {
+                font-size: 1.4rem;
+            }
+
+            main {
+                padding: 1.5rem 1rem;
+            }
+
+            .form-card,
+            .confirmation {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register-banquet.html" class="nav-active">Registration</a></li>
+            <li><span class="nav-disabled">Merchandise</span></li>
+            <li><span class="nav-disabled">Feedback</span></li>
+        </ul>
+    </nav>
+
+    <header class="hero-banner">
+        <h1>Saturday Evening Banquet Dinner</h1>
+        <p class="subtitle">Saturday, July 18, 2026</p>
+    </header>
+
+    <main>
+        <div class="form-card" id="form-section">
+            <h2>Register for Banquet</h2>
+            <form id="banquet-form" novalidate>
+                <div class="form-group">
+                    <label for="full-name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="full-name" name="fullName" required>
+                    <span class="error-msg" id="error-fullName"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                    <span class="error-msg" id="error-email"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="guests">Number of Guests <span class="required">*</span></label>
+                    <input type="number" id="guests" name="guests" min="1" required>
+                    <span class="error-msg" id="error-guests"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="meal">Meal Preference <span class="required">*</span></label>
+                    <select id="meal" name="meal" required>
+                        <option value="">Select meal preference</option>
+                        <option value="Chicken">Chicken</option>
+                        <option value="Beef">Beef</option>
+                        <option value="Vegetarian">Vegetarian</option>
+                        <option value="To Be Determined">To Be Determined</option>
+                    </select>
+                    <span class="error-msg" id="error-meal"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="dietary">Dietary Restrictions</label>
+                    <textarea id="dietary" name="dietary" rows="3" placeholder="e.g. nut allergy, gluten-free, halal"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="accessibility">Special Accessibility Needs</label>
+                    <textarea id="accessibility" name="accessibility" rows="3" placeholder="Let us know if you have any accessibility requirements"></textarea>
+                </div>
+
+                <div class="payment-info">
+                    <h3>Payment Information</h3>
+                    <p class="amount">Amount: <!-- PLACEHOLDER: replace with actual cost --></p>
+                    <p>Send payment via Zelle or Venmo</p>
+                    <p>To: <!-- PLACEHOLDER: add Zelle/Venmo contact --></p>
+                    <p>Memo: "Rowell Reunion - Banquet - [Your Name]"</p>
+                </div>
+
+                <button type="submit" class="btn-submit">Register for Banquet</button>
+            </form>
+        </div>
+
+        <div class="confirmation" id="confirmation-section" hidden>
+            <h2>Registration Confirmed</h2>
+            <div id="summary"></div>
+            <div class="payment-info">
+                <h3>Payment Reminder</h3>
+                <p class="amount">Amount: <!-- PLACEHOLDER: replace with actual cost --></p>
+                <p>Send payment via Zelle or Venmo</p>
+                <p>To: <!-- PLACEHOLDER: add Zelle/Venmo contact --></p>
+                <p>Memo: "Rowell Reunion - Banquet - [Your Name]"</p>
+            </div>
+            <p class="closing-msg">We look forward to seeing you!</p>
+            <button type="button" class="btn-update" id="btn-update">Update Registration</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026</p>
+    </footer>
+
+    <script>
+        (function () {
+            var STORAGE_KEY = 'rowellBanquetReg';
+            var form = document.getElementById('banquet-form');
+            var formSection = document.getElementById('form-section');
+            var confirmationSection = document.getElementById('confirmation-section');
+            var summaryDiv = document.getElementById('summary');
+            var btnUpdate = document.getElementById('btn-update');
+
+            function getErrorEl(field) {
+                return document.getElementById('error-' + field);
+            }
+
+            function clearErrors() {
+                var msgs = form.querySelectorAll('.error-msg');
+                for (var i = 0; i < msgs.length; i++) {
+                    msgs[i].textContent = '';
+                }
+            }
+
+            function validate() {
+                clearErrors();
+                var valid = true;
+                var fullName = form.fullName.value.trim();
+                var email = form.email.value.trim();
+                var guests = form.guests.value.trim();
+                var meal = form.meal.value;
+
+                if (!fullName) {
+                    getErrorEl('fullName').textContent = 'Full name is required.';
+                    valid = false;
+                }
+                if (!email) {
+                    getErrorEl('email').textContent = 'Email is required.';
+                    valid = false;
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    getErrorEl('email').textContent = 'Please enter a valid email address.';
+                    valid = false;
+                }
+                if (!guests || parseInt(guests, 10) < 1) {
+                    getErrorEl('guests').textContent = 'At least 1 guest is required.';
+                    valid = false;
+                }
+                if (!meal) {
+                    getErrorEl('meal').textContent = 'Please select a meal preference.';
+                    valid = false;
+                }
+                return valid;
+            }
+
+            function getData() {
+                return {
+                    fullName: form.fullName.value.trim(),
+                    email: form.email.value.trim(),
+                    phone: form.phone.value.trim(),
+                    guests: form.guests.value.trim(),
+                    meal: form.meal.value,
+                    dietary: form.dietary.value.trim(),
+                    accessibility: form.accessibility.value.trim()
+                };
+            }
+
+            function showConfirmation(data) {
+                summaryDiv.textContent = '';
+
+                var fields = [
+                    { label: 'Name', value: data.fullName },
+                    { label: 'Email', value: data.email },
+                    { label: 'Phone', value: data.phone || 'Not provided' },
+                    { label: 'Number of Guests', value: data.guests },
+                    { label: 'Meal Preference', value: data.meal },
+                    { label: 'Dietary Restrictions', value: data.dietary || 'None' },
+                    { label: 'Accessibility Needs', value: data.accessibility || 'None' }
+                ];
+
+                for (var i = 0; i < fields.length; i++) {
+                    var item = document.createElement('div');
+                    item.className = 'summary-item';
+                    var label = document.createElement('span');
+                    label.className = 'summary-label';
+                    label.textContent = fields[i].label + ': ';
+                    var value = document.createElement('span');
+                    value.textContent = fields[i].value;
+                    item.appendChild(label);
+                    item.appendChild(value);
+                    summaryDiv.appendChild(item);
+                }
+
+                formSection.hidden = true;
+                confirmationSection.hidden = false;
+            }
+
+            function prefillForm(data) {
+                form.fullName.value = data.fullName || '';
+                form.email.value = data.email || '';
+                form.phone.value = data.phone || '';
+                form.guests.value = data.guests || '';
+                form.meal.value = data.meal || '';
+                form.dietary.value = data.dietary || '';
+                form.accessibility.value = data.accessibility || '';
+            }
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (!validate()) return;
+                var data = getData();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                showConfirmation(data);
+            });
+
+            btnUpdate.addEventListener('click', function () {
+                confirmationSection.hidden = true;
+                formSection.hidden = false;
+            });
+
+            // On load: check localStorage
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    var data = JSON.parse(saved);
+                    prefillForm(data);
+                    showConfirmation(data);
+                } catch (e) {
+                    // ignore corrupt data
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
