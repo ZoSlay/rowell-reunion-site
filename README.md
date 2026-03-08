@@ -2,6 +2,8 @@
 
 A static website for the Rowell Family Reunion event.
 
+**Live site:** https://zoslay.github.io/rowell-reunion-site
+
 ## Structure
 
 - `index.html` — Landing page with event details and RSVP form
