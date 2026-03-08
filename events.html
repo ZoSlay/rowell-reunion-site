@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events — Rowell Family Reunion 2026</title>
+    <style>
+        /* Reset and base */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #2C2C2C;
+            line-height: 1.6;
+            background-color: #FAF3E0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        /* Navigation */
+        .site-nav {
+            background-color: #7B2D42;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+        }
+
+        .site-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .site-nav a {
+            color: #FAF3E0;
+            text-decoration: none;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .site-nav a:hover {
+            opacity: 0.8;
+        }
+
+        .site-nav .nav-active {
+            font-weight: bold;
+            border-bottom: 2px solid #C8902A;
+            padding-bottom: 2px;
+        }
+
+        .site-nav .nav-disabled {
+            color: #FAF3E0;
+            opacity: 0.4;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 0.95rem;
+            cursor: default;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            text-align: center;
+            padding: 3.5rem 1.5rem 3rem;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-banner .subtitle {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Main content */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Day Section Dividers */
+        .day-divider {
+            text-align: center;
+            margin: 2.5rem 0 2rem;
+            position: relative;
+        }
+
+        .day-divider::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #C8902A, transparent);
+        }
+
+        .day-divider h2 {
+            display: inline-block;
+            background-color: #FAF3E0;
+            padding: 0.25rem 1.5rem;
+            position: relative;
+            color: #7B2D42;
+            font-size: 1.5rem;
+            border: none;
+        }
+
+        .day-divider .day-date {
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 0.9rem;
+            color: #2C2C2C;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: #C8902A;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 45%;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 5%;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: 50%;
+        }
+
+        /* Timeline dot */
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background-color: #C8902A;
+            border: 3px solid #FAF3E0;
+            border-radius: 50%;
+            top: 1.5rem;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: -7%;
+            transform: translateX(50%);
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -7%;
+            transform: translateX(-50%);
+        }
+
+        /* Event Cards */
+        .event-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.2s;
+        }
+
+        .event-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .event-card h3 {
+            color: #7B2D42;
+            font-size: 1.2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .event-time {
+            font-size: 0.9rem;
+            color: #C8902A;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .event-location {
+            font-size: 0.85rem;
+            color: #2C2C2C;
+            opacity: 0.7;
+            margin-bottom: 0.75rem;
+            font-style: italic;
+        }
+
+        .event-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .btn-register {
+            display: inline-block;
+            background-color: #2A7B7B;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.55rem 1.3rem;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .btn-register:hover {
+            background-color: #1f6060;
+        }
+
+        /* Decorative divider between day sections */
+        .section-divider {
+            text-align: center;
+            margin: 3rem 0 1rem;
+        }
+
+        .section-divider span {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: #C8902A;
+            letter-spacing: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #e0dcd3;
+        }
+
+        /* Responsive — 375px and small screens */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                width: calc(100% - 50px);
+                margin-left: 50px !important;
+                margin-bottom: 1.5rem;
+            }
+
+            .timeline-item::before {
+                left: -38px !important;
+                right: auto !important;
+                transform: none !important;
+            }
+
+            .hero-banner {
+                padding: 2.5rem 1rem 2rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-banner .subtitle {
+                font-size: 1rem;
+            }
+
+            .site-nav ul {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .timeline::before {
+                left: 12px;
+            }
+
+            .timeline-item {
+                width: calc(100% - 35px);
+                margin-left: 35px !important;
+            }
+
+            .timeline-item::before {
+                left: -28px !important;
+            }
+
+            .event-card {
+                padding: 1rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.4rem;
+            }
+
+            main {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html" class="nav-active">Events</a></li>
+            <li><span class="nav-disabled">Registration</span></li>
+            <li><span class="nav-disabled">Merchandise</span></li>
+            <li><span class="nav-disabled">Feedback</span></li>
+        </ul>
+    </nav>
+
+    <header class="hero-banner">
+        <h1>Rowell Family Reunion</h1>
+        <p class="subtitle">July 17&ndash;19, 2026 &middot; Washington DC</p>
+    </header>
+
+    <main>
+        <!-- ===== FRIDAY ===== -->
+        <div class="day-divider">
+            <h2>Friday
+                <span class="day-date">July 17, 2026</span>
+            </h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="event-card">
+                    <h3>Reunion Weekend Opens</h3>
+                    <p class="event-time"><!-- PLACEHOLDER: replace with real time -->TBD</p>
+                    <p class="event-location"><!-- PLACEHOLDER: replace with real location -->TBD</p>
+                    <p class="event-description">Kick off the reunion weekend! Arrive, settle in, and reconnect with family.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative divider -->
+        <div class="section-divider">
+            <span>&bull; &bull; &bull;</span>
+        </div>
+
+        <!-- ===== SATURDAY ===== -->
+        <div class="day-divider">
+            <h2>Saturday
+                <span class="day-date">July 18, 2026</span>
+            </h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="event-card">
+                    <h3>Smithsonian NMAAHC Visit</h3>
+                    <p class="event-time">10:00 AM</p>
+                    <p class="event-location">National Museum of African American History &amp; Culture, Washington DC</p>
+                    <p class="event-description">Explore the Smithsonian's National Museum of African American History and Culture together as a family.</p>
+                    <a href="#" class="btn-register">Register for Museum Trip</a><!-- PLACEHOLDER: link to registration.html when built -->
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="event-card">
+                    <h3>Evening Banquet Dinner</h3>
+                    <p class="event-time"><!-- PLACEHOLDER: replace with real time -->TBD</p>
+                    <p class="event-location"><!-- PLACEHOLDER: replace with real location -->TBD</p>
+                    <p class="event-description">Join us for an evening of dining, toasts, and celebration of the Rowell family legacy.</p>
+                    <a href="#" class="btn-register">Register for Banquet</a><!-- PLACEHOLDER: link to registration.html when built -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative divider -->
+        <div class="section-divider">
+            <span>&bull; &bull; &bull;</span>
+        </div>
+
+        <!-- ===== SUNDAY ===== -->
+        <div class="day-divider">
+            <h2>Sunday
+                <span class="day-date">July 19, 2026</span>
+            </h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="event-card">
+                    <h3>Closing Day</h3>
+                    <p class="event-time"><!-- PLACEHOLDER: replace with real time -->TBD</p>
+                    <p class="event-location"><!-- PLACEHOLDER: replace with real location -->TBD</p>
+                    <p class="event-description">Wrap up the reunion weekend with final farewells and family photos.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026</p>
+    </footer>
+</body>
+</html>
