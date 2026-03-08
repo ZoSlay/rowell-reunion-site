@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Steps — Rowell Family Reunion</title>
+    <style>
+        /* Reset and base */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #2C2C2C;
+            line-height: 1.6;
+            background-color: #FAF3E0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        /* Navigation */
+        .site-nav {
+            background-color: #7B2D42;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+        }
+
+        .site-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .site-nav a {
+            color: #FAF3E0;
+            text-decoration: none;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .site-nav a:hover {
+            opacity: 0.8;
+        }
+
+        .site-nav .nav-active {
+            font-weight: bold;
+            border-bottom: 2px solid #C8902A;
+            padding-bottom: 2px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            text-align: center;
+            padding: 3.5rem 1.5rem 3rem;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-banner .subtitle {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Main content */
+        main {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Info cards */
+        .info-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .info-card h2 {
+            color: #7B2D42;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .info-card ul {
+            margin: 0.5rem 0 0.75rem 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .info-card li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Payment highlight */
+        .payment-highlight {
+            background-color: #FAF3E0;
+            border-left: 4px solid #C8902A;
+            border-radius: 5px;
+            padding: 1rem 1.25rem;
+            margin: 0.75rem 0;
+        }
+
+        .payment-highlight p {
+            margin-bottom: 0.4rem;
+        }
+
+        .payment-highlight .method-primary {
+            font-weight: 600;
+            color: #7B2D42;
+        }
+
+        .payment-highlight .method-fallback {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* Hotel placeholder */
+        .placeholder-note {
+            background-color: #FAF3E0;
+            border: 1px dashed #C8902A;
+            border-radius: 5px;
+            padding: 1rem 1.25rem;
+            font-style: italic;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Contact card */
+        .contact-card {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-card h2 {
+            color: #FAF3E0;
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card a {
+            color: #C8902A;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .contact-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #e0dcd3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-banner {
+                padding: 2.5rem 1rem 2rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-banner .subtitle {
+                font-size: 1rem;
+            }
+
+            .site-nav ul {
+                gap: 1rem;
+            }
+
+            .info-card,
+            .contact-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .hero-banner h1 {
+                font-size: 1.4rem;
+            }
+
+            main {
+                padding: 1.5rem 1rem;
+            }
+
+            .info-card,
+            .contact-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register-banquet.html">Registration</a></li>
+            <li><a href="merchandise.html">Merchandise</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="next-steps.html" class="nav-active">Next Steps</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-banner">
+        <h1>Next Steps</h1>
+        <p class="subtitle">What to do after you register</p>
+    </header>
+
+    <main>
+        <div class="info-card">
+            <h2>Payment Instructions</h2>
+            <p>After registering for events, please submit your payment using one of the methods below.</p>
+            <div class="payment-highlight">
+                <p class="method-primary">Zelle (preferred)</p>
+                <p>Send payment to: rowellreunion@gmail.com</p>
+                <p>Memo: "Rowell Reunion - [Event Name] - [Your Name]"</p>
+            </div>
+            <div class="payment-highlight">
+                <p class="method-fallback">Venmo (alternate)</p>
+                <p>Send payment to: rowellreunion@gmail.com</p>
+                <p>Memo: "Rowell Reunion - [Event Name] - [Your Name]"</p>
+            </div>
+            <p>Please include your name and the event in the memo so we can match your payment to your registration.</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Travel Suggestions</h2>
+            <p>The reunion takes place in Washington, DC from July 17-19, 2026.</p>
+            <ul>
+                <li>The closest airports are Ronald Reagan Washington National (DCA) and Washington Dulles International (IAD).</li>
+                <li>Amtrak and regional trains arrive at Union Station, which connects to the Metro system.</li>
+                <li>The DC Metro is convenient for getting around the city. Consider a SmarTrip card for public transit.</li>
+                <li>Rideshare services (Uber, Lyft) are widely available throughout the DC area.</li>
+            </ul>
+            <p>If you are driving, note that parking in downtown DC can be limited and expensive. Hotel parking or nearby garages are recommended.</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Hotel Information</h2>
+            <div class="placeholder-note">
+                Hotel block details are being finalized and will be posted here soon. Check back for group rate information and booking instructions.
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h2>What to Bring</h2>
+            <ul>
+                <li>Comfortable walking shoes for the museum visit</li>
+                <li>Formal or semi-formal attire for the Saturday evening banquet</li>
+                <li>Family photos or memorabilia to share</li>
+                <li>A light jacket or layers (museum and banquet venues may be air-conditioned)</li>
+                <li>Sunscreen and water bottle for any outdoor activities</li>
+                <li>Your confirmation details (check your email or the registration pages on this site)</li>
+            </ul>
+        </div>
+
+        <div class="contact-card">
+            <h2>Questions?</h2>
+            <p>Reach out to the planning committee anytime.</p>
+            <a href="mailto:rowellreunion@gmail.com">rowellreunion@gmail.com</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026</p>
+    </footer>
+</body>
+</html>
