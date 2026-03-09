@@ -127,37 +127,20 @@
         }
 
         .cost-table td:nth-child(2),
-        .cost-table td:nth-child(3),
-        .cost-table th:nth-child(2),
-        .cost-table th:nth-child(3) {
+        .cost-table th:nth-child(2) {
             text-align: right;
+            white-space: nowrap;
         }
 
-        .cost-table .total-row {
-            font-weight: 700;
-            background-color: #FAF3E0;
+        .cost-table td:nth-child(3) {
+            font-size: 0.85rem;
+            color: #666;
         }
 
-        .cost-summary {
-            background-color: #FAF3E0;
-            border-left: 4px solid #C8902A;
-            border-radius: 5px;
-            padding: 1rem 1.25rem;
-            margin: 0.75rem 0;
-            font-size: 0.95rem;
-        }
-
-        .cost-summary .estimate-range {
-            font-weight: 700;
-            color: #7B2D42;
-            font-size: 1.1rem;
-        }
-
-        .cost-summary .estimate-note {
+        .estimate-note {
             font-size: 0.85rem;
             color: #888;
             font-style: italic;
-            margin-top: 0.25rem;
         }
 
         /* Deadline list */
@@ -214,6 +197,20 @@
             margin-bottom: 1.5rem;
         }
 
+        .form-card h3 {
+            color: #7B2D42;
+            font-size: 1.15rem;
+            margin: 1.5rem 0 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0dcd3;
+        }
+
+        .form-card h3:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
         .form-group {
             margin-bottom: 1.25rem;
         }
@@ -268,6 +265,17 @@
             flex: 1;
         }
 
+        .field-note {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        .field-note a {
+            color: #7B2D42;
+            font-weight: 600;
+        }
+
         .error-msg {
             display: block;
             color: #a03030;
@@ -296,8 +304,8 @@
             accent-color: #7B2D42;
         }
 
-        /* Payment info */
-        .payment-info {
+        /* Basket summary */
+        .basket-summary {
             background-color: #FAF3E0;
             border-left: 4px solid #C8902A;
             border-radius: 5px;
@@ -305,23 +313,60 @@
             margin: 1.5rem 0;
         }
 
+        .basket-summary h3 {
+            color: #7B2D42;
+            font-size: 1.15rem;
+            margin: 0 0 0.75rem;
+            padding: 0;
+            border: none;
+        }
+
+        .basket-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #7B2D42;
+            margin-bottom: 0.75rem;
+        }
+
+        .basket-breakdown {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .basket-breakdown li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .basket-breakdown li:last-child {
+            border-bottom: none;
+        }
+
+        /* Payment info */
+        .payment-info {
+            background-color: #FAF3E0;
+            border-left: 4px solid #C8902A;
+            border-radius: 5px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
         .payment-info h3 {
             color: #7B2D42;
             font-size: 1.1rem;
-            margin-bottom: 0.75rem;
+            margin: 0 0 0.75rem;
+            padding: 0;
+            border: none;
         }
 
         .payment-info p {
             font-size: 0.9rem;
             margin-bottom: 0.4rem;
             line-height: 1.5;
-        }
-
-        .payment-info .payment-note {
-            font-style: italic;
-            color: #888;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
         }
 
         .payment-placeholder {
@@ -491,56 +536,53 @@
 
     <header class="hero-banner">
         <h1>Family Registration</h1>
-        <p class="subtitle">July 17&ndash;19, 2026 &middot; Hilton Alexandria Old Town</p>
+        <p class="subtitle">Rowell Family Reunion &middot; July 17&ndash;19, 2026</p>
     </header>
 
     <main>
-        <!-- Cost Estimate Section -->
+        <!-- Section 1 — Intro -->
         <div class="info-card">
-            <h2>Estimated Cost Per Person</h2>
+            <p>Register your family for the Rowell Family Reunion &mdash; July 17&ndash;19, 2026 at the Hilton Alexandria Old Town, Alexandria, VA.</p>
+        </div>
+
+        <!-- Section 2 — Cost Estimate Table -->
+        <div class="info-card">
+            <h2>Cost Estimates Per Person</h2>
             <table class="cost-table">
                 <thead>
                     <tr>
                         <th>Item</th>
-                        <th>Low Estimate</th>
-                        <th>High Estimate</th>
+                        <th>Est. Cost</th>
+                        <th>Notes</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Banquet Dinner</td>
-                        <td>$79.32</td>
-                        <td>$87.67</td>
+                        <td>$123&ndash;$143</td>
+                        <td>Mandatory for all attendees 5+. Pending tax confirmation.</td>
                     </tr>
                     <tr>
-                        <td>Breakfast (Saturday) &mdash; if attending</td>
-                        <td>$49.92</td>
-                        <td>$79.36</td>
+                        <td>Saturday Breakfast</td>
+                        <td>$39&ndash;$62</td>
+                        <td>Optional. Per person if attending. Menu TBD.</td>
                     </tr>
                     <tr>
-                        <td>Museum Transportation &mdash; if attending</td>
+                        <td>Museum Excursion</td>
                         <td>$25.42</td>
-                        <td>$25.42</td>
+                        <td>Optional. Per person if attending. Charter bus estimate.</td>
                     </tr>
-                    <tr class="total-row">
-                        <td>Total Per Person</td>
-                        <td>$154.66</td>
-                        <td>$192.45</td>
+                    <tr>
+                        <td>Children under 5</td>
+                        <td>Free</td>
+                        <td>No charge.</td>
                     </tr>
                 </tbody>
             </table>
-            <div class="cost-summary">
-                <p class="estimate-range">Estimated registration cost per person &mdash; $155 to $192</p>
-                <p class="estimate-note">Final costs pending hotel confirmation. These are approximate estimates, not guaranteed totals.</p>
-            </div>
+            <p class="estimate-note">All amounts are estimates. Final costs confirmed after registration closes July 7, 2026.</p>
         </div>
 
-        <!-- Hotel Booking Note -->
-        <div class="info-card">
-            <p>Hotel accommodations are not included in your registration fee. Attendees must book their own room directly with the Hilton Alexandria Old Town using the reunion room block. Visit the <a href="next-steps.html" style="color: #7B2D42; font-weight: 600;">Hotel &amp; Travel page</a> for booking details and group rate information.</p>
-        </div>
-
-        <!-- Deadlines Section -->
+        <!-- Section 3 — Deadlines -->
         <div class="info-card">
             <h2>Important Deadlines</h2>
             <div class="deadline-urgent">
@@ -567,10 +609,14 @@
             </ul>
         </div>
 
-        <!-- Registration Form -->
+        <!-- Section 4 — Registration Form -->
         <div class="form-card" id="form-section">
             <h2>Register Your Family</h2>
             <form id="reg-form" novalidate>
+
+                <!-- Attendee Information -->
+                <h3>Attendee Information</h3>
+
                 <div class="form-group">
                     <label for="full-name">Full Name <span class="required">*</span></label>
                     <input type="text" id="full-name" name="fullName" required>
@@ -591,48 +637,81 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="adults">Adults Attending <span class="required">*</span></label>
+                        <label for="adults">Adults (13+) <span class="required">*</span></label>
                         <input type="number" id="adults" name="adults" min="1" value="1" required>
                         <span class="error-msg" id="error-adults"></span>
                     </div>
                     <div class="form-group">
-                        <label for="children">Children Attending <span class="required">*</span></label>
+                        <label for="children">Children (5&ndash;12) <span class="required">*</span></label>
                         <input type="number" id="children" name="children" min="0" value="0" required>
                         <span class="error-msg" id="error-children"></span>
                     </div>
                 </div>
 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="under5">Children Under 5 <span class="required">*</span></label>
+                        <input type="number" id="under5" name="under5" min="0" value="0" required>
+                        <span class="error-msg" id="error-under5"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="total-attendees">Total Attendees</label>
+                        <input type="text" id="total-attendees" name="totalAttendees" readonly>
+                    </div>
+                </div>
+
+                <!-- Hotel Intent -->
+                <h3>Hotel</h3>
+
                 <div class="form-group">
-                    <label for="total-attendees">Total Attendees</label>
-                    <input type="text" id="total-attendees" name="totalAttendees" readonly>
+                    <label>Are you planning to stay at the Hilton Alexandria Old Town? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="hotelIntent" value="Yes" required> Yes</label>
+                        <label><input type="radio" name="hotelIntent" value="No"> No</label>
+                        <label><input type="radio" name="hotelIntent" value="Not sure"> Not sure</label>
+                    </div>
+                    <span class="error-msg" id="error-hotelIntent"></span>
+                    <p class="field-note">Staying within the room block helps the group meet the minimum required reservation nights. Visit the <a href="next-steps.html">Hotel &amp; Travel page</a> for booking details.</p>
+                </div>
+
+                <!-- Activity Selections -->
+                <h3>Activity Selections</h3>
+
+                <div class="form-group">
+                    <label for="breakfast-count">How many in your party attending Saturday breakfast? <span class="required">*</span></label>
+                    <input type="number" id="breakfast-count" name="breakfastCount" min="0" value="0" required>
+                    <span class="error-msg" id="error-breakfastCount"></span>
                 </div>
 
                 <div class="form-group">
-                    <label>Reserving a Room at the Hilton? <span class="required">*</span></label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="reservingRoom" value="Yes" required> Yes</label>
-                        <label><input type="radio" name="reservingRoom" value="No"> No</label>
-                    </div>
-                    <span class="error-msg" id="error-reservingRoom"></span>
+                    <label for="museum-count">How many in your party joining the museum excursion? <span class="required">*</span></label>
+                    <input type="number" id="museum-count" name="museumCount" min="0" value="0" required>
+                    <span class="error-msg" id="error-museumCount"></span>
+                    <p class="field-note">Children under 5 are not eligible for the museum excursion head count.</p>
                 </div>
 
-                <div class="form-group">
-                    <label>Attending Saturday Breakfast? <span class="required">*</span></label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="breakfast" value="Yes" required> Yes</label>
-                        <label><input type="radio" name="breakfast" value="No"> No</label>
-                    </div>
-                    <span class="error-msg" id="error-breakfast"></span>
+                <!-- Basket Cost Summary -->
+                <div class="basket-summary">
+                    <h3>Estimated Family Total</h3>
+                    <div class="basket-total" id="basket-total">$0</div>
+                    <ul class="basket-breakdown">
+                        <li><span>Banquet</span><span id="basket-banquet">$0</span></li>
+                        <li><span>Breakfast</span><span id="basket-breakfast">$0</span></li>
+                        <li><span>Museum</span><span id="basket-museum">$0</span></li>
+                    </ul>
+                    <p class="estimate-note">This is an estimated total based on current pricing. Final amounts will be confirmed after registration closes July 7, 2026.</p>
                 </div>
 
+                <!-- Additional Information -->
+                <h3>Additional Information</h3>
+
                 <div class="form-group">
-                    <label>Attending Museum Excursion? <span class="required">*</span></label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="museum" value="Yes" required> Yes</label>
-                        <label><input type="radio" name="museum" value="No"> No</label>
-                    </div>
-                    <span class="error-msg" id="error-museum"></span>
+                    <label for="notes">Special Dietary Needs or Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="e.g. vegetarian, nut allergy, wheelchair access"></textarea>
                 </div>
+
+                <!-- Payment Method -->
+                <h3>Payment Method</h3>
 
                 <div class="form-group">
                     <label>Preferred Payment Method <span class="required">*</span></label>
@@ -643,11 +722,6 @@
                     <span class="error-msg" id="error-paymentMethod"></span>
                 </div>
 
-                <div class="form-group">
-                    <label for="notes">Special Dietary Needs or Notes</label>
-                    <textarea id="notes" name="notes" rows="3" placeholder="e.g. vegetarian, nut allergy, wheelchair access"></textarea>
-                </div>
-
                 <button type="submit" class="btn-submit">Submit Registration</button>
             </form>
         </div>
@@ -655,16 +729,17 @@
         <!-- Confirmation (hidden until submit) -->
         <div class="confirmation" id="confirmation-section" hidden>
             <h2>Registration Received</h2>
-            <p>Thank you for registering! Please follow the payment instructions below to complete your registration.</p>
+            <p>Thank you &mdash; your registration has been received. Please complete your payment using the instructions below.</p>
             <div id="summary"></div>
             <p class="closing-msg">We look forward to seeing you at the reunion!</p>
             <button type="button" class="btn-update" id="btn-update">Update Registration</button>
         </div>
 
-        <!-- Payment Instructions -->
+        <!-- Section 6 — Payment Instructions -->
         <div class="info-card">
             <h2>Payment Instructions</h2>
-            <p>After registering, please send your payment using one of the methods below. <strong>Payment is not processed automatically</strong> &mdash; you must complete payment manually using the instructions shown.</p>
+            <p>After registering, please send your payment using one of the methods below. Your payment amount is the estimated family total shown during registration.</p>
+            <p><strong>Payment is not processed automatically</strong> &mdash; you must complete payment manually using the instructions shown.</p>
 
             <div class="payment-info">
                 <h3>Venmo</h3>
@@ -678,7 +753,7 @@
                 <p>Memo: "Rowell Reunion - [Your Name]"</p>
             </div>
 
-            <p class="payment-note" style="font-style: italic; color: #888; font-size: 0.85rem; margin-top: 0.75rem;">Selecting a payment method during registration does not process payment. You must send payment separately using the instructions above.</p>
+            <p class="estimate-note">Selecting a payment method during registration does not process payment. You must send payment separately using the instructions above.</p>
         </div>
     </main>
 
@@ -694,19 +769,55 @@
             var confirmationSection = document.getElementById('confirmation-section');
             var summaryDiv = document.getElementById('summary');
             var btnUpdate = document.getElementById('btn-update');
+
             var adultsInput = document.getElementById('adults');
             var childrenInput = document.getElementById('children');
+            var under5Input = document.getElementById('under5');
             var totalInput = document.getElementById('total-attendees');
+            var breakfastInput = document.getElementById('breakfast-count');
+            var museumInput = document.getElementById('museum-count');
 
-            function updateTotal() {
-                var adults = parseInt(adultsInput.value, 10) || 0;
-                var children = parseInt(childrenInput.value, 10) || 0;
-                totalInput.value = adults + children;
+            var basketTotalEl = document.getElementById('basket-total');
+            var basketBanquetEl = document.getElementById('basket-banquet');
+            var basketBreakfastEl = document.getElementById('basket-breakfast');
+            var basketMuseumEl = document.getElementById('basket-museum');
+
+            var BANQUET_RATE = 133;
+            var BREAKFAST_RATE = 50;
+            var MUSEUM_RATE = 25.42;
+
+            function getInt(input) {
+                var v = parseInt(input.value, 10);
+                return isNaN(v) ? 0 : v;
             }
 
-            adultsInput.addEventListener('input', updateTotal);
-            childrenInput.addEventListener('input', updateTotal);
-            updateTotal();
+            function updateTotalAndBasket() {
+                var adults = getInt(adultsInput);
+                var children = getInt(childrenInput);
+                var under5 = getInt(under5Input);
+                var total = adults + children + under5;
+                totalInput.value = total;
+
+                var banquetCount = adults + children;
+                var breakfastCount = getInt(breakfastInput);
+                var museumCount = getInt(museumInput);
+
+                var banquetCost = banquetCount * BANQUET_RATE;
+                var breakfastCost = breakfastCount * BREAKFAST_RATE;
+                var museumCost = museumCount * MUSEUM_RATE;
+                var totalCost = banquetCost + breakfastCost + museumCost;
+
+                basketBanquetEl.textContent = '$' + banquetCost.toFixed(0);
+                basketBreakfastEl.textContent = '$' + breakfastCost.toFixed(0);
+                basketMuseumEl.textContent = '$' + museumCost.toFixed(2);
+                basketTotalEl.textContent = '$' + totalCost.toFixed(2);
+            }
+
+            var numericInputs = [adultsInput, childrenInput, under5Input, breakfastInput, museumInput];
+            for (var i = 0; i < numericInputs.length; i++) {
+                numericInputs[i].addEventListener('input', updateTotalAndBasket);
+            }
+            updateTotalAndBasket();
 
             function getRadioValue(name) {
                 var el = form.querySelector('input[name="' + name + '"]:checked');
@@ -715,8 +826,8 @@
 
             function setRadioValue(name, value) {
                 var radios = form.querySelectorAll('input[name="' + name + '"]');
-                for (var i = 0; i < radios.length; i++) {
-                    radios[i].checked = (radios[i].value === value);
+                for (var j = 0; j < radios.length; j++) {
+                    radios[j].checked = (radios[j].value === value);
                 }
             }
 
@@ -726,24 +837,20 @@
 
             function clearErrors() {
                 var msgs = form.querySelectorAll('.error-msg');
-                for (var i = 0; i < msgs.length; i++) {
-                    msgs[i].textContent = '';
+                for (var j = 0; j < msgs.length; j++) {
+                    msgs[j].textContent = '';
                 }
             }
 
             function validate() {
                 clearErrors();
                 var valid = true;
-                var fullName = form.fullName.value.trim();
-                var email = form.email.value.trim();
-                var phone = form.phone.value.trim();
-                var adults = adultsInput.value.trim();
-                var children = childrenInput.value.trim();
 
-                if (!fullName) {
+                if (!form.fullName.value.trim()) {
                     getErrorEl('fullName').textContent = 'Full name is required.';
                     valid = false;
                 }
+                var email = form.email.value.trim();
                 if (!email) {
                     getErrorEl('email').textContent = 'Email is required.';
                     valid = false;
@@ -751,50 +858,91 @@
                     getErrorEl('email').textContent = 'Please enter a valid email address.';
                     valid = false;
                 }
-                if (!phone) {
+                if (!form.phone.value.trim()) {
                     getErrorEl('phone').textContent = 'Phone number is required.';
                     valid = false;
                 }
-                if (!adults || parseInt(adults, 10) < 1) {
+
+                var adults = getInt(adultsInput);
+                var children = getInt(childrenInput);
+                var under5 = getInt(under5Input);
+                var total = adults + children + under5;
+                var eligible = adults + children;
+
+                if (adults < 1) {
                     getErrorEl('adults').textContent = 'At least 1 adult is required.';
                     valid = false;
                 }
-                if (children === '' || parseInt(children, 10) < 0) {
+                if (children < 0) {
                     getErrorEl('children').textContent = 'Enter 0 or more.';
                     valid = false;
                 }
-                if (!getRadioValue('reservingRoom')) {
-                    getErrorEl('reservingRoom').textContent = 'Please select yes or no.';
+                if (under5 < 0) {
+                    getErrorEl('under5').textContent = 'Enter 0 or more.';
                     valid = false;
                 }
-                if (!getRadioValue('breakfast')) {
-                    getErrorEl('breakfast').textContent = 'Please select yes or no.';
+
+                if (!getRadioValue('hotelIntent')) {
+                    getErrorEl('hotelIntent').textContent = 'Please select an option.';
                     valid = false;
                 }
-                if (!getRadioValue('museum')) {
-                    getErrorEl('museum').textContent = 'Please select yes or no.';
+
+                var breakfastCount = getInt(breakfastInput);
+                if (breakfastCount < 0) {
+                    getErrorEl('breakfastCount').textContent = 'Enter 0 or more.';
+                    valid = false;
+                } else if (breakfastCount > total) {
+                    getErrorEl('breakfastCount').textContent = 'Cannot exceed total attendees (' + total + ').';
                     valid = false;
                 }
+
+                var museumCount = getInt(museumInput);
+                if (museumCount < 0) {
+                    getErrorEl('museumCount').textContent = 'Enter 0 or more.';
+                    valid = false;
+                } else if (museumCount > eligible) {
+                    getErrorEl('museumCount').textContent = 'Cannot exceed adults + children 5\u201312 (' + eligible + '). Children under 5 are not eligible.';
+                    valid = false;
+                }
+
                 if (!getRadioValue('paymentMethod')) {
                     getErrorEl('paymentMethod').textContent = 'Please select a payment method.';
                     valid = false;
                 }
+
                 return valid;
             }
 
             function getData() {
+                var adults = getInt(adultsInput);
+                var children = getInt(childrenInput);
+                var under5 = getInt(under5Input);
+                var breakfastCount = getInt(breakfastInput);
+                var museumCount = getInt(museumInput);
+
+                var banquetCost = (adults + children) * BANQUET_RATE;
+                var breakfastCost = breakfastCount * BREAKFAST_RATE;
+                var museumCost = museumCount * MUSEUM_RATE;
+
                 return {
                     fullName: form.fullName.value.trim(),
                     email: form.email.value.trim(),
                     phone: form.phone.value.trim(),
-                    adults: parseInt(adultsInput.value, 10) || 0,
-                    children: parseInt(childrenInput.value, 10) || 0,
-                    totalAttendees: (parseInt(adultsInput.value, 10) || 0) + (parseInt(childrenInput.value, 10) || 0),
-                    reservingRoom: getRadioValue('reservingRoom'),
-                    breakfast: getRadioValue('breakfast'),
-                    museum: getRadioValue('museum'),
+                    adults: adults,
+                    children: children,
+                    under5: under5,
+                    totalAttendees: adults + children + under5,
+                    hotelIntent: getRadioValue('hotelIntent'),
+                    breakfastCount: breakfastCount,
+                    museumCount: museumCount,
                     paymentMethod: getRadioValue('paymentMethod'),
-                    notes: form.notes.value.trim()
+                    notes: form.notes.value.trim(),
+                    basket: {
+                        banquet: banquetCost,
+                        breakfast: breakfastCost,
+                        museum: museumCost,
+                        total: banquetCost + breakfastCost + museumCost
+                    }
                 };
             }
 
@@ -805,26 +953,28 @@
                     { label: 'Name', value: data.fullName },
                     { label: 'Email', value: data.email },
                     { label: 'Phone', value: data.phone },
-                    { label: 'Adults', value: String(data.adults) },
-                    { label: 'Children', value: String(data.children) },
+                    { label: 'Adults (13+)', value: String(data.adults) },
+                    { label: 'Children (5\u201312)', value: String(data.children) },
+                    { label: 'Children Under 5', value: String(data.under5) },
                     { label: 'Total Attendees', value: String(data.totalAttendees) },
-                    { label: 'Reserving Hotel Room', value: data.reservingRoom },
-                    { label: 'Saturday Breakfast', value: data.breakfast },
-                    { label: 'Museum Excursion', value: data.museum },
+                    { label: 'Hotel', value: data.hotelIntent },
+                    { label: 'Breakfast Count', value: String(data.breakfastCount) },
+                    { label: 'Museum Excursion Count', value: String(data.museumCount) },
                     { label: 'Payment Method', value: data.paymentMethod },
-                    { label: 'Notes', value: data.notes || 'None' }
+                    { label: 'Notes', value: data.notes || 'None' },
+                    { label: 'Estimated Family Total', value: '$' + data.basket.total.toFixed(2) }
                 ];
 
-                for (var i = 0; i < fields.length; i++) {
+                for (var j = 0; j < fields.length; j++) {
                     var item = document.createElement('div');
                     item.className = 'summary-item';
-                    var label = document.createElement('span');
-                    label.className = 'summary-label';
-                    label.textContent = fields[i].label + ': ';
-                    var value = document.createElement('span');
-                    value.textContent = fields[i].value;
-                    item.appendChild(label);
-                    item.appendChild(value);
+                    var lbl = document.createElement('span');
+                    lbl.className = 'summary-label';
+                    lbl.textContent = fields[j].label + ': ';
+                    var val = document.createElement('span');
+                    val.textContent = fields[j].value;
+                    item.appendChild(lbl);
+                    item.appendChild(val);
                     summaryDiv.appendChild(item);
                 }
 
@@ -838,12 +988,13 @@
                 form.phone.value = data.phone || '';
                 adultsInput.value = data.adults != null ? data.adults : 1;
                 childrenInput.value = data.children != null ? data.children : 0;
-                setRadioValue('reservingRoom', data.reservingRoom || '');
-                setRadioValue('breakfast', data.breakfast || '');
-                setRadioValue('museum', data.museum || '');
+                under5Input.value = data.under5 != null ? data.under5 : 0;
+                breakfastInput.value = data.breakfastCount != null ? data.breakfastCount : 0;
+                museumInput.value = data.museumCount != null ? data.museumCount : 0;
+                setRadioValue('hotelIntent', data.hotelIntent || '');
                 setRadioValue('paymentMethod', data.paymentMethod || '');
                 form.notes.value = data.notes || '';
-                updateTotal();
+                updateTotalAndBasket();
             }
 
             form.addEventListener('submit', function (e) {
