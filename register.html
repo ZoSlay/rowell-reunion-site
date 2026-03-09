@@ -612,7 +612,25 @@
         <!-- Section 4 — Registration Form -->
         <div class="form-card" id="form-section">
             <h2>Register Your Family</h2>
-            <form id="reg-form" novalidate>
+            <form id="reg-form"
+                  name="rowell-registration"
+                  method="POST"
+                  data-netlify="true"
+                  netlify
+                  netlify-honeypot="bot-field"
+                  action="/thank-you.html"
+                  enctype="application/x-www-form-urlencoded"
+                  novalidate>
+
+                <input type="hidden" name="form-name" value="rowell-registration">
+                <input type="hidden" name="_subject" value="New Rowell Reunion Registration">
+                <input type="hidden" name="estimated-total" id="estimated-total-field">
+
+                <p class="hidden" style="display:none" aria-hidden="true">
+                    <label>Do not fill this out:
+                        <input name="bot-field" tabindex="-1" autocomplete="off">
+                    </label>
+                </p>
 
                 <!-- Attendee Information -->
                 <h3>Attendee Information</h3>
@@ -726,15 +744,6 @@
             </form>
         </div>
 
-        <!-- Confirmation (hidden until submit) -->
-        <div class="confirmation" id="confirmation-section" hidden>
-            <h2>Registration Received</h2>
-            <p>Thank you &mdash; your registration has been received. Please complete your payment using the instructions below.</p>
-            <div id="summary"></div>
-            <p class="closing-msg">We look forward to seeing you at the reunion!</p>
-            <button type="button" class="btn-update" id="btn-update">Update Registration</button>
-        </div>
-
         <!-- Section 6 — Payment Instructions -->
         <div class="info-card">
             <h2>Payment Instructions</h2>
@@ -765,10 +774,6 @@
         (function () {
             var STORAGE_KEY = 'rowellRegistration';
             var form = document.getElementById('reg-form');
-            var formSection = document.getElementById('form-section');
-            var confirmationSection = document.getElementById('confirmation-section');
-            var summaryDiv = document.getElementById('summary');
-            var btnUpdate = document.getElementById('btn-update');
 
             var adultsInput = document.getElementById('adults');
             var childrenInput = document.getElementById('children');
@@ -946,42 +951,6 @@
                 };
             }
 
-            function showConfirmation(data) {
-                summaryDiv.textContent = '';
-
-                var fields = [
-                    { label: 'Name', value: data.fullName },
-                    { label: 'Email', value: data.email },
-                    { label: 'Phone', value: data.phone },
-                    { label: 'Adults (13+)', value: String(data.adults) },
-                    { label: 'Children (5\u201312)', value: String(data.children) },
-                    { label: 'Children Under 5', value: String(data.under5) },
-                    { label: 'Total Attendees', value: String(data.totalAttendees) },
-                    { label: 'Hotel', value: data.hotelIntent },
-                    { label: 'Breakfast Count', value: String(data.breakfastCount) },
-                    { label: 'Museum Excursion Count', value: String(data.museumCount) },
-                    { label: 'Payment Method', value: data.paymentMethod },
-                    { label: 'Notes', value: data.notes || 'None' },
-                    { label: 'Estimated Family Total', value: '$' + data.basket.total.toFixed(2) }
-                ];
-
-                for (var j = 0; j < fields.length; j++) {
-                    var item = document.createElement('div');
-                    item.className = 'summary-item';
-                    var lbl = document.createElement('span');
-                    lbl.className = 'summary-label';
-                    lbl.textContent = fields[j].label + ': ';
-                    var val = document.createElement('span');
-                    val.textContent = fields[j].value;
-                    item.appendChild(lbl);
-                    item.appendChild(val);
-                    summaryDiv.appendChild(item);
-                }
-
-                formSection.hidden = true;
-                confirmationSection.hidden = false;
-            }
-
             function prefillForm(data) {
                 form.fullName.value = data.fullName || '';
                 form.email.value = data.email || '';
@@ -998,25 +967,25 @@
             }
 
             form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                if (!validate()) return;
+                if (!validate()) {
+                    e.preventDefault();
+                    return;
+                }
+                // Populate estimated-total hidden field
+                document.getElementById('estimated-total-field').value =
+                    basketTotalEl.textContent;
+                // Save to localStorage
                 var data = getData();
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                showConfirmation(data);
+                // Allow form to POST to Netlify and redirect to thank-you.html
             });
 
-            btnUpdate.addEventListener('click', function () {
-                confirmationSection.hidden = true;
-                formSection.hidden = false;
-            });
-
-            // On load: check localStorage
+            // On load: prefill from localStorage if available
             var saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 try {
                     var data = JSON.parse(saved);
                     prefillForm(data);
-                    showConfirmation(data);
                 } catch (e) {
                     // ignore corrupt data
                 }
