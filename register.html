@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Rowell Family Reunion 2026</title>
+    <style>
+        /* Reset and base */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #2C2C2C;
+            line-height: 1.6;
+            background-color: #FAF3E0;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        /* Navigation */
+        .site-nav {
+            background-color: #7B2D42;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+        }
+
+        .site-nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .site-nav a {
+            color: #FAF3E0;
+            text-decoration: none;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .site-nav a:hover {
+            opacity: 0.8;
+        }
+
+        .site-nav .nav-active {
+            font-weight: bold;
+            border-bottom: 2px solid #C8902A;
+            padding-bottom: 2px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            text-align: center;
+            padding: 3.5rem 1.5rem 3rem;
+        }
+
+        .hero-banner h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-banner .subtitle {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        /* Main content */
+        main {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Info cards */
+        .info-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .info-card h2 {
+            color: #7B2D42;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        /* Cost estimate table */
+        .cost-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .cost-table th,
+        .cost-table td {
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0dcd3;
+        }
+
+        .cost-table th {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            font-weight: 600;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .cost-table td:nth-child(2),
+        .cost-table td:nth-child(3),
+        .cost-table th:nth-child(2),
+        .cost-table th:nth-child(3) {
+            text-align: right;
+        }
+
+        .cost-table .total-row {
+            font-weight: 700;
+            background-color: #FAF3E0;
+        }
+
+        .cost-summary {
+            background-color: #FAF3E0;
+            border-left: 4px solid #C8902A;
+            border-radius: 5px;
+            padding: 1rem 1.25rem;
+            margin: 0.75rem 0;
+            font-size: 0.95rem;
+        }
+
+        .cost-summary .estimate-range {
+            font-weight: 700;
+            color: #7B2D42;
+            font-size: 1.1rem;
+        }
+
+        .cost-summary .estimate-note {
+            font-size: 0.85rem;
+            color: #888;
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
+
+        /* Deadline list */
+        .deadline-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .deadline-list li {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0dcd3;
+            font-size: 0.95rem;
+        }
+
+        .deadline-list li:last-child {
+            border-bottom: none;
+        }
+
+        .deadline-list .deadline-date {
+            font-weight: 700;
+            color: #7B2D42;
+            display: inline-block;
+            min-width: 140px;
+        }
+
+        /* Urgent deadline */
+        .deadline-urgent {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            border-radius: 5px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .deadline-urgent .deadline-date {
+            color: #C8902A;
+        }
+
+        /* Form card */
+        .form-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-card h2 {
+            color: #7B2D42;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group .required {
+            color: #a03030;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2A7B7B;
+            box-shadow: 0 0 0 3px rgba(42, 123, 123, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group input[readonly] {
+            background-color: #f0ece2;
+            color: #666;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .error-msg {
+            display: block;
+            color: #a03030;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            min-height: 1rem;
+        }
+
+        /* Radio group */
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.3rem;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+            accent-color: #7B2D42;
+        }
+
+        /* Payment info */
+        .payment-info {
+            background-color: #FAF3E0;
+            border-left: 4px solid #C8902A;
+            border-radius: 5px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-info h3 {
+            color: #7B2D42;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .payment-info p {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+
+        .payment-info .payment-note {
+            font-style: italic;
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-placeholder {
+            background-color: #fff;
+            border: 1px dashed #C8902A;
+            border-radius: 5px;
+            padding: 0.75rem 1rem;
+            font-style: italic;
+            color: #888;
+            font-size: 0.85rem;
+            margin: 0.5rem 0;
+        }
+
+        /* Submit button */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: #2A7B7B;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background-color: #1f6060;
+        }
+
+        /* Confirmation */
+        .confirmation {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .confirmation h2 {
+            color: #7B2D42;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .confirmation .summary-item {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .confirmation .summary-label {
+            font-weight: 600;
+        }
+
+        .confirmation .closing-msg {
+            margin-top: 1.5rem;
+            font-style: italic;
+            color: #7B2D42;
+            font-size: 1.05rem;
+        }
+
+        .btn-update {
+            display: block;
+            width: 100%;
+            background-color: #C8902A;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1.5rem;
+        }
+
+        .btn-update:hover {
+            background-color: #a87520;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #e0dcd3;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-banner {
+                padding: 2.5rem 1rem 2rem;
+            }
+
+            .hero-banner h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero-banner .subtitle {
+                font-size: 1rem;
+            }
+
+            .site-nav ul {
+                gap: 1rem;
+            }
+
+            .form-card,
+            .info-card,
+            .confirmation {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .cost-table {
+                font-size: 0.8rem;
+            }
+
+            .cost-table th,
+            .cost-table td {
+                padding: 0.5rem;
+            }
+
+            .deadline-list .deadline-date {
+                display: block;
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .hero-banner h1 {
+                font-size: 1.4rem;
+            }
+
+            main {
+                padding: 1.5rem 1rem;
+            }
+
+            .form-card,
+            .info-card,
+            .confirmation {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register.html" class="nav-active">Registration</a></li>
+            <li><a href="merchandise.html">Merchandise</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="next-steps.html">Next Steps</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-banner">
+        <h1>Family Registration</h1>
+        <p class="subtitle">July 17&ndash;19, 2026 &middot; Hilton Alexandria Old Town</p>
+    </header>
+
+    <main>
+        <!-- Cost Estimate Section -->
+        <div class="info-card">
+            <h2>Estimated Cost Per Person</h2>
+            <table class="cost-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Low Estimate</th>
+                        <th>High Estimate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hotel (2 nights, double occupancy)</td>
+                        <td>$195.00</td>
+                        <td>$195.00</td>
+                    </tr>
+                    <tr>
+                        <td>Banquet Dinner</td>
+                        <td>$79.32</td>
+                        <td>$87.67</td>
+                    </tr>
+                    <tr>
+                        <td>Breakfast (Saturday)</td>
+                        <td>$49.92</td>
+                        <td>$79.36</td>
+                    </tr>
+                    <tr>
+                        <td>Museum Transportation</td>
+                        <td>$25.42</td>
+                        <td>$25.42</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td>Total Per Person</td>
+                        <td>$349.66</td>
+                        <td>$387.45</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="cost-summary">
+                <p class="estimate-range">Estimated cost per person &mdash; $350 to $387</p>
+                <p class="estimate-note">Final costs pending hotel confirmation. These are approximate estimates, not guaranteed totals.</p>
+            </div>
+            <p style="font-size: 0.85rem; color: #888;">Hotel parking is an additional $29/night for those driving.</p>
+        </div>
+
+        <!-- Deadlines Section -->
+        <div class="info-card">
+            <h2>Important Deadlines</h2>
+            <div class="deadline-urgent">
+                <span class="deadline-date">April 30, 2026</span> &mdash; Museum excursion response needed<br>
+                Your museum excursion response is needed by April 30 so we can confirm transportation. Please register early.
+            </div>
+            <ul class="deadline-list">
+                <li>
+                    <span class="deadline-date">June 26, 2026</span>
+                    Room block cut-off &mdash; unreserved rooms release to public
+                </li>
+                <li>
+                    <span class="deadline-date">July 3, 2026</span>
+                    Balance due to hotel &mdash; $2,500 remaining balance due
+                </li>
+                <li>
+                    <span class="deadline-date">July 7, 2026</span>
+                    Family registration deadline &mdash; required to guarantee banquet count
+                </li>
+                <li>
+                    <span class="deadline-date">July 10, 2026</span>
+                    Banquet guarantee count called in &mdash; final count provided to Hilton
+                </li>
+            </ul>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="form-card" id="form-section">
+            <h2>Register Your Family</h2>
+            <form id="reg-form" novalidate>
+                <div class="form-group">
+                    <label for="full-name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="full-name" name="fullName" required>
+                    <span class="error-msg" id="error-fullName"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                    <span class="error-msg" id="error-email"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" required>
+                    <span class="error-msg" id="error-phone"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="adults">Adults Attending <span class="required">*</span></label>
+                        <input type="number" id="adults" name="adults" min="1" value="1" required>
+                        <span class="error-msg" id="error-adults"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="children">Children Attending <span class="required">*</span></label>
+                        <input type="number" id="children" name="children" min="0" value="0" required>
+                        <span class="error-msg" id="error-children"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="total-attendees">Total Attendees</label>
+                    <input type="text" id="total-attendees" name="totalAttendees" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>Reserving a Room at the Hilton? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="reservingRoom" value="Yes" required> Yes</label>
+                        <label><input type="radio" name="reservingRoom" value="No"> No</label>
+                    </div>
+                    <span class="error-msg" id="error-reservingRoom"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Attending Saturday Breakfast? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="breakfast" value="Yes" required> Yes</label>
+                        <label><input type="radio" name="breakfast" value="No"> No</label>
+                    </div>
+                    <span class="error-msg" id="error-breakfast"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Attending Museum Excursion? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="museum" value="Yes" required> Yes</label>
+                        <label><input type="radio" name="museum" value="No"> No</label>
+                    </div>
+                    <span class="error-msg" id="error-museum"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Payment Method <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="paymentMethod" value="Venmo" required> Venmo</label>
+                        <label><input type="radio" name="paymentMethod" value="Zelle"> Zelle</label>
+                    </div>
+                    <span class="error-msg" id="error-paymentMethod"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Special Dietary Needs or Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="e.g. vegetarian, nut allergy, wheelchair access"></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Submit Registration</button>
+            </form>
+        </div>
+
+        <!-- Confirmation (hidden until submit) -->
+        <div class="confirmation" id="confirmation-section" hidden>
+            <h2>Registration Received</h2>
+            <p>Thank you for registering! Please follow the payment instructions below to complete your registration.</p>
+            <div id="summary"></div>
+            <p class="closing-msg">We look forward to seeing you at the reunion!</p>
+            <button type="button" class="btn-update" id="btn-update">Update Registration</button>
+        </div>
+
+        <!-- Payment Instructions -->
+        <div class="info-card">
+            <h2>Payment Instructions</h2>
+            <p>After registering, please send your payment using one of the methods below. <strong>Payment is not processed automatically</strong> &mdash; you must complete payment manually using the instructions shown.</p>
+
+            <div class="payment-info">
+                <h3>Venmo</h3>
+                <div class="payment-placeholder">PLACEHOLDER &mdash; Venmo handle will be added before the page goes live.</div>
+                <p>Memo: "Rowell Reunion - [Your Name]"</p>
+            </div>
+
+            <div class="payment-info">
+                <h3>Zelle</h3>
+                <div class="payment-placeholder">PLACEHOLDER &mdash; Zelle phone number or email will be added before the page goes live.</div>
+                <p>Memo: "Rowell Reunion - [Your Name]"</p>
+            </div>
+
+            <p class="payment-note" style="font-style: italic; color: #888; font-size: 0.85rem; margin-top: 0.75rem;">Selecting a payment method during registration does not process payment. You must send payment separately using the instructions above.</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026</p>
+    </footer>
+
+    <script>
+        (function () {
+            var STORAGE_KEY = 'rowellRegistration';
+            var form = document.getElementById('reg-form');
+            var formSection = document.getElementById('form-section');
+            var confirmationSection = document.getElementById('confirmation-section');
+            var summaryDiv = document.getElementById('summary');
+            var btnUpdate = document.getElementById('btn-update');
+            var adultsInput = document.getElementById('adults');
+            var childrenInput = document.getElementById('children');
+            var totalInput = document.getElementById('total-attendees');
+
+            function updateTotal() {
+                var adults = parseInt(adultsInput.value, 10) || 0;
+                var children = parseInt(childrenInput.value, 10) || 0;
+                totalInput.value = adults + children;
+            }
+
+            adultsInput.addEventListener('input', updateTotal);
+            childrenInput.addEventListener('input', updateTotal);
+            updateTotal();
+
+            function getRadioValue(name) {
+                var el = form.querySelector('input[name="' + name + '"]:checked');
+                return el ? el.value : '';
+            }
+
+            function setRadioValue(name, value) {
+                var radios = form.querySelectorAll('input[name="' + name + '"]');
+                for (var i = 0; i < radios.length; i++) {
+                    radios[i].checked = (radios[i].value === value);
+                }
+            }
+
+            function getErrorEl(field) {
+                return document.getElementById('error-' + field);
+            }
+
+            function clearErrors() {
+                var msgs = form.querySelectorAll('.error-msg');
+                for (var i = 0; i < msgs.length; i++) {
+                    msgs[i].textContent = '';
+                }
+            }
+
+            function validate() {
+                clearErrors();
+                var valid = true;
+                var fullName = form.fullName.value.trim();
+                var email = form.email.value.trim();
+                var phone = form.phone.value.trim();
+                var adults = adultsInput.value.trim();
+                var children = childrenInput.value.trim();
+
+                if (!fullName) {
+                    getErrorEl('fullName').textContent = 'Full name is required.';
+                    valid = false;
+                }
+                if (!email) {
+                    getErrorEl('email').textContent = 'Email is required.';
+                    valid = false;
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    getErrorEl('email').textContent = 'Please enter a valid email address.';
+                    valid = false;
+                }
+                if (!phone) {
+                    getErrorEl('phone').textContent = 'Phone number is required.';
+                    valid = false;
+                }
+                if (!adults || parseInt(adults, 10) < 1) {
+                    getErrorEl('adults').textContent = 'At least 1 adult is required.';
+                    valid = false;
+                }
+                if (children === '' || parseInt(children, 10) < 0) {
+                    getErrorEl('children').textContent = 'Enter 0 or more.';
+                    valid = false;
+                }
+                if (!getRadioValue('reservingRoom')) {
+                    getErrorEl('reservingRoom').textContent = 'Please select yes or no.';
+                    valid = false;
+                }
+                if (!getRadioValue('breakfast')) {
+                    getErrorEl('breakfast').textContent = 'Please select yes or no.';
+                    valid = false;
+                }
+                if (!getRadioValue('museum')) {
+                    getErrorEl('museum').textContent = 'Please select yes or no.';
+                    valid = false;
+                }
+                if (!getRadioValue('paymentMethod')) {
+                    getErrorEl('paymentMethod').textContent = 'Please select a payment method.';
+                    valid = false;
+                }
+                return valid;
+            }
+
+            function getData() {
+                return {
+                    fullName: form.fullName.value.trim(),
+                    email: form.email.value.trim(),
+                    phone: form.phone.value.trim(),
+                    adults: parseInt(adultsInput.value, 10) || 0,
+                    children: parseInt(childrenInput.value, 10) || 0,
+                    totalAttendees: (parseInt(adultsInput.value, 10) || 0) + (parseInt(childrenInput.value, 10) || 0),
+                    reservingRoom: getRadioValue('reservingRoom'),
+                    breakfast: getRadioValue('breakfast'),
+                    museum: getRadioValue('museum'),
+                    paymentMethod: getRadioValue('paymentMethod'),
+                    notes: form.notes.value.trim()
+                };
+            }
+
+            function showConfirmation(data) {
+                summaryDiv.textContent = '';
+
+                var fields = [
+                    { label: 'Name', value: data.fullName },
+                    { label: 'Email', value: data.email },
+                    { label: 'Phone', value: data.phone },
+                    { label: 'Adults', value: String(data.adults) },
+                    { label: 'Children', value: String(data.children) },
+                    { label: 'Total Attendees', value: String(data.totalAttendees) },
+                    { label: 'Reserving Hotel Room', value: data.reservingRoom },
+                    { label: 'Saturday Breakfast', value: data.breakfast },
+                    { label: 'Museum Excursion', value: data.museum },
+                    { label: 'Payment Method', value: data.paymentMethod },
+                    { label: 'Notes', value: data.notes || 'None' }
+                ];
+
+                for (var i = 0; i < fields.length; i++) {
+                    var item = document.createElement('div');
+                    item.className = 'summary-item';
+                    var label = document.createElement('span');
+                    label.className = 'summary-label';
+                    label.textContent = fields[i].label + ': ';
+                    var value = document.createElement('span');
+                    value.textContent = fields[i].value;
+                    item.appendChild(label);
+                    item.appendChild(value);
+                    summaryDiv.appendChild(item);
+                }
+
+                formSection.hidden = true;
+                confirmationSection.hidden = false;
+            }
+
+            function prefillForm(data) {
+                form.fullName.value = data.fullName || '';
+                form.email.value = data.email || '';
+                form.phone.value = data.phone || '';
+                adultsInput.value = data.adults != null ? data.adults : 1;
+                childrenInput.value = data.children != null ? data.children : 0;
+                setRadioValue('reservingRoom', data.reservingRoom || '');
+                setRadioValue('breakfast', data.breakfast || '');
+                setRadioValue('museum', data.museum || '');
+                setRadioValue('paymentMethod', data.paymentMethod || '');
+                form.notes.value = data.notes || '';
+                updateTotal();
+            }
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (!validate()) return;
+                var data = getData();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                showConfirmation(data);
+            });
+
+            btnUpdate.addEventListener('click', function () {
+                confirmationSection.hidden = true;
+                formSection.hidden = false;
+            });
+
+            // On load: check localStorage
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    var data = JSON.parse(saved);
+                    prefillForm(data);
+                    showConfirmation(data);
+                } catch (e) {
+                    // ignore corrupt data
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
