@@ -136,8 +136,37 @@
             color: #888;
         }
 
-        /* Hotel placeholder */
-        .placeholder-note {
+        /* Detail list inside info cards */
+        .detail-list {
+            list-style: none;
+            margin: 0 0 0.75rem 0;
+            padding: 0;
+            font-size: 0.95rem;
+        }
+
+        .detail-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 0;
+        }
+
+        .detail-list .label {
+            font-weight: 600;
+            color: #7B2D42;
+        }
+
+        /* Critical date callout */
+        .critical-date {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            border-radius: 5px;
+            padding: 1rem 1.25rem;
+            margin: 0.75rem 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Pending note */
+        .pending-note {
             background-color: #FAF3E0;
             border: 1px dashed #C8902A;
             border-radius: 5px;
@@ -264,9 +293,32 @@
         </div>
 
         <div class="info-card">
-            <h2>Hotel Information</h2>
-            <div class="placeholder-note">
-                Hotel block details are being finalized and will be posted here soon. Check back for group rate information and booking instructions.
+            <h2>Hotel Accommodation</h2>
+            <p>Our reunion hotel is the <strong>Hilton Alexandria Old Town</strong>, located at 1767 King Street, Alexandria, VA 22314.</p>
+            <ul class="detail-list">
+                <li><span class="label">Dates:</span> Friday, July 17 – Sunday, July 19, 2026</li>
+                <li><span class="label">Room Rate:</span> $169/night + 15.5% tax + $1.25/night facility fee (approximately $195/night all-in — this is an approximate estimate and not a guaranteed final total)</li>
+                <li><span class="label">Parking:</span> $29/night (discounted group rate)</li>
+                <li><span class="label">Wi-Fi:</span> Included</li>
+            </ul>
+            <div class="payment-highlight">
+                <p class="method-primary">Book Within the Reunion Room Block</p>
+                <p>To receive the discounted group rate of $169/night, be sure to book your room within the Rowell Family Reunion room block. Booking details will be shared by email — contact Lorenzo Slay at <a href="mailto:lorenzo.slay@slaycorp.co">lorenzo.slay@slaycorp.co</a> if you need assistance.</p>
+            </div>
+            <div class="pending-note">
+                Banquet pricing details are still being confirmed with the hotel. Final per-person costs will be posted here once available.
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h2>Saturday Museum Excursion</h2>
+            <p>On Saturday morning, we will visit the <strong>National Museum of African American History &amp; Culture</strong> in Washington, DC — approximately 7 miles from the hotel.</p>
+            <ul class="detail-list">
+                <li><span class="label">Admission:</span> Free (timed-entry pass required)</li>
+                <li><span class="label">Transportation:</span> Charter bus from the hotel</li>
+            </ul>
+            <div class="critical-date">
+                Mark your calendar: Timed-entry passes for July release on Monday, May 18, 2026 at 9:00 AM ET. Passes go fast — be ready to book as soon as they open.
             </div>
         </div>
 
