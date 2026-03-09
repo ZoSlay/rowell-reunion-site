@@ -58,14 +58,6 @@
             padding-bottom: 2px;
         }
 
-        .site-nav .nav-disabled {
-            color: #FAF3E0;
-            opacity: 0.4;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 0.95rem;
-            cursor: default;
-        }
-
         /* Hero Banner */
         .hero-banner {
             background-color: #7B2D42;
@@ -99,6 +91,10 @@
             position: relative;
         }
 
+        .day-divider:first-child {
+            margin-top: 0;
+        }
+
         .day-divider::before {
             content: "";
             position: absolute;
@@ -128,118 +124,144 @@
             margin-top: 0.25rem;
         }
 
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding: 1rem 0;
-        }
-
-        .timeline::before {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background-color: #C8902A;
-            transform: translateX(-50%);
-        }
-
-        .timeline-item {
-            position: relative;
-            width: 45%;
-            margin-bottom: 2rem;
-        }
-
-        .timeline-item:nth-child(odd) {
-            margin-left: 5%;
-        }
-
-        .timeline-item:nth-child(even) {
-            margin-left: 50%;
-        }
-
-        /* Timeline dot */
-        .timeline-item::before {
-            content: "";
-            position: absolute;
-            width: 14px;
-            height: 14px;
-            background-color: #C8902A;
-            border: 3px solid #FAF3E0;
-            border-radius: 50%;
-            top: 1.5rem;
-            z-index: 1;
-        }
-
-        .timeline-item:nth-child(odd)::before {
-            right: -7%;
-            transform: translateX(50%);
-        }
-
-        .timeline-item:nth-child(even)::before {
-            left: -7%;
-            transform: translateX(-50%);
-        }
-
-        /* Event Cards */
-        .event-card {
+        /* Schedule table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
             background-color: #fff;
             border-radius: 10px;
-            padding: 1.5rem;
+            overflow: hidden;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            transition: box-shadow 0.2s;
         }
 
-        .event-card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        .schedule-table th {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            font-weight: 600;
+            font-family: Georgia, "Times New Roman", serif;
+            padding: 0.75rem 1rem;
+            text-align: left;
         }
 
-        .event-card h3 {
-            color: #7B2D42;
-            font-size: 1.2rem;
-            margin-bottom: 0.4rem;
+        .schedule-table td {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid #e0dcd3;
+            vertical-align: top;
         }
 
-        .event-time {
-            font-size: 0.9rem;
+        .schedule-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .schedule-table td:first-child {
+            white-space: nowrap;
+            font-weight: 600;
             color: #C8902A;
-            font-weight: bold;
-            margin-bottom: 0.25rem;
+            width: 140px;
         }
 
-        .event-location {
-            font-size: 0.85rem;
-            color: #2C2C2C;
-            opacity: 0.7;
-            margin-bottom: 0.75rem;
-            font-style: italic;
-        }
-
-        .event-description {
+        /* Info note */
+        .info-note {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
             font-size: 0.95rem;
-            line-height: 1.5;
+        }
+
+        .info-note p {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-note p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Critical callout */
+        .critical-note {
+            background-color: #7B2D42;
+            color: #FAF3E0;
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* Restaurant section heading */
+        .restaurant-section-title {
+            font-size: 1.2rem;
+            color: #7B2D42;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .restaurant-intro {
+            font-size: 0.95rem;
             margin-bottom: 1rem;
         }
 
-        .btn-register {
-            display: inline-block;
-            background-color: #2A7B7B;
-            color: #fff;
+        .restaurant-group-title {
+            font-size: 1rem;
+            color: #C8902A;
+            font-weight: 700;
+            margin: 1.25rem 0 0.75rem;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        /* Restaurant cards */
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .restaurant-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+            transition: box-shadow 0.2s;
+        }
+
+        .restaurant-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .restaurant-card .r-name {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .restaurant-card .r-name a {
+            color: #7B2D42;
             text-decoration: none;
-            padding: 0.55rem 1.3rem;
-            border-radius: 5px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: background-color 0.2s;
         }
 
-        .btn-register:hover {
-            background-color: #1f6060;
+        .restaurant-card .r-name a:hover {
+            text-decoration: underline;
         }
 
-        /* Decorative divider between day sections */
+        .restaurant-card .r-meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+        }
+
+        .restaurant-card .r-highlight {
+            font-size: 0.85rem;
+            color: #2C2C2C;
+            line-height: 1.4;
+        }
+
+        /* Decorative divider */
         .section-divider {
             text-align: center;
             margin: 3rem 0 1rem;
@@ -252,6 +274,30 @@
             letter-spacing: 0.5rem;
         }
 
+        /* Register button */
+        .btn-register {
+            display: inline-block;
+            background-color: #2A7B7B;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.55rem 1.3rem;
+            border-radius: 5px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-register:hover {
+            background-color: #1f6060;
+        }
+
+        .register-cta {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -261,24 +307,8 @@
             border-top: 1px solid #e0dcd3;
         }
 
-        /* Responsive — 375px and small screens */
+        /* Responsive */
         @media (max-width: 768px) {
-            .timeline::before {
-                left: 20px;
-            }
-
-            .timeline-item {
-                width: calc(100% - 50px);
-                margin-left: 50px !important;
-                margin-bottom: 1.5rem;
-            }
-
-            .timeline-item::before {
-                left: -38px !important;
-                right: auto !important;
-                transform: none !important;
-            }
-
             .hero-banner {
                 padding: 2.5rem 1rem 2rem;
             }
@@ -294,32 +324,32 @@
             .site-nav ul {
                 gap: 1rem;
             }
+
+            .restaurant-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .schedule-table td:first-child {
+                width: auto;
+            }
         }
 
         @media (max-width: 375px) {
-            .timeline::before {
-                left: 12px;
-            }
-
-            .timeline-item {
-                width: calc(100% - 35px);
-                margin-left: 35px !important;
-            }
-
-            .timeline-item::before {
-                left: -28px !important;
-            }
-
-            .event-card {
-                padding: 1rem;
-            }
-
             .hero-banner h1 {
                 font-size: 1.4rem;
             }
 
             main {
                 padding: 1.5rem 1rem;
+            }
+
+            .schedule-table {
+                font-size: 0.8rem;
+            }
+
+            .schedule-table td,
+            .schedule-table th {
+                padding: 0.5rem 0.6rem;
             }
         }
     </style>
@@ -337,26 +367,88 @@
     </nav>
 
     <header class="hero-banner">
-        <h1>Rowell Family Reunion</h1>
-        <p class="subtitle">July 17&ndash;19, 2026 &middot; Washington DC</p>
+        <h1>Event Schedule</h1>
+        <p class="subtitle">Hilton Alexandria Old Town &middot; July 17&ndash;19, 2026</p>
     </header>
 
     <main>
         <!-- ===== FRIDAY ===== -->
         <div class="day-divider">
             <h2>Friday
-                <span class="day-date">July 17, 2026</span>
+                <span class="day-date">July 17, 2026 &mdash; Arrival Day</span>
             </h2>
         </div>
 
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="event-card">
-                    <h3>Reunion Weekend Opens</h3>
-                    <p class="event-time"><!-- PLACEHOLDER: replace with real time -->TBD</p>
-                    <p class="event-location"><!-- PLACEHOLDER: replace with real location -->TBD</p>
-                    <p class="event-description">Kick off the reunion weekend! Arrive, settle in, and reconnect with family.</p>
-                </div>
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Activity</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>All day</td>
+                    <td>Arrival and check-in</td>
+                    <td>Hilton Alexandria Old Town, 1767 King Street, Alexandria VA 22314</td>
+                </tr>
+                <tr>
+                    <td>Evening</td>
+                    <td>Dinner on your own</td>
+                    <td>See dining suggestions below</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Friday Dinner Suggestions -->
+        <h3 class="restaurant-section-title">Friday Dinner Suggestions</h3>
+
+        <h4 class="restaurant-group-title">Walking Distance</h4>
+        <div class="restaurant-grid">
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/The+Majestic+Alexandria+VA" target="_blank" rel="noopener">The Majestic</a></div>
+                <div class="r-meta">American &middot; $&ndash;$$ &middot; 2 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Historic est. 1932 with live jazz</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Chadwicks+Alexandria+VA" target="_blank" rel="noopener">Chadwicks</a></div>
+                <div class="r-meta">American &middot; $&ndash;$$ &middot; 7 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Waterfront, seats 100+</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Vola's+Dockside+Grill+Alexandria+VA" target="_blank" rel="noopener">Vola&rsquo;s Dockside Grill</a></div>
+                <div class="r-meta">Seafood &middot; $&ndash;$$ &middot; 6 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Riverfront private dining</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Chart+House+Alexandria+VA" target="_blank" rel="noopener">Chart House</a></div>
+                <div class="r-meta">Seafood/Steak &middot; $$ &middot; 5 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Private room for 72, river views</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Ada's+on+the+River+Alexandria+VA" target="_blank" rel="noopener">Ada&rsquo;s on the River</a></div>
+                <div class="r-meta">Steakhouse &middot; $$ &middot; 5 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Private dining, Potomac views</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Hank's+Oyster+Bar+Alexandria+VA" target="_blank" rel="noopener">Hank&rsquo;s Oyster Bar</a></div>
+                <div class="r-meta">Seafood &middot; $$ &middot; 5 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Award-winning casual atmosphere</div>
+            </div>
+        </div>
+
+        <h4 class="restaurant-group-title">Short Rideshare</h4>
+        <div class="restaurant-grid">
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Jula's+on+Potomac+Alexandria+VA" target="_blank" rel="noopener">Jula&rsquo;s on Potomac</a></div>
+                <div class="r-meta">Fine Dining &middot; $$ &middot; 1.5 mi &middot; Groups: Yes</div>
+                <div class="r-highlight">Seats 125+, waterfront terrace</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Lena's+Wood-Fired+Pizza+Alexandria+VA" target="_blank" rel="noopener">Lena&rsquo;s Wood-Fired</a></div>
+                <div class="r-meta">Italian/Pizza &middot; $&ndash;$$ &middot; 1.5 mi &middot; Groups: Yes</div>
+                <div class="r-highlight">Top-rated pizza in Alexandria</div>
             </div>
         </div>
 
@@ -368,29 +460,133 @@
         <!-- ===== SATURDAY ===== -->
         <div class="day-divider">
             <h2>Saturday
-                <span class="day-date">July 18, 2026</span>
+                <span class="day-date">July 18, 2026 &mdash; Reunion Day</span>
             </h2>
         </div>
 
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="event-card">
-                    <h3>Smithsonian NMAAHC Visit</h3>
-                    <p class="event-time">10:00 AM</p>
-                    <p class="event-location">National Museum of African American History &amp; Culture, Washington DC</p>
-                    <p class="event-description">Explore the Smithsonian's National Museum of African American History and Culture together as a family.</p>
-                    <a href="register.html" class="btn-register">Register for Museum Trip</a>
-                </div>
-            </div>
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Activity</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>7:00&ndash;8:00 AM</td>
+                    <td>Breakfast</td>
+                    <td>Washington/Jefferson Room, Hilton Alexandria Old Town</td>
+                </tr>
+                <tr>
+                    <td>9:15 AM</td>
+                    <td>Depart for museum</td>
+                    <td>Hotel lobby</td>
+                </tr>
+                <tr>
+                    <td>9:45 AM</td>
+                    <td>Arrive at NMAAHC &mdash; group assembly and photos</td>
+                    <td>Outside NMAAHC, 1400 Constitution Ave NW, Washington DC</td>
+                </tr>
+                <tr>
+                    <td>10:00 AM</td>
+                    <td>Museum opens &mdash; group enters</td>
+                    <td>NMAAHC</td>
+                </tr>
+                <tr>
+                    <td>10:00 AM&ndash;12:00 PM</td>
+                    <td>Museum visit</td>
+                    <td>NMAAHC</td>
+                </tr>
+                <tr>
+                    <td>12:00 PM</td>
+                    <td>Depart museum</td>
+                    <td>NMAAHC</td>
+                </tr>
+                <tr>
+                    <td>12:30 PM</td>
+                    <td>Arrive back at hotel</td>
+                    <td>Hilton Alexandria Old Town</td>
+                </tr>
+                <tr>
+                    <td>12:30&ndash;4:30 PM</td>
+                    <td>Free time &mdash; lunch on your own</td>
+                    <td>Old Town Alexandria</td>
+                </tr>
+                <tr>
+                    <td>5:00 PM</td>
+                    <td>Banquet dinner begins</td>
+                    <td>Washington/Jefferson Room, Hilton Alexandria Old Town</td>
+                </tr>
+                <tr>
+                    <td>7:00 PM+</td>
+                    <td>Fellowship and family time</td>
+                    <td>Washington/Jefferson Room</td>
+                </tr>
+            </tbody>
+        </table>
 
-            <div class="timeline-item">
-                <div class="event-card">
-                    <h3>Evening Banquet Dinner</h3>
-                    <p class="event-time"><!-- PLACEHOLDER: replace with real time -->TBD</p>
-                    <p class="event-location"><!-- PLACEHOLDER: replace with real location -->TBD</p>
-                    <p class="event-description">Join us for an evening of dining, toasts, and celebration of the Rowell family legacy.</p>
-                    <a href="register.html" class="btn-register">Register for Banquet</a>
-                </div>
+        <div class="info-note">
+            <p>Museum visit is approximately 2 hours. The History Galleries require approximately 1 mile of walking. Please wear comfortable shoes and hydrate before entering.</p>
+        </div>
+
+        <div class="critical-note">
+            Timed-entry passes are required for all visitors. Passes for July will be released Monday, May 18, 2026 at 9:00 AM ET. The planning committee will secure group passes &mdash; no individual action required.
+        </div>
+
+        <div class="register-cta">
+            <a href="register.html" class="btn-register">Register Your Family</a>
+        </div>
+
+        <!-- Saturday Lunch Suggestions -->
+        <h3 class="restaurant-section-title">Saturday Lunch Suggestions</h3>
+        <p class="restaurant-intro">Lunch is on your own during the 12:30&ndash;4:30 PM free-time window. Here are some options near the hotel.</p>
+
+        <h4 class="restaurant-group-title">Walking Distance</h4>
+        <div class="restaurant-grid">
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/King+Street+Tavern+Alexandria+VA" target="_blank" rel="noopener">King Street Tavern</a></div>
+                <div class="r-meta">American Pub &middot; $ &middot; In hotel &middot; Groups: Yes</div>
+                <div class="r-highlight">Comfort food, 30+ beers</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Bob+and+Edith's+Diner+Alexandria+VA" target="_blank" rel="noopener">Bob &amp; Edith&rsquo;s Diner</a></div>
+                <div class="r-meta">American Diner &middot; $ &middot; 1 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Budget-friendly, hearty portions</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Bollywood+Masala+Alexandria+VA" target="_blank" rel="noopener">Bollywood Masala</a></div>
+                <div class="r-meta">Indian &middot; $ &middot; 1 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Vegetarian-friendly, event venue</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Chadwicks+Alexandria+VA" target="_blank" rel="noopener">Chadwicks</a></div>
+                <div class="r-meta">American &middot; $&ndash;$$ &middot; 7 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">Waterfront, seats 100+, group menus</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Fontaine+Caffe+Alexandria+VA" target="_blank" rel="noopener">Fontaine</a></div>
+                <div class="r-meta">French Crepes &middot; $ &middot; 4 min walk &middot; Groups: Yes</div>
+                <div class="r-highlight">20+ crepe varieties, kid-friendly</div>
+            </div>
+        </div>
+
+        <h4 class="restaurant-group-title">Short Rideshare</h4>
+        <div class="restaurant-grid">
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Taqueria+Poblano+Alexandria+VA" target="_blank" rel="noopener">Taqueria Poblano</a></div>
+                <div class="r-meta">Mexican &middot; $ &middot; 2 mi &middot; Groups: Yes</div>
+                <div class="r-highlight">$4.50 kids menu, outdoor patio</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Los+Tios+Alexandria+VA" target="_blank" rel="noopener">Los Tios</a></div>
+                <div class="r-meta">Tex-Mex &middot; $&ndash;$$ &middot; 1.9 mi &middot; Groups: Yes</div>
+                <div class="r-highlight">Great lunch specials and brunch</div>
+            </div>
+            <div class="restaurant-card">
+                <div class="r-name"><a href="https://www.google.com/maps/search/Evening+Star+Cafe+Alexandria+VA" target="_blank" rel="noopener">Evening Star Cafe</a></div>
+                <div class="r-meta">American &middot; $ &middot; 2 mi &middot; Groups: Yes</div>
+                <div class="r-highlight">Casual neighborhood spot</div>
             </div>
         </div>
 
@@ -402,19 +598,29 @@
         <!-- ===== SUNDAY ===== -->
         <div class="day-divider">
             <h2>Sunday
-                <span class="day-date">July 19, 2026</span>
+                <span class="day-date">July 19, 2026 &mdash; Departure Day</span>
             </h2>
         </div>
 
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="event-card">
-                    <h3>Closing Day</h3>
-                    <p class="event-time"><!-- PLACEHOLDER: replace with real time -->TBD</p>
-                    <p class="event-location"><!-- PLACEHOLDER: replace with real location -->TBD</p>
-                    <p class="event-description">Wrap up the reunion weekend with final farewells and family photos.</p>
-                </div>
-            </div>
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Activity</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Morning</td>
+                    <td>Checkout and departures</td>
+                    <td>Hilton Alexandria Old Town</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-note">
+            <p>Hotel checkout time is 11:00 AM. Please confirm directly with the hotel if you require a late checkout.</p>
         </div>
     </main>
 
