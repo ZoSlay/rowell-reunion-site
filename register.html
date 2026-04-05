@@ -773,6 +773,7 @@
     <script>
         (function () {
             var STORAGE_KEY = 'rowellRegistration';
+            var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx9YibTmYq-TbiNUvm-fpPzw6GT6BV52A04Iy5yKdGIhHkT8Isk9dOv-_rKcXCf0N-eMg/exec';
             var form = document.getElementById('reg-form');
 
             var adultsInput = document.getElementById('adults');
@@ -967,8 +968,8 @@
             }
 
             form.addEventListener('submit', function (e) {
+                e.preventDefault();
                 if (!validate()) {
-                    e.preventDefault();
                     return;
                 }
                 // Populate estimated-total hidden field
@@ -977,7 +978,38 @@
                 // Save to localStorage
                 var data = getData();
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                // Allow form to POST to Netlify and redirect to thank-you.html
+
+                // Dual-write: POST to Google Sheets
+                var nameParts = data.fullName.split(/\s+/);
+                var firstName = nameParts[0] || '';
+                var lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+                fetch(SHEETS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: 'registration',
+                        family_name: lastName,
+                        first_name: firstName,
+                        last_name: lastName,
+                        email: data.email,
+                        phone: data.phone,
+                        num_adults: data.adults,
+                        num_children: data.children,
+                        num_under5: data.under5,
+                        hotel_intent: data.hotelIntent.toLowerCase(),
+                        breakfast_count: data.breakfastCount,
+                        museum_count: data.museumCount,
+                        dietary_notes: data.notes,
+                        payment_method: data.paymentMethod,
+                        estimated_total: data.basket.total,
+                        notes: ''
+                    })
+                })
+                .catch(function () { /* Sheets write failed — silent per REUNION-011 AC4 */ })
+                .finally(function () {
+                    // Submit to Netlify Forms (backup) and redirect to thank-you.html
+                    form.submit();
+                });
             });
 
             // On load: prefill from localStorage if available

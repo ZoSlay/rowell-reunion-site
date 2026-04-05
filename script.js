@@ -1,5 +1,6 @@
 (function () {
     var STORAGE_KEY = 'rowellRsvp';
+    var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx9YibTmYq-TbiNUvm-fpPzw6GT6BV52A04Iy5yKdGIhHkT8Isk9dOv-_rKcXCf0N-eMg/exec';
 
     var form = document.getElementById('rsvp-form');
     var confirmation = document.getElementById('rsvp-confirmation');
@@ -126,6 +127,21 @@
         e.preventDefault();
         if (!validate()) return;
         var data = getData();
+
+        // POST to Google Sheets (fire-and-forget, silent failure)
+        fetch(SHEETS_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                type: 'rsvp',
+                name: data.name,
+                email: data.email,
+                num_adults: data.adults,
+                num_children: data.children,
+                dietary_restrictions: data.dietary,
+                attending: data.attending ? 'yes' : 'no'
+            })
+        }).catch(function () { /* Sheets write failed — silent per REUNION-011 */ });
+
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         showConfirmation(data);
     });
