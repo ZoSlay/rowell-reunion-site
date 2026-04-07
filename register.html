@@ -555,10 +555,6 @@
         <!-- Section 3 — Deadlines -->
         <div class="info-card">
             <h2>Important Deadlines</h2>
-            <div class="deadline-urgent">
-                <span class="deadline-date">April 30, 2026</span> &mdash; Museum excursion response needed<br>
-                Your museum excursion response is needed by April 30 so we can confirm transportation. Please register early.
-            </div>
             <ul class="deadline-list">
                 <li>
                     <span class="deadline-date">June 26, 2026</span>
@@ -662,22 +658,6 @@
                     <p class="field-note">Staying within the room block helps the group meet the minimum required reservation nights. Visit the <a href="next-steps.html">Hotel &amp; Travel page</a> for booking details.</p>
                 </div>
 
-                <!-- Activity Selections -->
-                <h3>Activity Selections</h3>
-
-                <div class="form-group">
-                    <label for="breakfast-count">How many in your party attending Saturday breakfast? <span class="required">*</span></label>
-                    <input type="number" id="breakfast-count" name="breakfastCount" min="0" value="0" required>
-                    <span class="error-msg" id="error-breakfastCount"></span>
-                </div>
-
-                <div class="form-group">
-                    <label for="museum-count">How many in your party joining the museum excursion? <span class="required">*</span></label>
-                    <input type="number" id="museum-count" name="museumCount" min="0" value="0" required>
-                    <span class="error-msg" id="error-museumCount"></span>
-                    <p class="field-note">Children under 5 are not eligible for the museum excursion head count.</p>
-                </div>
-
                 <!-- Family Total (single line, no itemization — REUNION-014) -->
                 <div class="basket-summary">
                     <h3>Family Total Due</h3>
@@ -745,9 +725,6 @@
             var childrenInput = document.getElementById('children');
             var under5Input = document.getElementById('under5');
             var totalInput = document.getElementById('total-attendees');
-            var breakfastInput = document.getElementById('breakfast-count');
-            var museumInput = document.getElementById('museum-count');
-
             var basketTotalEl = document.getElementById('basket-total');
             var perPersonDisplayEl = document.getElementById('per-person-display');
 
@@ -776,7 +753,7 @@
                 basketTotalEl.textContent = '$' + totalCost.toFixed(2);
             }
 
-            var numericInputs = [adultsInput, childrenInput, under5Input, breakfastInput, museumInput];
+            var numericInputs = [adultsInput, childrenInput, under5Input];
             for (var i = 0; i < numericInputs.length; i++) {
                 numericInputs[i].addEventListener('input', updateTotalAndBasket);
             }
@@ -829,8 +806,6 @@
                 var adults = getInt(adultsInput);
                 var children = getInt(childrenInput);
                 var under5 = getInt(under5Input);
-                var total = adults + children + under5;
-                var eligible = adults + children;
 
                 if (adults < 1) {
                     getErrorEl('adults').textContent = 'At least 1 adult is required.';
@@ -850,24 +825,6 @@
                     valid = false;
                 }
 
-                var breakfastCount = getInt(breakfastInput);
-                if (breakfastCount < 0) {
-                    getErrorEl('breakfastCount').textContent = 'Enter 0 or more.';
-                    valid = false;
-                } else if (breakfastCount > total) {
-                    getErrorEl('breakfastCount').textContent = 'Cannot exceed total attendees (' + total + ').';
-                    valid = false;
-                }
-
-                var museumCount = getInt(museumInput);
-                if (museumCount < 0) {
-                    getErrorEl('museumCount').textContent = 'Enter 0 or more.';
-                    valid = false;
-                } else if (museumCount > eligible) {
-                    getErrorEl('museumCount').textContent = 'Cannot exceed adults + children 5\u201312 (' + eligible + '). Children under 5 are not eligible.';
-                    valid = false;
-                }
-
                 if (!getRadioValue('paymentMethod')) {
                     getErrorEl('paymentMethod').textContent = 'Please select a payment method.';
                     valid = false;
@@ -880,8 +837,6 @@
                 var adults = getInt(adultsInput);
                 var children = getInt(childrenInput);
                 var under5 = getInt(under5Input);
-                var breakfastCount = getInt(breakfastInput);
-                var museumCount = getInt(museumInput);
 
                 var totalAttendees = adults + children + under5;
                 var totalCost = TOTAL_PER_PERSON_PLACEHOLDER * totalAttendees;
@@ -895,8 +850,6 @@
                     under5: under5,
                     totalAttendees: totalAttendees,
                     hotelIntent: getRadioValue('hotelIntent'),
-                    breakfastCount: breakfastCount,
-                    museumCount: museumCount,
                     paymentMethod: getRadioValue('paymentMethod'),
                     notes: form.notes.value.trim(),
                     basket: {
@@ -912,8 +865,6 @@
                 adultsInput.value = data.adults != null ? data.adults : 1;
                 childrenInput.value = data.children != null ? data.children : 0;
                 under5Input.value = data.under5 != null ? data.under5 : 0;
-                breakfastInput.value = data.breakfastCount != null ? data.breakfastCount : 0;
-                museumInput.value = data.museumCount != null ? data.museumCount : 0;
                 setRadioValue('hotelIntent', data.hotelIntent || '');
                 setRadioValue('paymentMethod', data.paymentMethod || '');
                 form.notes.value = data.notes || '';
@@ -950,8 +901,10 @@
                         num_children: data.children,
                         num_under5: data.under5,
                         hotel_intent: data.hotelIntent.toLowerCase(),
-                        breakfast_count: data.breakfastCount,
-                        museum_count: data.museumCount,
+                        // REUNION-016: full participation assumed; constant "ALL" preserves
+                        // Sheets schema and downstream dashboard logic.
+                        breakfast_count: 'ALL',
+                        museum_count: 'ALL',
                         dietary_notes: data.notes,
                         payment_method: data.paymentMethod,
                         estimated_total: data.basket.total,
