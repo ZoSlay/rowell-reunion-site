@@ -528,7 +528,6 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="events.html">Events</a></li>
             <li><a href="register.html" class="nav-active">Registration</a></li>
-            <li><a href="merchandise.html">Merchandise</a></li>
             <li><a href="feedback.html">Feedback</a></li>
             <li><a href="next-steps.html">Next Steps</a></li>
             <li><a href="dashboard.html">Dashboard</a></li>
@@ -546,41 +545,11 @@
             <p>Register your family for the Rowell Family Reunion &mdash; July 17&ndash;19, 2026 at the Hilton Alexandria Old Town, Alexandria, VA.</p>
         </div>
 
-        <!-- Section 2 — Cost Estimate Table -->
+        <!-- Section 2 — Total Due Per Person (REUNION-014: itemization removed; full participation assumed) -->
         <div class="info-card">
-            <h2>Cost Estimates Per Person</h2>
-            <table class="cost-table">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Est. Cost</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Banquet Dinner</td>
-                        <td>$123&ndash;$143</td>
-                        <td>Mandatory for all attendees 5+. Pending tax confirmation.</td>
-                    </tr>
-                    <tr>
-                        <td>Saturday Breakfast</td>
-                        <td>$39&ndash;$62</td>
-                        <td>Optional. Per person if attending. Menu TBD.</td>
-                    </tr>
-                    <tr>
-                        <td>Museum Excursion</td>
-                        <td>$25.42</td>
-                        <td>Optional. Per person if attending. Charter bus estimate.</td>
-                    </tr>
-                    <tr>
-                        <td>Children under 5</td>
-                        <td>Free</td>
-                        <td>No charge.</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="estimate-note">All amounts are estimates. Final costs confirmed after registration closes July 7, 2026.</p>
+            <h2>Total Due Per Person</h2>
+            <p class="basket-total" id="per-person-display">$0</p>
+            <p class="estimate-note">Single per-person total assuming full participation in all reunion events. Final pricing pending — will be confirmed by Lorenzo before payment is requested.</p>
         </div>
 
         <!-- Section 3 — Deadlines -->
@@ -709,16 +678,11 @@
                     <p class="field-note">Children under 5 are not eligible for the museum excursion head count.</p>
                 </div>
 
-                <!-- Basket Cost Summary -->
+                <!-- Family Total (single line, no itemization — REUNION-014) -->
                 <div class="basket-summary">
-                    <h3>Estimated Family Total</h3>
+                    <h3>Family Total Due</h3>
                     <div class="basket-total" id="basket-total">$0</div>
-                    <ul class="basket-breakdown">
-                        <li><span>Banquet</span><span id="basket-banquet">$0</span></li>
-                        <li><span>Breakfast</span><span id="basket-breakfast">$0</span></li>
-                        <li><span>Museum</span><span id="basket-museum">$0</span></li>
-                    </ul>
-                    <p class="estimate-note">This is an estimated total based on current pricing. Final amounts will be confirmed after registration closes July 7, 2026.</p>
+                    <p class="estimate-note">Total = per-person amount × total attendees. Pricing pending final confirmation.</p>
                 </div>
 
                 <!-- Additional Information -->
@@ -785,13 +749,14 @@
             var museumInput = document.getElementById('museum-count');
 
             var basketTotalEl = document.getElementById('basket-total');
-            var basketBanquetEl = document.getElementById('basket-banquet');
-            var basketBreakfastEl = document.getElementById('basket-breakfast');
-            var basketMuseumEl = document.getElementById('basket-museum');
+            var perPersonDisplayEl = document.getElementById('per-person-display');
 
-            var BANQUET_RATE = 133;
-            var BREAKFAST_RATE = 50;
-            var MUSEUM_RATE = 25.42;
+            // ----- REUNION-014 single-source pricing config -----
+            // PLACEHOLDER: real per-person total pending REUNION-015 (Lorenzo price intake).
+            // Update this single constant when real pricing arrives — do not reintroduce
+            // per-line itemization. Assumes full participation in all reunion events.
+            var TOTAL_PER_PERSON_PLACEHOLDER = 0;
+            // ----------------------------------------------------
 
             function getInt(input) {
                 var v = parseInt(input.value, 10);
@@ -805,18 +770,9 @@
                 var total = adults + children + under5;
                 totalInput.value = total;
 
-                var banquetCount = adults + children;
-                var breakfastCount = getInt(breakfastInput);
-                var museumCount = getInt(museumInput);
+                var totalCost = TOTAL_PER_PERSON_PLACEHOLDER * total;
 
-                var banquetCost = banquetCount * BANQUET_RATE;
-                var breakfastCost = breakfastCount * BREAKFAST_RATE;
-                var museumCost = museumCount * MUSEUM_RATE;
-                var totalCost = banquetCost + breakfastCost + museumCost;
-
-                basketBanquetEl.textContent = '$' + banquetCost.toFixed(0);
-                basketBreakfastEl.textContent = '$' + breakfastCost.toFixed(0);
-                basketMuseumEl.textContent = '$' + museumCost.toFixed(2);
+                perPersonDisplayEl.textContent = '$' + TOTAL_PER_PERSON_PLACEHOLDER.toFixed(2);
                 basketTotalEl.textContent = '$' + totalCost.toFixed(2);
             }
 
@@ -927,9 +883,8 @@
                 var breakfastCount = getInt(breakfastInput);
                 var museumCount = getInt(museumInput);
 
-                var banquetCost = (adults + children) * BANQUET_RATE;
-                var breakfastCost = breakfastCount * BREAKFAST_RATE;
-                var museumCost = museumCount * MUSEUM_RATE;
+                var totalAttendees = adults + children + under5;
+                var totalCost = TOTAL_PER_PERSON_PLACEHOLDER * totalAttendees;
 
                 return {
                     fullName: form.fullName.value.trim(),
@@ -938,17 +893,14 @@
                     adults: adults,
                     children: children,
                     under5: under5,
-                    totalAttendees: adults + children + under5,
+                    totalAttendees: totalAttendees,
                     hotelIntent: getRadioValue('hotelIntent'),
                     breakfastCount: breakfastCount,
                     museumCount: museumCount,
                     paymentMethod: getRadioValue('paymentMethod'),
                     notes: form.notes.value.trim(),
                     basket: {
-                        banquet: banquetCost,
-                        breakfast: breakfastCost,
-                        museum: museumCost,
-                        total: banquetCost + breakfastCost + museumCost
+                        total: totalCost
                     }
                 };
             }
