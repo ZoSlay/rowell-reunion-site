@@ -348,6 +348,7 @@
     <script>
         (function () {
             var STORAGE_KEY = 'rowellFeedback';
+            var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzix3wDjHeZMENeO65MQreNRbYt0vomI7dHDYLxPVbXONUv8w7yiqeIJ6jhuqnCUu4nTA/exec';
             var form = document.getElementById('feedback-form');
             var formSection = document.getElementById('form-section');
             var confirmationSection = document.getElementById('confirmation-section');
@@ -471,7 +472,21 @@
                     timestamp: new Date().toISOString()
                 };
 
+                // Dual-write: localStorage first (always succeeds)
                 saveEntry(entry);
+
+                // POST to Apps Script for email delivery (fire-and-forget)
+                fetch(SHEETS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: 'feedback',
+                        name: entry.name,
+                        email: entry.email,
+                        category: entry.category,
+                        message: entry.message
+                    })
+                }).catch(function () { /* Email send failed — localStorage backup preserved */ });
+
                 showConfirmation(entry);
             });
 
