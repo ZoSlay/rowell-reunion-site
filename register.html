@@ -549,28 +549,41 @@
             <p>Register your family for the Rowell Family Reunion &mdash; July 17&ndash;19, 2026 at the Hilton Alexandria Old Town, Alexandria, VA.</p>
         </div>
 
-        <!-- Section 2 — Total Due Per Person (REUNION-014: itemization removed; full participation assumed) -->
+        <!-- Section 2 — Reunion Package -->
         <div class="info-card">
-            <h2>Total Due Per Person</h2>
-            <p class="basket-total" id="per-person-display">$0</p>
-            <p class="estimate-note">Single per-person total assuming full participation in all reunion events. Final pricing pending — will be confirmed by Lorenzo before payment is requested.</p>
+            <h2>Reunion Package</h2>
+            <p>Your registration covers everything for the weekend:</p>
+            <ul style="margin: 0.5rem 0 1rem 1.5rem; font-size: 0.95rem;">
+                <li>Breakfast (Saturday morning)</li>
+                <li>Banquet dinner (Saturday evening)</li>
+                <li>Museum trip (NMAAHC)</li>
+                <li>Reunion t-shirt</li>
+                <li>Welcome gift bag</li>
+            </ul>
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                <div style="background-color: #FAF3E0; border-radius: 8px; padding: 1rem 1.5rem; flex: 1; min-width: 180px; text-align: center;">
+                    <div style="font-size: 0.9rem; color: #888; margin-bottom: 0.25rem;">Adult (13+)</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #5C4A2E;">$305</div>
+                </div>
+                <div style="background-color: #FAF3E0; border-radius: 8px; padding: 1rem 1.5rem; flex: 1; min-width: 180px; text-align: center;">
+                    <div style="font-size: 0.9rem; color: #888; margin-bottom: 0.25rem;">Child (5&ndash;12)</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #5C4A2E;">$240</div>
+                </div>
+            </div>
+            <p style="margin-top: 0.75rem; font-size: 0.9rem; color: #888; font-style: italic;">Children under 5 attend free.</p>
         </div>
 
         <!-- Section 3 — Deadlines -->
         <div class="info-card">
             <h2>Important Deadlines</h2>
+            <div class="deadline-urgent">
+                <span class="deadline-date">June 15, 2026</span>
+                Registration deadline &mdash; all moneys due
+            </div>
             <ul class="deadline-list">
                 <li>
                     <span class="deadline-date">June 26, 2026</span>
                     Room block cut-off &mdash; unreserved rooms release to public
-                </li>
-                <li>
-                    <span class="deadline-date">July 3, 2026</span>
-                    Balance due to hotel &mdash; $2,500 remaining balance due
-                </li>
-                <li>
-                    <span class="deadline-date">July 7, 2026</span>
-                    Family registration deadline &mdash; required to guarantee banquet count
                 </li>
                 <li>
                     <span class="deadline-date">July 10, 2026</span>
@@ -594,7 +607,7 @@
 
                 <input type="hidden" name="form-name" value="rowell-registration">
                 <input type="hidden" name="_subject" value="New Rowell Reunion Registration">
-                <input type="hidden" name="estimated-total" id="estimated-total-field">
+                <input type="hidden" name="total-due" id="total-due-field">
 
                 <p class="hidden" style="display:none" aria-hidden="true">
                     <label>Do not fill this out:
@@ -636,37 +649,21 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="under5">Children Under 5 <span class="required">*</span></label>
-                        <input type="number" id="under5" name="under5" min="0" value="0" required>
-                        <span class="error-msg" id="error-under5"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="total-attendees">Total Attendees</label>
-                        <input type="text" id="total-attendees" name="totalAttendees" readonly>
-                    </div>
-                </div>
-
-                <!-- Hotel Intent -->
-                <h3>Hotel</h3>
-
                 <div class="form-group">
-                    <label>Are you planning to stay at the Hilton Alexandria Old Town? <span class="required">*</span></label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="hotelIntent" value="Yes" required> Yes</label>
-                        <label><input type="radio" name="hotelIntent" value="No"> No</label>
-                        <label><input type="radio" name="hotelIntent" value="Not sure"> Not sure</label>
-                    </div>
-                    <span class="error-msg" id="error-hotelIntent"></span>
-                    <p class="field-note">Staying within the room block helps the group meet the minimum required reservation nights. Visit the <a href="next-steps.html">Hotel &amp; Travel page</a> for booking details.</p>
+                    <label for="under5">Children Under 5 <span class="required">*</span></label>
+                    <input type="number" id="under5" name="under5" min="0" value="0" required>
+                    <span class="error-msg" id="error-under5"></span>
                 </div>
 
-                <!-- Family Total (single line, no itemization — REUNION-014) -->
+                <!-- Family Total -->
                 <div class="basket-summary">
                     <h3>Family Total Due</h3>
+                    <ul class="basket-breakdown">
+                        <li><span id="basket-adults-label">0 adults × $305</span> <span id="basket-adults-cost">$0</span></li>
+                        <li><span id="basket-children-label">0 children × $240</span> <span id="basket-children-cost">$0</span></li>
+                        <li><span id="basket-under5-label">0 children under 5</span> <span>Free</span></li>
+                    </ul>
                     <div class="basket-total" id="basket-total">$0</div>
-                    <p class="estimate-note">Total = per-person amount × total attendees. Pricing pending final confirmation.</p>
                 </div>
 
                 <!-- Additional Information -->
@@ -722,22 +719,16 @@
     <script>
         (function () {
             var STORAGE_KEY = 'rowellRegistration';
-            var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx9YibTmYq-TbiNUvm-fpPzw6GT6BV52A04Iy5yKdGIhHkT8Isk9dOv-_rKcXCf0N-eMg/exec';
+            var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzix3wDjHeZMENeO65MQreNRbYt0vomI7dHDYLxPVbXONUv8w7yiqeIJ6jhuqnCUu4nTA/exec';
             var form = document.getElementById('reg-form');
 
             var adultsInput = document.getElementById('adults');
             var childrenInput = document.getElementById('children');
             var under5Input = document.getElementById('under5');
-            var totalInput = document.getElementById('total-attendees');
             var basketTotalEl = document.getElementById('basket-total');
-            var perPersonDisplayEl = document.getElementById('per-person-display');
 
-            // ----- REUNION-014 single-source pricing config -----
-            // PLACEHOLDER: real per-person total pending REUNION-015 (Lorenzo price intake).
-            // Update this single constant when real pricing arrives — do not reintroduce
-            // per-line itemization. Assumes full participation in all reunion events.
-            var TOTAL_PER_PERSON_PLACEHOLDER = 0;
-            // ----------------------------------------------------
+            var ADULT_PRICE = 305;
+            var CHILD_PRICE = 240;
 
             function getInt(input) {
                 var v = parseInt(input.value, 10);
@@ -748,13 +739,16 @@
                 var adults = getInt(adultsInput);
                 var children = getInt(childrenInput);
                 var under5 = getInt(under5Input);
-                var total = adults + children + under5;
-                totalInput.value = total;
+                var adultCost = adults * ADULT_PRICE;
+                var childCost = children * CHILD_PRICE;
+                var totalCost = adultCost + childCost;
 
-                var totalCost = TOTAL_PER_PERSON_PLACEHOLDER * total;
-
-                perPersonDisplayEl.textContent = '$' + TOTAL_PER_PERSON_PLACEHOLDER.toFixed(2);
-                basketTotalEl.textContent = '$' + totalCost.toFixed(2);
+                document.getElementById('basket-adults-label').textContent = adults + ' adult' + (adults !== 1 ? 's' : '') + ' \u00D7 $305';
+                document.getElementById('basket-adults-cost').textContent = '$' + adultCost;
+                document.getElementById('basket-children-label').textContent = children + ' child' + (children !== 1 ? 'ren' : '') + ' \u00D7 $240';
+                document.getElementById('basket-children-cost').textContent = '$' + childCost;
+                document.getElementById('basket-under5-label').textContent = under5 + ' child' + (under5 !== 1 ? 'ren' : '') + ' under 5';
+                basketTotalEl.textContent = '$' + totalCost;
             }
 
             var numericInputs = [adultsInput, childrenInput, under5Input];
@@ -824,11 +818,6 @@
                     valid = false;
                 }
 
-                if (!getRadioValue('hotelIntent')) {
-                    getErrorEl('hotelIntent').textContent = 'Please select an option.';
-                    valid = false;
-                }
-
                 if (!getRadioValue('paymentMethod')) {
                     getErrorEl('paymentMethod').textContent = 'Please select a payment method.';
                     valid = false;
@@ -842,8 +831,7 @@
                 var children = getInt(childrenInput);
                 var under5 = getInt(under5Input);
 
-                var totalAttendees = adults + children + under5;
-                var totalCost = TOTAL_PER_PERSON_PLACEHOLDER * totalAttendees;
+                var totalDue = (adults * ADULT_PRICE) + (children * CHILD_PRICE);
 
                 return {
                     fullName: form.fullName.value.trim(),
@@ -852,13 +840,9 @@
                     adults: adults,
                     children: children,
                     under5: under5,
-                    totalAttendees: totalAttendees,
-                    hotelIntent: getRadioValue('hotelIntent'),
                     paymentMethod: getRadioValue('paymentMethod'),
                     notes: form.notes.value.trim(),
-                    basket: {
-                        total: totalCost
-                    }
+                    totalDue: totalDue
                 };
             }
 
@@ -869,7 +853,6 @@
                 adultsInput.value = data.adults != null ? data.adults : 1;
                 childrenInput.value = data.children != null ? data.children : 0;
                 under5Input.value = data.under5 != null ? data.under5 : 0;
-                setRadioValue('hotelIntent', data.hotelIntent || '');
                 setRadioValue('paymentMethod', data.paymentMethod || '');
                 form.notes.value = data.notes || '';
                 updateTotalAndBasket();
@@ -880,11 +863,10 @@
                 if (!validate()) {
                     return;
                 }
-                // Populate estimated-total hidden field
-                document.getElementById('estimated-total-field').value =
-                    basketTotalEl.textContent;
                 // Save to localStorage
                 var data = getData();
+                // Populate hidden total field
+                document.getElementById('total-due-field').value = data.totalDue;
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
                 // Dual-write: POST to Google Sheets
@@ -904,14 +886,9 @@
                         num_adults: data.adults,
                         num_children: data.children,
                         num_under5: data.under5,
-                        hotel_intent: data.hotelIntent.toLowerCase(),
-                        // REUNION-016: full participation assumed; constant "ALL" preserves
-                        // Sheets schema and downstream dashboard logic.
-                        breakfast_count: 'ALL',
-                        museum_count: 'ALL',
                         dietary_notes: data.notes,
                         payment_method: data.paymentMethod,
-                        estimated_total: data.basket.total,
+                        total_due: data.totalDue,
                         notes: ''
                     })
                 })
