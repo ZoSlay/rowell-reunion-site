@@ -85,7 +85,32 @@ function handleRsvp(data) {
 }
 
 function handleFeedback(data) {
-  // Placeholder for REUNION-021 — feedback email integration
+  var recipient = 'rowellfamilyreunion2026@gmail.com';
+  var category = data.category || 'General';
+  var subject = 'Reunion Site Feedback — ' + category;
+
+  var body = 'Rowell Family Reunion — Feedback Submission\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n'
+    + 'Name: ' + (data.name || 'Not provided') + '\n'
+    + 'Email: ' + (data.email || 'Not provided') + '\n'
+    + 'Category: ' + category + '\n\n'
+    + 'Message:\n' + (data.message || '') + '\n\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+    + 'Submitted: ' + new Date().toISOString() + '\n'
+    + 'Source: Reunion website feedback form\n';
+
+  var emailOptions = {
+    to: recipient,
+    subject: subject,
+    body: body
+  };
+
+  if (data.email) {
+    emailOptions.replyTo = data.email;
+  }
+
+  MailApp.sendEmail(emailOptions);
+
   return jsonResponse({ status: 'success', type: 'feedback' });
 }
 
