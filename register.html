@@ -607,7 +607,7 @@
 
                 <input type="hidden" name="form-name" value="rowell-registration">
                 <input type="hidden" name="_subject" value="New Rowell Reunion Registration">
-                <input type="hidden" name="estimated-total" id="estimated-total-field">
+                <input type="hidden" name="total-due" id="total-due-field">
 
                 <p class="hidden" style="display:none" aria-hidden="true">
                     <label>Do not fill this out:
@@ -649,30 +649,10 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="under5">Children Under 5 <span class="required">*</span></label>
-                        <input type="number" id="under5" name="under5" min="0" value="0" required>
-                        <span class="error-msg" id="error-under5"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="total-attendees">Total Attendees</label>
-                        <input type="text" id="total-attendees" name="totalAttendees" readonly>
-                    </div>
-                </div>
-
-                <!-- Hotel Intent -->
-                <h3>Hotel</h3>
-
                 <div class="form-group">
-                    <label>Are you planning to stay at the Hilton Alexandria Old Town? <span class="required">*</span></label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="hotelIntent" value="Yes" required> Yes</label>
-                        <label><input type="radio" name="hotelIntent" value="No"> No</label>
-                        <label><input type="radio" name="hotelIntent" value="Not sure"> Not sure</label>
-                    </div>
-                    <span class="error-msg" id="error-hotelIntent"></span>
-                    <p class="field-note">Staying within the room block helps the group meet the minimum required reservation nights. Visit the <a href="next-steps.html">Hotel &amp; Travel page</a> for booking details.</p>
+                    <label for="under5">Children Under 5 <span class="required">*</span></label>
+                    <input type="number" id="under5" name="under5" min="0" value="0" required>
+                    <span class="error-msg" id="error-under5"></span>
                 </div>
 
                 <!-- Family Total -->
@@ -745,7 +725,6 @@
             var adultsInput = document.getElementById('adults');
             var childrenInput = document.getElementById('children');
             var under5Input = document.getElementById('under5');
-            var totalInput = document.getElementById('total-attendees');
             var basketTotalEl = document.getElementById('basket-total');
 
             var ADULT_PRICE = 305;
@@ -760,9 +739,6 @@
                 var adults = getInt(adultsInput);
                 var children = getInt(childrenInput);
                 var under5 = getInt(under5Input);
-                var total = adults + children + under5;
-                totalInput.value = total;
-
                 var adultCost = adults * ADULT_PRICE;
                 var childCost = children * CHILD_PRICE;
                 var totalCost = adultCost + childCost;
@@ -842,11 +818,6 @@
                     valid = false;
                 }
 
-                if (!getRadioValue('hotelIntent')) {
-                    getErrorEl('hotelIntent').textContent = 'Please select an option.';
-                    valid = false;
-                }
-
                 if (!getRadioValue('paymentMethod')) {
                     getErrorEl('paymentMethod').textContent = 'Please select a payment method.';
                     valid = false;
@@ -860,7 +831,6 @@
                 var children = getInt(childrenInput);
                 var under5 = getInt(under5Input);
 
-                var totalAttendees = adults + children + under5;
                 var totalDue = (adults * ADULT_PRICE) + (children * CHILD_PRICE);
 
                 return {
@@ -870,8 +840,6 @@
                     adults: adults,
                     children: children,
                     under5: under5,
-                    totalAttendees: totalAttendees,
-                    hotelIntent: getRadioValue('hotelIntent'),
                     paymentMethod: getRadioValue('paymentMethod'),
                     notes: form.notes.value.trim(),
                     totalDue: totalDue
@@ -885,7 +853,6 @@
                 adultsInput.value = data.adults != null ? data.adults : 1;
                 childrenInput.value = data.children != null ? data.children : 0;
                 under5Input.value = data.under5 != null ? data.under5 : 0;
-                setRadioValue('hotelIntent', data.hotelIntent || '');
                 setRadioValue('paymentMethod', data.paymentMethod || '');
                 form.notes.value = data.notes || '';
                 updateTotalAndBasket();
@@ -896,10 +863,10 @@
                 if (!validate()) {
                     return;
                 }
-                // Populate hidden total field
-                document.getElementById('estimated-total-field').value = data.totalDue;
                 // Save to localStorage
                 var data = getData();
+                // Populate hidden total field
+                document.getElementById('total-due-field').value = data.totalDue;
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
                 // Dual-write: POST to Google Sheets
