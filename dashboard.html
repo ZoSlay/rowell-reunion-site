@@ -6,6 +6,11 @@
     <title>Dashboard — Rowell Family Reunion 2026</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        .site-nav { background-color: #6B2D3E; }
+        .hero { background-color: #6B2D3E; }
+        h2 { color: #6B2D3E; }
+        .site-nav .nav-active { border-bottom-color: #C8902A; }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -28,7 +33,7 @@
         }
 
         .stat-card.active-filter {
-            border: 2px solid #3b5d3b;
+            border: 2px solid #6B2D3E;
         }
 
         .stat-label {
@@ -40,7 +45,7 @@
         .stat-value {
             font-size: 1.6rem;
             font-weight: bold;
-            color: #3b5d3b;
+            color: #6B2D3E;
         }
 
         .finance-grid {
@@ -58,7 +63,7 @@
         }
 
         .finance-card.highlight {
-            background-color: #3b5d3b;
+            background-color: #6B2D3E;
         }
 
         .finance-card.highlight .finance-label {
@@ -78,11 +83,11 @@
         .finance-value {
             font-size: 1.6rem;
             font-weight: bold;
-            color: #3b5d3b;
+            color: #6B2D3E;
         }
 
         .finance-value.surplus {
-            color: #3b5d3b;
+            color: #6B2D3E;
         }
 
         .finance-value.deficit {
@@ -99,7 +104,7 @@
         }
 
         .btn-refresh {
-            background-color: #3b5d3b;
+            background-color: #6B2D3E;
             color: #faf9f6;
             border: none;
             padding: 0.4rem 1rem;
@@ -136,12 +141,12 @@
 
         .admin-gate-card input:focus {
             outline: none;
-            border-color: #3b5d3b;
+            border-color: #6B2D3E;
             box-shadow: 0 0 0 2px rgba(59, 93, 59, 0.2);
         }
 
         .btn-admin {
-            background-color: #3b5d3b;
+            background-color: #6B2D3E;
             color: #faf9f6;
             border: none;
             padding: 0.5rem 1.2rem;
@@ -180,7 +185,7 @@
 
         .filter-row input:focus {
             outline: none;
-            border-color: #3b5d3b;
+            border-color: #6B2D3E;
             box-shadow: 0 0 0 2px rgba(59, 93, 59, 0.2);
         }
 
@@ -197,7 +202,7 @@
 
         .active-drill {
             font-size: 0.85rem;
-            color: #3b5d3b;
+            color: #6B2D3E;
             font-weight: bold;
             margin-bottom: 0.5rem;
         }
@@ -214,7 +219,7 @@
         }
 
         .reg-table th {
-            background-color: #3b5d3b;
+            background-color: #6B2D3E;
             color: #faf9f6;
             padding: 0.6rem 0.75rem;
             text-align: left;
@@ -236,7 +241,7 @@
             background-color: #f0ece2;
         }
 
-        .status-paid { color: #3b5d3b; font-weight: bold; }
+        .status-paid { color: #6B2D3E; font-weight: bold; }
         .status-partial { color: #b8860b; font-weight: bold; }
         .status-unpaid { color: #a03030; font-weight: bold; }
 
