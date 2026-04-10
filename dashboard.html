@@ -43,63 +43,50 @@
             color: #3b5d3b;
         }
 
-        .budget-section {
+        .finance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
-        .budget-item {
-            margin-bottom: 1rem;
-        }
-
-        .budget-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .budget-bar-bg {
-            background-color: #e0dcd3;
-            border-radius: 4px;
-            height: 20px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .budget-bar-fill {
-            background-color: #3b5d3b;
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-
-        .progress-section {
+        .finance-card {
             background-color: #f0ece2;
             border-radius: 6px;
             padding: 1.25rem;
-            margin-bottom: 1.5rem;
             text-align: center;
         }
 
-        .progress-pct {
-            font-size: 1.3rem;
+        .finance-card.highlight {
+            background-color: #3b5d3b;
+        }
+
+        .finance-card.highlight .finance-label {
+            color: #d4c9a8;
+        }
+
+        .finance-card.highlight .finance-value {
+            color: #faf9f6;
+        }
+
+        .finance-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .finance-value {
+            font-size: 1.6rem;
             font-weight: bold;
             color: #3b5d3b;
-            margin-bottom: 0.5rem;
         }
 
-        .progress-bar-bg {
-            background-color: #e0dcd3;
-            border-radius: 4px;
-            height: 14px;
-            overflow: hidden;
+        .finance-value.surplus {
+            color: #3b5d3b;
         }
 
-        .progress-bar-fill {
-            background-color: #d4c9a8;
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s;
+        .finance-value.deficit {
+            color: #a03030;
         }
 
         .refresh-row {
@@ -260,54 +247,6 @@
             font-style: italic;
         }
 
-        .comparison-section {
-            margin-top: 2rem;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .comparison-card {
-            background-color: #f0ece2;
-            border-radius: 6px;
-            padding: 1.25rem;
-        }
-
-        .comparison-card h3 {
-            font-size: 1rem;
-            color: #3b5d3b;
-            margin-bottom: 0.5rem;
-        }
-
-        .comparison-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.85rem;
-        }
-
-        .comparison-list li {
-            padding: 0.25rem 0;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-
-        .comparison-count {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #3b5d3b;
-        }
-
-        .comparison-note {
-            font-size: 0.8rem;
-            color: #888;
-            font-style: italic;
-            margin-top: 0.5rem;
-        }
-
         .error-banner {
             background-color: #f0ece2;
             border-left: 4px solid #a03030;
@@ -319,21 +258,17 @@
         }
 
         @media (max-width: 480px) {
-            .stats-grid {
+            .stats-grid, .finance-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .stat-value {
+            .stat-value, .finance-value {
                 font-size: 1.3rem;
             }
 
             .admin-gate-card {
                 flex-direction: column;
                 align-items: stretch;
-            }
-
-            .comparison-grid {
-                grid-template-columns: 1fr;
             }
 
             .filter-row {
@@ -371,59 +306,38 @@
             <h2>Registration Progress</h2>
 
             <div class="stats-grid">
-                <div class="stat-card" data-filter="all-families">
-                    <div class="stat-label">Families Registered</div>
-                    <div class="stat-value" id="stat-families">0</div>
-                </div>
                 <div class="stat-card" data-filter="all">
                     <div class="stat-label">Individuals Registered</div>
                     <div class="stat-value" id="stat-individuals">0</div>
                 </div>
                 <div class="stat-card" data-filter="paid">
-                    <div class="stat-label">Total Collected</div>
-                    <div class="stat-value" id="stat-collected">$0</div>
+                    <div class="stat-label">Paid</div>
+                    <div class="stat-value" id="stat-paid-count">0</div>
                 </div>
                 <div class="stat-card" data-filter="unpaid">
-                    <div class="stat-label">Remaining</div>
-                    <div class="stat-value" id="stat-remaining">$0</div>
+                    <div class="stat-label">Unpaid</div>
+                    <div class="stat-value" id="stat-unpaid-count">0</div>
                 </div>
             </div>
 
-            <div class="progress-section">
-                <div class="progress-pct" id="progress-pct">0% of expected registrations</div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
-                </div>
-            </div>
+            <h2>Financial Summary</h2>
 
-            <h2>Budget Tracking</h2>
-            <div class="budget-section">
-                <div class="budget-item" data-filter="banquet">
-                    <div class="budget-label">
-                        <span>Banquet</span>
-                        <span id="budget-banquet-text">$0 / $10,000</span>
-                    </div>
-                    <div class="budget-bar-bg">
-                        <div class="budget-bar-fill" id="budget-banquet-fill" style="width:0%"></div>
-                    </div>
+            <div class="finance-grid">
+                <div class="finance-card">
+                    <div class="finance-label">Deposit</div>
+                    <div class="finance-value" id="fin-deposit">$1,000</div>
                 </div>
-                <div class="budget-item" data-filter="breakfast">
-                    <div class="budget-label">
-                        <span>Breakfast</span>
-                        <span id="budget-breakfast-text">$0 / $4,000</span>
-                    </div>
-                    <div class="budget-bar-bg">
-                        <div class="budget-bar-fill" id="budget-breakfast-fill" style="width:0%"></div>
-                    </div>
+                <div class="finance-card">
+                    <div class="finance-label">Obligation</div>
+                    <div class="finance-value" id="fin-obligation">$0</div>
                 </div>
-                <div class="budget-item" data-filter="museum">
-                    <div class="budget-label">
-                        <span>Museum Excursion</span>
-                        <span id="budget-museum-text">$0 / $2,000</span>
-                    </div>
-                    <div class="budget-bar-bg">
-                        <div class="budget-bar-fill" id="budget-museum-fill" style="width:0%"></div>
-                    </div>
+                <div class="finance-card">
+                    <div class="finance-label">Collected</div>
+                    <div class="finance-value" id="fin-collected">$0</div>
+                </div>
+                <div class="finance-card highlight">
+                    <div class="finance-label">Remaining</div>
+                    <div class="finance-value" id="fin-remaining">$0</div>
                 </div>
             </div>
 
@@ -456,36 +370,22 @@
                 <table class="reg-table" id="reg-table">
                     <thead>
                         <tr>
+                            <th data-col="family_name">Family</th>
                             <th data-col="name">Name</th>
                             <th data-col="email">Email</th>
-                            <th data-col="attendees"># Attendees</th>
-                            <th data-col="method">Payment Method</th>
-                            <th data-col="due">Amount Due</th>
-                            <th data-col="paid">Amount Paid</th>
+                            <th data-col="phone">Phone</th>
+                            <th data-col="adults">Adults</th>
+                            <th data-col="children">Children</th>
+                            <th data-col="under5">Under 5</th>
+                            <th data-col="dietary">Dietary</th>
+                            <th data-col="method">Payment</th>
+                            <th data-col="due">Due</th>
+                            <th data-col="paid">Paid</th>
                             <th data-col="status">Status</th>
                         </tr>
                     </thead>
                     <tbody id="reg-tbody"></tbody>
                 </table>
-            </div>
-
-            <div class="comparison-section">
-                <h2>RSVP vs Registration Comparison</h2>
-                <p class="comparison-note">Best-effort comparison — email-based matching</p>
-                <div class="comparison-grid" id="comparison-grid">
-                    <div class="comparison-card">
-                        <h3>RSVPd but Not Registered</h3>
-                        <ul class="comparison-list" id="comp-rsvp-only"></ul>
-                    </div>
-                    <div class="comparison-card">
-                        <h3>Registered but Not RSVPd</h3>
-                        <ul class="comparison-list" id="comp-reg-only"></ul>
-                    </div>
-                    <div class="comparison-card">
-                        <h3>Matched</h3>
-                        <div class="comparison-count" id="comp-matched">0</div>
-                    </div>
-                </div>
             </div>
         </section>
     </main>
@@ -498,18 +398,12 @@
         (function () {
             var SHEETS_ID = '1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo';
             var REG_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Registrations';
-            var RSVP_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=RSVPs';
             var ADMIN_PASSWORD = 'Rowell2026';
-            var BUDGET_CONFIG = {
-                expected_registrations: 80,
-                banquet_price: 133,
-                breakfast_price: 50,
-                museum_price: 25.42,
-                targets: { banquet: 10000, breakfast: 4000, museum: 2000 }
-            };
+            var DEPOSIT = 1000;
+            var ADULT_PRICE = 305;
+            var CHILD_PRICE = 240;
 
             var registrations = [];
-            var rsvps = [];
             var adminUnlocked = false;
             var currentDrill = null;
             var sortCol = 'name';
@@ -527,10 +421,7 @@
                 if (val == null || val === '') return 0;
                 var s = String(val).replace(/[$,]/g, '').trim();
                 var n = parseFloat(s);
-                if (isNaN(n)) {
-                    console.warn('Dashboard: NaN parsing value:', val);
-                    return 0;
-                }
+                if (isNaN(n)) return 0;
                 return n;
             }
 
@@ -554,11 +445,8 @@
             }
 
             var REG_COLS = ['timestamp', 'family_name', 'first_name', 'last_name', 'email', 'phone',
-                'num_adults', 'num_children', 'num_under5', 'hotel_intent', 'breakfast_count',
-                'museum_count', 'dietary_notes', 'payment_method', 'estimated_total',
-                'amount_paid', 'payment_status', 'confirmation_sent', 'notes'];
-            var RSVP_COLS = ['timestamp', 'name', 'email', 'num_adults', 'num_children',
-                'dietary_restrictions', 'attending'];
+                'num_adults', 'num_children', 'num_under5', 'dietary_notes', 'payment_method',
+                'total_due', 'amount_paid', 'payment_status', 'confirmation_sent', 'notes'];
 
             // --- Data Fetch ---
 
@@ -574,18 +462,13 @@
 
             function fetchData() {
                 hideError();
-                Promise.all([
-                    fetch(REG_URL).then(function (r) { return r.text(); }),
-                    fetch(RSVP_URL).then(function (r) { return r.text(); })
-                ]).then(function (results) {
-                    var regData = parseGviz(results[0]);
-                    var rsvpData = parseGviz(results[1]);
-                    if (regData.status === 'error' || rsvpData.status === 'error') {
+                fetch(REG_URL).then(function (r) { return r.text(); }).then(function (text) {
+                    var regData = parseGviz(text);
+                    if (regData.status === 'error') {
                         showError('Dashboard data unavailable \u2014 please refresh or contact Lorenzo.');
                         return;
                     }
                     registrations = gvizToObjects(regData.table, REG_COLS);
-                    rsvps = gvizToObjects(rsvpData.table, RSVP_COLS);
                     renderAll();
                     document.getElementById('last-refreshed').textContent =
                         'Last refreshed: ' + new Date().toLocaleTimeString();
@@ -596,64 +479,53 @@
 
             // --- Public View Rendering ---
 
+            function fmtDollars(n) {
+                return '$' + Math.abs(n).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+
             function renderPublicView() {
-                var families = {};
                 var totalIndividuals = 0;
+                var totalObligation = 0;
                 var totalCollected = 0;
-                var totalEstimated = 0;
-                var banquetActual = 0;
-                var breakfastActual = 0;
-                var museumActual = 0;
+                var paidFamilies = 0;
+                var unpaidFamilies = 0;
 
                 for (var i = 0; i < registrations.length; i++) {
                     var r = registrations[i];
-                    var fn = String(r.family_name).trim();
-                    if (fn) families[fn.toLowerCase()] = true;
-
                     var adults = parseNum(r.num_adults);
                     var children = parseNum(r.num_children);
                     var under5 = parseNum(r.num_under5);
                     totalIndividuals += adults + children + under5;
 
-                    var status = String(r.payment_status).toUpperCase().trim();
-                    var paid = parseNum(r.amount_paid);
-                    var est = parseNum(r.estimated_total);
-                    if (status === 'PAID' || status === 'PARTIAL') {
-                        totalCollected += paid;
-                    }
-                    totalEstimated += est;
+                    totalObligation += parseNum(r.total_due);
+                    totalCollected += parseNum(r.amount_paid);
 
-                    var bfCount = parseNum(r.breakfast_count);
-                    var musCount = parseNum(r.museum_count);
-                    banquetActual += (adults + children) * BUDGET_CONFIG.banquet_price;
-                    breakfastActual += bfCount * BUDGET_CONFIG.breakfast_price;
-                    museumActual += musCount * BUDGET_CONFIG.museum_price;
+                    var status = String(r.payment_status).toUpperCase().trim();
+                    if (status === 'PAID') {
+                        paidFamilies++;
+                    } else {
+                        unpaidFamilies++;
+                    }
                 }
 
-                var familyCount = Object.keys(families).length;
-                var remaining = totalEstimated - totalCollected;
+                var remaining = totalObligation - (DEPOSIT + totalCollected);
 
-                document.getElementById('stat-families').textContent = familyCount;
                 document.getElementById('stat-individuals').textContent = totalIndividuals;
-                document.getElementById('stat-collected').textContent = '$' + totalCollected.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                document.getElementById('stat-remaining').textContent = '$' + Math.max(0, remaining).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('stat-paid-count').textContent = paidFamilies;
+                document.getElementById('stat-unpaid-count').textContent = unpaidFamilies;
 
-                var regPct = BUDGET_CONFIG.expected_registrations > 0
-                    ? Math.min(100, Math.round((totalIndividuals / BUDGET_CONFIG.expected_registrations) * 100))
-                    : 0;
-                document.getElementById('progress-pct').textContent = regPct + '% of expected registrations received';
-                document.getElementById('progress-fill').style.width = regPct + '%';
+                document.getElementById('fin-deposit').textContent = fmtDollars(DEPOSIT);
+                document.getElementById('fin-obligation').textContent = fmtDollars(totalObligation);
+                document.getElementById('fin-collected').textContent = fmtDollars(totalCollected);
 
-                renderBudgetBar('banquet', banquetActual, BUDGET_CONFIG.targets.banquet);
-                renderBudgetBar('breakfast', breakfastActual, BUDGET_CONFIG.targets.breakfast);
-                renderBudgetBar('museum', museumActual, BUDGET_CONFIG.targets.museum);
-            }
-
-            function renderBudgetBar(name, actual, target) {
-                var pct = target > 0 ? Math.min(100, Math.round((actual / target) * 100)) : 0;
-                document.getElementById('budget-' + name + '-text').textContent =
-                    '$' + Math.round(actual).toLocaleString() + ' / $' + target.toLocaleString();
-                document.getElementById('budget-' + name + '-fill').style.width = pct + '%';
+                var remainingEl = document.getElementById('fin-remaining');
+                if (remaining <= 0) {
+                    remainingEl.textContent = fmtDollars(remaining) + ' surplus';
+                    remainingEl.className = 'finance-value surplus';
+                } else {
+                    remainingEl.textContent = fmtDollars(remaining);
+                    remainingEl.className = 'finance-value deficit';
+                }
             }
 
             // --- Admin Table ---
@@ -664,16 +536,18 @@
                     var children = parseNum(r.num_children);
                     var under5 = parseNum(r.num_under5);
                     return {
+                        family_name: String(r.family_name).trim(),
                         name: (String(r.first_name).trim() + ' ' + String(r.last_name).trim()).trim(),
                         email: String(r.email).trim(),
-                        attendees: adults + children + under5,
+                        phone: String(r.phone).trim(),
+                        adults: adults,
+                        children: children,
+                        under5: under5,
+                        dietary: String(r.dietary_notes).trim(),
                         method: String(r.payment_method).trim(),
-                        due: parseNum(r.estimated_total),
+                        due: parseNum(r.total_due),
                         paid: parseNum(r.amount_paid),
-                        status: String(r.payment_status).toUpperCase().trim() || 'UNPAID',
-                        breakfast_count: parseNum(r.breakfast_count),
-                        museum_count: parseNum(r.museum_count),
-                        family_name: String(r.family_name).trim()
+                        status: String(r.payment_status).toUpperCase().trim() || 'UNPAID'
                     };
                 });
             }
@@ -682,21 +556,10 @@
                 if (!currentDrill) return rows;
                 return rows.filter(function (r) {
                     switch (currentDrill) {
-                        case 'all':
-                        case 'all-families':
-                            return true;
-                        case 'paid':
-                            return r.status === 'PAID';
-                        case 'unpaid':
-                            return r.status !== 'PAID';
-                        case 'banquet':
-                            return true;
-                        case 'breakfast':
-                            return r.breakfast_count > 0;
-                        case 'museum':
-                            return r.museum_count > 0;
-                        default:
-                            return true;
+                        case 'all': return true;
+                        case 'paid': return r.status === 'PAID';
+                        case 'unpaid': return r.status !== 'PAID';
+                        default: return true;
                     }
                 });
             }
@@ -706,6 +569,7 @@
                 var q = filterText.toLowerCase();
                 return rows.filter(function (r) {
                     return r.name.toLowerCase().indexOf(q) !== -1 ||
+                        r.family_name.toLowerCase().indexOf(q) !== -1 ||
                         r.email.toLowerCase().indexOf(q) !== -1 ||
                         r.method.toLowerCase().indexOf(q) !== -1 ||
                         r.status.toLowerCase().indexOf(q) !== -1;
@@ -731,12 +595,8 @@
 
             var DRILL_LABELS = {
                 'all': 'Showing: All registrants',
-                'all-families': 'Showing: All registrants',
                 'paid': 'Showing: Paid registrants',
-                'unpaid': 'Showing: Unpaid / Partial registrants',
-                'banquet': 'Showing: All registrants (banquet)',
-                'breakfast': 'Showing: Breakfast attendees',
-                'museum': 'Showing: Museum excursion attendees'
+                'unpaid': 'Showing: Unpaid / Partial registrants'
             };
 
             function renderTable() {
@@ -759,7 +619,7 @@
                 if (rows.length === 0) {
                     var tr = document.createElement('tr');
                     var td = document.createElement('td');
-                    td.setAttribute('colspan', '7');
+                    td.setAttribute('colspan', '12');
                     td.className = 'empty-msg';
                     td.textContent = registrations.length === 0 ? 'No registrations yet' : 'No matching registrations';
                     tr.appendChild(td);
@@ -767,132 +627,30 @@
                     return;
                 }
 
+                var cols = ['family_name', 'name', 'email', 'phone', 'adults', 'children', 'under5', 'dietary', 'method', 'due', 'paid', 'status'];
+
                 for (var i = 0; i < rows.length; i++) {
                     var r = rows[i];
                     var tr = document.createElement('tr');
 
-                    var tdName = document.createElement('td');
-                    tdName.textContent = r.name;
-                    tr.appendChild(tdName);
-
-                    var tdEmail = document.createElement('td');
-                    tdEmail.textContent = r.email;
-                    tr.appendChild(tdEmail);
-
-                    var tdAtt = document.createElement('td');
-                    tdAtt.textContent = r.attendees;
-                    tr.appendChild(tdAtt);
-
-                    var tdMethod = document.createElement('td');
-                    tdMethod.textContent = r.method;
-                    tr.appendChild(tdMethod);
-
-                    var tdDue = document.createElement('td');
-                    tdDue.textContent = '$' + r.due.toFixed(2);
-                    tr.appendChild(tdDue);
-
-                    var tdPaid = document.createElement('td');
-                    tdPaid.textContent = '$' + r.paid.toFixed(2);
-                    tr.appendChild(tdPaid);
-
-                    var tdStatus = document.createElement('td');
-                    tdStatus.textContent = r.status;
-                    if (r.status === 'PAID') tdStatus.className = 'status-paid';
-                    else if (r.status === 'PARTIAL') tdStatus.className = 'status-partial';
-                    else tdStatus.className = 'status-unpaid';
-                    tr.appendChild(tdStatus);
+                    for (var c = 0; c < cols.length; c++) {
+                        var tdEl = document.createElement('td');
+                        var val = r[cols[c]];
+                        if (cols[c] === 'due' || cols[c] === 'paid') {
+                            tdEl.textContent = '$' + val.toFixed(2);
+                        } else {
+                            tdEl.textContent = val;
+                        }
+                        if (cols[c] === 'status') {
+                            if (val === 'PAID') tdEl.className = 'status-paid';
+                            else if (val === 'PARTIAL') tdEl.className = 'status-partial';
+                            else tdEl.className = 'status-unpaid';
+                        }
+                        tr.appendChild(tdEl);
+                    }
 
                     tbody.appendChild(tr);
                 }
-            }
-
-            // --- RSVP Comparison ---
-
-            function renderComparison() {
-                var rsvpOnly = document.getElementById('comp-rsvp-only');
-                var regOnly = document.getElementById('comp-reg-only');
-                var matchedEl = document.getElementById('comp-matched');
-
-                while (rsvpOnly.firstChild) rsvpOnly.removeChild(rsvpOnly.firstChild);
-                while (regOnly.firstChild) regOnly.removeChild(regOnly.firstChild);
-
-                var attendingRsvps = rsvps.filter(function (r) {
-                    return String(r.attending).toLowerCase() !== 'no';
-                });
-
-                var rsvpByEmail = {};
-                for (var i = 0; i < attendingRsvps.length; i++) {
-                    var email = String(attendingRsvps[i].email).toLowerCase().trim();
-                    if (email) rsvpByEmail[email] = attendingRsvps[i];
-                }
-
-                var regByEmail = {};
-                for (var i = 0; i < registrations.length; i++) {
-                    var email = String(registrations[i].email).toLowerCase().trim();
-                    if (!email) continue;
-                    var existing = regByEmail[email];
-                    if (!existing || String(registrations[i].timestamp) > String(existing.timestamp)) {
-                        regByEmail[email] = registrations[i];
-                    }
-                }
-
-                var matched = 0;
-                var rsvpNotReg = [];
-                var regNotRsvp = [];
-
-                var rsvpEmails = Object.keys(rsvpByEmail);
-                for (var i = 0; i < rsvpEmails.length; i++) {
-                    if (regByEmail[rsvpEmails[i]]) {
-                        matched++;
-                    } else {
-                        var r = rsvpByEmail[rsvpEmails[i]];
-                        rsvpNotReg.push({ name: String(r.name).trim(), email: rsvpEmails[i] });
-                    }
-                }
-
-                var regEmails = Object.keys(regByEmail);
-                for (var i = 0; i < regEmails.length; i++) {
-                    if (!rsvpByEmail[regEmails[i]]) {
-                        var r = regByEmail[regEmails[i]];
-                        var name = (String(r.first_name).trim() + ' ' + String(r.last_name).trim()).trim();
-                        regNotRsvp.push({ name: name, email: regEmails[i] });
-                    }
-                }
-
-                if (rsvpNotReg.length === 0 && regNotRsvp.length === 0 && matched === 0) {
-                    var li1 = document.createElement('li');
-                    li1.textContent = 'No data available';
-                    rsvpOnly.appendChild(li1);
-                    var li2 = document.createElement('li');
-                    li2.textContent = 'No data available';
-                    regOnly.appendChild(li2);
-                    matchedEl.textContent = '0';
-                    return;
-                }
-
-                for (var i = 0; i < rsvpNotReg.length; i++) {
-                    var li = document.createElement('li');
-                    li.textContent = rsvpNotReg[i].name + ' (' + rsvpNotReg[i].email + ')';
-                    rsvpOnly.appendChild(li);
-                }
-                if (rsvpNotReg.length === 0) {
-                    var li = document.createElement('li');
-                    li.textContent = 'None';
-                    rsvpOnly.appendChild(li);
-                }
-
-                for (var i = 0; i < regNotRsvp.length; i++) {
-                    var li = document.createElement('li');
-                    li.textContent = regNotRsvp[i].name + ' (' + regNotRsvp[i].email + ')';
-                    regOnly.appendChild(li);
-                }
-                if (regNotRsvp.length === 0) {
-                    var li = document.createElement('li');
-                    li.textContent = 'None';
-                    regOnly.appendChild(li);
-                }
-
-                matchedEl.textContent = matched;
             }
 
             // --- Render All ---
@@ -901,7 +659,6 @@
                 renderPublicView();
                 if (adminUnlocked) {
                     renderTable();
-                    renderComparison();
                 }
             }
 
@@ -919,7 +676,6 @@
                     input.style.display = 'none';
                     errorEl.textContent = '';
                     renderTable();
-                    renderComparison();
                 } else {
                     errorEl.textContent = 'Incorrect password.';
                 }
@@ -953,20 +709,6 @@
                     var all = document.querySelectorAll('.stat-card');
                     for (var j = 0; j < all.length; j++) all[j].classList.remove('active-filter');
                     if (currentDrill) this.classList.add('active-filter');
-                    renderTable();
-                    document.getElementById('reg-table').scrollIntoView({ behavior: 'smooth' });
-                });
-            }
-
-            // Budget bar drill-down
-            var budgetItems = document.querySelectorAll('.budget-item');
-            for (var i = 0; i < budgetItems.length; i++) {
-                budgetItems[i].addEventListener('click', function () {
-                    if (!adminUnlocked) return;
-                    var filter = this.getAttribute('data-filter');
-                    currentDrill = (currentDrill === filter) ? null : filter;
-                    var all = document.querySelectorAll('.stat-card');
-                    for (var j = 0; j < all.length; j++) all[j].classList.remove('active-filter');
                     renderTable();
                     document.getElementById('reg-table').scrollIntoView({ behavior: 'smooth' });
                 });
