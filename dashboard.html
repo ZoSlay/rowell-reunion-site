@@ -43,34 +43,32 @@
             color: #3b5d3b;
         }
 
-        .budget-section {
-            margin-bottom: 2rem;
+        .deposit-card {
+            background-color: #e8f0e8;
+            border: 2px solid #3b5d3b;
+            border-radius: 6px;
+            padding: 1.25rem;
+            text-align: center;
         }
 
-        .budget-item {
-            margin-bottom: 1rem;
+        .deposit-card .stat-label {
+            color: #3b5d3b;
+            font-weight: 600;
         }
 
-        .budget-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
+        .break-even-section {
+            background-color: #f0ece2;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #555;
         }
 
-        .budget-bar-bg {
-            background-color: #e0dcd3;
-            border-radius: 4px;
-            height: 20px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .budget-bar-fill {
-            background-color: #3b5d3b;
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s;
+        .break-even-section .break-even-value {
+            font-weight: bold;
+            color: #3b5d3b;
         }
 
         .progress-section {
@@ -368,63 +366,45 @@
 
         <!-- Public View -->
         <section id="public-view">
-            <h2>Registration Progress</h2>
+            <h2>Financial Overview</h2>
 
             <div class="stats-grid">
-                <div class="stat-card" data-filter="all-families">
-                    <div class="stat-label">Families Registered</div>
-                    <div class="stat-value" id="stat-families">0</div>
-                </div>
                 <div class="stat-card" data-filter="all">
-                    <div class="stat-label">Individuals Registered</div>
-                    <div class="stat-value" id="stat-individuals">0</div>
+                    <div class="stat-label">We Owe: Total Obligation</div>
+                    <div class="stat-value" id="stat-obligation">$13,567.80</div>
+                </div>
+                <div class="stat-card deposit-card">
+                    <div class="stat-label">We Owe: Deposit Paid</div>
+                    <div class="stat-value" id="stat-deposit">$1,000.00</div>
                 </div>
                 <div class="stat-card" data-filter="paid">
-                    <div class="stat-label">Total Collected</div>
-                    <div class="stat-value" id="stat-collected">$0</div>
+                    <div class="stat-label">Collected: Total Collected</div>
+                    <div class="stat-value" id="stat-collected">$0.00</div>
                 </div>
                 <div class="stat-card" data-filter="unpaid">
-                    <div class="stat-label">Remaining</div>
-                    <div class="stat-value" id="stat-remaining">$0</div>
+                    <div class="stat-label">Collected: Remaining</div>
+                    <div class="stat-value" id="stat-remaining">$0.00</div>
                 </div>
             </div>
 
             <div class="progress-section">
-                <div class="progress-pct" id="progress-pct">0% of expected registrations</div>
+                <div class="progress-pct" id="financial-progress-pct">0.0% of obligation collected</div>
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+                    <div class="progress-bar-fill" id="financial-progress-fill" style="width:0%"></div>
                 </div>
             </div>
 
-            <h2>Budget Tracking</h2>
-            <div class="budget-section">
-                <div class="budget-item" data-filter="banquet">
-                    <div class="budget-label">
-                        <span>Banquet</span>
-                        <span id="budget-banquet-text">$0 / $10,000</span>
-                    </div>
-                    <div class="budget-bar-bg">
-                        <div class="budget-bar-fill" id="budget-banquet-fill" style="width:0%"></div>
-                    </div>
+            <h2>Registration Progress</h2>
+
+            <div class="progress-section">
+                <div class="progress-pct" id="reg-progress-pct">0 of 45 registered</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="reg-progress-fill" style="width:0%"></div>
                 </div>
-                <div class="budget-item" data-filter="breakfast">
-                    <div class="budget-label">
-                        <span>Breakfast</span>
-                        <span id="budget-breakfast-text">$0 / $4,000</span>
-                    </div>
-                    <div class="budget-bar-bg">
-                        <div class="budget-bar-fill" id="budget-breakfast-fill" style="width:0%"></div>
-                    </div>
-                </div>
-                <div class="budget-item" data-filter="museum">
-                    <div class="budget-label">
-                        <span>Museum Excursion</span>
-                        <span id="budget-museum-text">$0 / $2,000</span>
-                    </div>
-                    <div class="budget-bar-bg">
-                        <div class="budget-bar-fill" id="budget-museum-fill" style="width:0%"></div>
-                    </div>
-                </div>
+            </div>
+
+            <div class="break-even-section" id="break-even-section">
+                <span class="break-even-value" id="break-even-text">Calculating...</span>
             </div>
 
             <div class="refresh-row">
@@ -500,13 +480,10 @@
             var REG_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Registrations';
             var RSVP_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=RSVPs';
             var ADMIN_PASSWORD = 'Rowell2026';
-            var BUDGET_CONFIG = {
-                expected_registrations: 80,
-                banquet_price: 133,
-                breakfast_price: 50,
-                museum_price: 25.42,
-                targets: { banquet: 10000, breakfast: 4000, museum: 2000 }
-            };
+            var TOTAL_OBLIGATION = 13567.80;
+            var DEPOSIT_PAID = 1000.00;
+            var TARGET_HEADCOUNT = 45;
+            var ADULT_PRICE = 305;
 
             var registrations = [];
             var rsvps = [];
@@ -597,63 +574,43 @@
             // --- Public View Rendering ---
 
             function renderPublicView() {
-                var families = {};
-                var totalIndividuals = 0;
+                var totalRegistered = 0;
                 var totalCollected = 0;
-                var totalEstimated = 0;
-                var banquetActual = 0;
-                var breakfastActual = 0;
-                var museumActual = 0;
 
                 for (var i = 0; i < registrations.length; i++) {
                     var r = registrations[i];
-                    var fn = String(r.family_name).trim();
-                    if (fn) families[fn.toLowerCase()] = true;
-
                     var adults = parseNum(r.num_adults);
                     var children = parseNum(r.num_children);
                     var under5 = parseNum(r.num_under5);
-                    totalIndividuals += adults + children + under5;
-
-                    var status = String(r.payment_status).toUpperCase().trim();
-                    var paid = parseNum(r.amount_paid);
-                    var est = parseNum(r.estimated_total);
-                    if (status === 'PAID' || status === 'PARTIAL') {
-                        totalCollected += paid;
-                    }
-                    totalEstimated += est;
-
-                    var bfCount = parseNum(r.breakfast_count);
-                    var musCount = parseNum(r.museum_count);
-                    banquetActual += (adults + children) * BUDGET_CONFIG.banquet_price;
-                    breakfastActual += bfCount * BUDGET_CONFIG.breakfast_price;
-                    museumActual += musCount * BUDGET_CONFIG.museum_price;
+                    totalRegistered += adults + children + under5;
+                    totalCollected += parseNum(r.amount_paid);
                 }
 
-                var familyCount = Object.keys(families).length;
-                var remaining = totalEstimated - totalCollected;
+                var remaining = TOTAL_OBLIGATION - (DEPOSIT_PAID + totalCollected);
 
-                document.getElementById('stat-families').textContent = familyCount;
-                document.getElementById('stat-individuals').textContent = totalIndividuals;
-                document.getElementById('stat-collected').textContent = '$' + totalCollected.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-                document.getElementById('stat-remaining').textContent = '$' + Math.max(0, remaining).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('stat-obligation').textContent = '$' + TOTAL_OBLIGATION.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('stat-deposit').textContent = '$' + DEPOSIT_PAID.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('stat-collected').textContent = '$' + totalCollected.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('stat-remaining').textContent = '$' + remaining.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-                var regPct = BUDGET_CONFIG.expected_registrations > 0
-                    ? Math.min(100, Math.round((totalIndividuals / BUDGET_CONFIG.expected_registrations) * 100))
+                var financialPct = TOTAL_OBLIGATION > 0
+                    ? ((DEPOSIT_PAID + totalCollected) / TOTAL_OBLIGATION) * 100
                     : 0;
-                document.getElementById('progress-pct').textContent = regPct + '% of expected registrations received';
-                document.getElementById('progress-fill').style.width = regPct + '%';
+                document.getElementById('financial-progress-pct').textContent = financialPct.toFixed(1) + '% of obligation collected';
+                document.getElementById('financial-progress-fill').style.width = Math.min(100, financialPct) + '%';
 
-                renderBudgetBar('banquet', banquetActual, BUDGET_CONFIG.targets.banquet);
-                renderBudgetBar('breakfast', breakfastActual, BUDGET_CONFIG.targets.breakfast);
-                renderBudgetBar('museum', museumActual, BUDGET_CONFIG.targets.museum);
-            }
+                document.getElementById('reg-progress-pct').textContent = totalRegistered + ' of ' + TARGET_HEADCOUNT + ' registered';
+                var regPct = TARGET_HEADCOUNT > 0 ? Math.min(100, Math.round((totalRegistered / TARGET_HEADCOUNT) * 100)) : 0;
+                document.getElementById('reg-progress-fill').style.width = regPct + '%';
 
-            function renderBudgetBar(name, actual, target) {
-                var pct = target > 0 ? Math.min(100, Math.round((actual / target) * 100)) : 0;
-                document.getElementById('budget-' + name + '-text').textContent =
-                    '$' + Math.round(actual).toLocaleString() + ' / $' + target.toLocaleString();
-                document.getElementById('budget-' + name + '-fill').style.width = pct + '%';
+                var netRemaining = TOTAL_OBLIGATION - DEPOSIT_PAID - totalCollected;
+                var breakEvenEl = document.getElementById('break-even-text');
+                if (netRemaining <= 0) {
+                    breakEvenEl.textContent = 'Obligation covered.';
+                } else {
+                    var needed = Math.ceil(netRemaining / ADULT_PRICE);
+                    breakEvenEl.textContent = 'Approximately ' + needed + ' more adult registrations needed to cover obligation';
+                }
             }
 
             // --- Admin Table ---
