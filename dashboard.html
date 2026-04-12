@@ -6,6 +6,11 @@
     <title>Dashboard — Rowell Family Reunion 2026</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        .site-nav { background-color: #6B2D3E; }
+        .hero { background-color: #6B2D3E; }
+        h2 { color: #6B2D3E; }
+        .site-nav .nav-active { border-bottom-color: #C8902A; }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -28,7 +33,7 @@
         }
 
         .stat-card.active-filter {
-            border: 2px solid #3b5d3b;
+            border: 2px solid #6B2D3E;
         }
 
         .stat-label {
@@ -40,19 +45,19 @@
         .stat-value {
             font-size: 1.6rem;
             font-weight: bold;
-            color: #3b5d3b;
+            color: #6B2D3E;
         }
 
         .deposit-card {
-            background-color: #e8f0e8;
-            border: 2px solid #3b5d3b;
+            background-color: #f5eef0;
+            border: 2px solid #6B2D3E;
             border-radius: 6px;
             padding: 1.25rem;
             text-align: center;
         }
 
         .deposit-card .stat-label {
-            color: #3b5d3b;
+            color: #6B2D3E;
             font-weight: 600;
         }
 
@@ -68,7 +73,7 @@
 
         .break-even-section .break-even-value {
             font-weight: bold;
-            color: #3b5d3b;
+            color: #6B2D3E;
         }
 
         .progress-section {
@@ -82,7 +87,7 @@
         .progress-pct {
             font-size: 1.3rem;
             font-weight: bold;
-            color: #3b5d3b;
+            color: #6B2D3E;
             margin-bottom: 0.5rem;
         }
 
@@ -110,7 +115,7 @@
         }
 
         .btn-refresh {
-            background-color: #3b5d3b;
+            background-color: #6B2D3E;
             color: #faf9f6;
             border: none;
             padding: 0.4rem 1rem;
@@ -147,12 +152,12 @@
 
         .admin-gate-card input:focus {
             outline: none;
-            border-color: #3b5d3b;
+            border-color: #6B2D3E;
             box-shadow: 0 0 0 2px rgba(59, 93, 59, 0.2);
         }
 
         .btn-admin {
-            background-color: #3b5d3b;
+            background-color: #6B2D3E;
             color: #faf9f6;
             border: none;
             padding: 0.5rem 1.2rem;
@@ -191,7 +196,7 @@
 
         .filter-row input:focus {
             outline: none;
-            border-color: #3b5d3b;
+            border-color: #6B2D3E;
             box-shadow: 0 0 0 2px rgba(59, 93, 59, 0.2);
         }
 
@@ -208,7 +213,7 @@
 
         .active-drill {
             font-size: 0.85rem;
-            color: #3b5d3b;
+            color: #6B2D3E;
             font-weight: bold;
             margin-bottom: 0.5rem;
         }
@@ -225,7 +230,7 @@
         }
 
         .reg-table th {
-            background-color: #3b5d3b;
+            background-color: #6B2D3E;
             color: #faf9f6;
             padding: 0.6rem 0.75rem;
             text-align: left;
@@ -247,7 +252,7 @@
             background-color: #f0ece2;
         }
 
-        .status-paid { color: #3b5d3b; font-weight: bold; }
+        .status-paid { color: #6B2D3E; font-weight: bold; }
         .status-partial { color: #b8860b; font-weight: bold; }
         .status-unpaid { color: #a03030; font-weight: bold; }
 
@@ -256,54 +261,6 @@
             padding: 2rem;
             color: #888;
             font-style: italic;
-        }
-
-        .comparison-section {
-            margin-top: 2rem;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .comparison-card {
-            background-color: #f0ece2;
-            border-radius: 6px;
-            padding: 1.25rem;
-        }
-
-        .comparison-card h3 {
-            font-size: 1rem;
-            color: #3b5d3b;
-            margin-bottom: 0.5rem;
-        }
-
-        .comparison-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.85rem;
-        }
-
-        .comparison-list li {
-            padding: 0.25rem 0;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-
-        .comparison-count {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #3b5d3b;
-        }
-
-        .comparison-note {
-            font-size: 0.8rem;
-            color: #888;
-            font-style: italic;
-            margin-top: 0.5rem;
         }
 
         .error-banner {
@@ -330,10 +287,6 @@
                 align-items: stretch;
             }
 
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-
             .filter-row {
                 flex-direction: column;
             }
@@ -346,13 +299,13 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="events.html">Events</a></li>
             <li><a href="register.html">Registration</a></li>
-            <li><a href="feedback.html">Feedback</a></li>
             <li><a href="next-steps.html">Next Steps</a></li>
             <li><a href="family-history.html">Family History</a></li>
             <li><a href="in-memoriam.html">In Memoriam</a></li>
             <li><a href="past-reunions.html">Past Reunions</a></li>
             <li><a href="generations.html">Generations</a></li>
             <li><a href="dashboard.html" class="nav-active">Dashboard</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
         </ul>
     </nav>
 
@@ -436,36 +389,22 @@
                 <table class="reg-table" id="reg-table">
                     <thead>
                         <tr>
+                            <th data-col="family_name">Family</th>
                             <th data-col="name">Name</th>
                             <th data-col="email">Email</th>
-                            <th data-col="attendees"># Attendees</th>
-                            <th data-col="method">Payment Method</th>
-                            <th data-col="due">Amount Due</th>
-                            <th data-col="paid">Amount Paid</th>
+                            <th data-col="phone">Phone</th>
+                            <th data-col="adults">Adults</th>
+                            <th data-col="children">Children</th>
+                            <th data-col="under5">Under 5</th>
+                            <th data-col="dietary">Dietary</th>
+                            <th data-col="method">Payment</th>
+                            <th data-col="due">Due</th>
+                            <th data-col="paid">Paid</th>
                             <th data-col="status">Status</th>
                         </tr>
                     </thead>
                     <tbody id="reg-tbody"></tbody>
                 </table>
-            </div>
-
-            <div class="comparison-section">
-                <h2>RSVP vs Registration Comparison</h2>
-                <p class="comparison-note">Best-effort comparison — email-based matching</p>
-                <div class="comparison-grid" id="comparison-grid">
-                    <div class="comparison-card">
-                        <h3>RSVPd but Not Registered</h3>
-                        <ul class="comparison-list" id="comp-rsvp-only"></ul>
-                    </div>
-                    <div class="comparison-card">
-                        <h3>Registered but Not RSVPd</h3>
-                        <ul class="comparison-list" id="comp-reg-only"></ul>
-                    </div>
-                    <div class="comparison-card">
-                        <h3>Matched</h3>
-                        <div class="comparison-count" id="comp-matched">0</div>
-                    </div>
-                </div>
             </div>
         </section>
     </main>
@@ -478,7 +417,6 @@
         (function () {
             var SHEETS_ID = '1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo';
             var REG_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Registrations';
-            var RSVP_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=RSVPs';
             var ADMIN_PASSWORD = 'Rowell2026';
             var TOTAL_OBLIGATION = 13567.80;
             var DEPOSIT_PAID = 1000.00;
@@ -486,7 +424,6 @@
             var ADULT_PRICE = 305;
 
             var registrations = [];
-            var rsvps = [];
             var adminUnlocked = false;
             var currentDrill = null;
             var sortCol = 'name';
@@ -504,10 +441,7 @@
                 if (val == null || val === '') return 0;
                 var s = String(val).replace(/[$,]/g, '').trim();
                 var n = parseFloat(s);
-                if (isNaN(n)) {
-                    console.warn('Dashboard: NaN parsing value:', val);
-                    return 0;
-                }
+                if (isNaN(n)) return 0;
                 return n;
             }
 
@@ -531,11 +465,8 @@
             }
 
             var REG_COLS = ['timestamp', 'family_name', 'first_name', 'last_name', 'email', 'phone',
-                'num_adults', 'num_children', 'num_under5', 'hotel_intent', 'breakfast_count',
-                'museum_count', 'dietary_notes', 'payment_method', 'estimated_total',
-                'amount_paid', 'payment_status', 'confirmation_sent', 'notes'];
-            var RSVP_COLS = ['timestamp', 'name', 'email', 'num_adults', 'num_children',
-                'dietary_restrictions', 'attending'];
+                'num_adults', 'num_children', 'num_under5', 'dietary_notes', 'payment_method',
+                'total_due', 'amount_paid', 'payment_status', 'confirmation_sent', 'notes'];
 
             // --- Data Fetch ---
 
@@ -551,18 +482,13 @@
 
             function fetchData() {
                 hideError();
-                Promise.all([
-                    fetch(REG_URL).then(function (r) { return r.text(); }),
-                    fetch(RSVP_URL).then(function (r) { return r.text(); })
-                ]).then(function (results) {
-                    var regData = parseGviz(results[0]);
-                    var rsvpData = parseGviz(results[1]);
-                    if (regData.status === 'error' || rsvpData.status === 'error') {
+                fetch(REG_URL).then(function (r) { return r.text(); }).then(function (text) {
+                    var regData = parseGviz(text);
+                    if (regData.status === 'error') {
                         showError('Dashboard data unavailable \u2014 please refresh or contact Lorenzo.');
                         return;
                     }
                     registrations = gvizToObjects(regData.table, REG_COLS);
-                    rsvps = gvizToObjects(rsvpData.table, RSVP_COLS);
                     renderAll();
                     document.getElementById('last-refreshed').textContent =
                         'Last refreshed: ' + new Date().toLocaleTimeString();
@@ -621,16 +547,18 @@
                     var children = parseNum(r.num_children);
                     var under5 = parseNum(r.num_under5);
                     return {
+                        family_name: String(r.family_name).trim(),
                         name: (String(r.first_name).trim() + ' ' + String(r.last_name).trim()).trim(),
                         email: String(r.email).trim(),
-                        attendees: adults + children + under5,
+                        phone: String(r.phone).trim(),
+                        adults: adults,
+                        children: children,
+                        under5: under5,
+                        dietary: String(r.dietary_notes).trim(),
                         method: String(r.payment_method).trim(),
-                        due: parseNum(r.estimated_total),
+                        due: parseNum(r.total_due),
                         paid: parseNum(r.amount_paid),
-                        status: String(r.payment_status).toUpperCase().trim() || 'UNPAID',
-                        breakfast_count: parseNum(r.breakfast_count),
-                        museum_count: parseNum(r.museum_count),
-                        family_name: String(r.family_name).trim()
+                        status: String(r.payment_status).toUpperCase().trim() || 'UNPAID'
                     };
                 });
             }
@@ -639,21 +567,10 @@
                 if (!currentDrill) return rows;
                 return rows.filter(function (r) {
                     switch (currentDrill) {
-                        case 'all':
-                        case 'all-families':
-                            return true;
-                        case 'paid':
-                            return r.status === 'PAID';
-                        case 'unpaid':
-                            return r.status !== 'PAID';
-                        case 'banquet':
-                            return true;
-                        case 'breakfast':
-                            return r.breakfast_count > 0;
-                        case 'museum':
-                            return r.museum_count > 0;
-                        default:
-                            return true;
+                        case 'all': return true;
+                        case 'paid': return r.status === 'PAID';
+                        case 'unpaid': return r.status !== 'PAID';
+                        default: return true;
                     }
                 });
             }
@@ -663,6 +580,7 @@
                 var q = filterText.toLowerCase();
                 return rows.filter(function (r) {
                     return r.name.toLowerCase().indexOf(q) !== -1 ||
+                        r.family_name.toLowerCase().indexOf(q) !== -1 ||
                         r.email.toLowerCase().indexOf(q) !== -1 ||
                         r.method.toLowerCase().indexOf(q) !== -1 ||
                         r.status.toLowerCase().indexOf(q) !== -1;
@@ -688,12 +606,8 @@
 
             var DRILL_LABELS = {
                 'all': 'Showing: All registrants',
-                'all-families': 'Showing: All registrants',
                 'paid': 'Showing: Paid registrants',
-                'unpaid': 'Showing: Unpaid / Partial registrants',
-                'banquet': 'Showing: All registrants (banquet)',
-                'breakfast': 'Showing: Breakfast attendees',
-                'museum': 'Showing: Museum excursion attendees'
+                'unpaid': 'Showing: Unpaid / Partial registrants'
             };
 
             function renderTable() {
@@ -716,7 +630,7 @@
                 if (rows.length === 0) {
                     var tr = document.createElement('tr');
                     var td = document.createElement('td');
-                    td.setAttribute('colspan', '7');
+                    td.setAttribute('colspan', '12');
                     td.className = 'empty-msg';
                     td.textContent = registrations.length === 0 ? 'No registrations yet' : 'No matching registrations';
                     tr.appendChild(td);
@@ -724,132 +638,30 @@
                     return;
                 }
 
+                var cols = ['family_name', 'name', 'email', 'phone', 'adults', 'children', 'under5', 'dietary', 'method', 'due', 'paid', 'status'];
+
                 for (var i = 0; i < rows.length; i++) {
                     var r = rows[i];
                     var tr = document.createElement('tr');
 
-                    var tdName = document.createElement('td');
-                    tdName.textContent = r.name;
-                    tr.appendChild(tdName);
-
-                    var tdEmail = document.createElement('td');
-                    tdEmail.textContent = r.email;
-                    tr.appendChild(tdEmail);
-
-                    var tdAtt = document.createElement('td');
-                    tdAtt.textContent = r.attendees;
-                    tr.appendChild(tdAtt);
-
-                    var tdMethod = document.createElement('td');
-                    tdMethod.textContent = r.method;
-                    tr.appendChild(tdMethod);
-
-                    var tdDue = document.createElement('td');
-                    tdDue.textContent = '$' + r.due.toFixed(2);
-                    tr.appendChild(tdDue);
-
-                    var tdPaid = document.createElement('td');
-                    tdPaid.textContent = '$' + r.paid.toFixed(2);
-                    tr.appendChild(tdPaid);
-
-                    var tdStatus = document.createElement('td');
-                    tdStatus.textContent = r.status;
-                    if (r.status === 'PAID') tdStatus.className = 'status-paid';
-                    else if (r.status === 'PARTIAL') tdStatus.className = 'status-partial';
-                    else tdStatus.className = 'status-unpaid';
-                    tr.appendChild(tdStatus);
+                    for (var c = 0; c < cols.length; c++) {
+                        var tdEl = document.createElement('td');
+                        var val = r[cols[c]];
+                        if (cols[c] === 'due' || cols[c] === 'paid') {
+                            tdEl.textContent = '$' + val.toFixed(2);
+                        } else {
+                            tdEl.textContent = val;
+                        }
+                        if (cols[c] === 'status') {
+                            if (val === 'PAID') tdEl.className = 'status-paid';
+                            else if (val === 'PARTIAL') tdEl.className = 'status-partial';
+                            else tdEl.className = 'status-unpaid';
+                        }
+                        tr.appendChild(tdEl);
+                    }
 
                     tbody.appendChild(tr);
                 }
-            }
-
-            // --- RSVP Comparison ---
-
-            function renderComparison() {
-                var rsvpOnly = document.getElementById('comp-rsvp-only');
-                var regOnly = document.getElementById('comp-reg-only');
-                var matchedEl = document.getElementById('comp-matched');
-
-                while (rsvpOnly.firstChild) rsvpOnly.removeChild(rsvpOnly.firstChild);
-                while (regOnly.firstChild) regOnly.removeChild(regOnly.firstChild);
-
-                var attendingRsvps = rsvps.filter(function (r) {
-                    return String(r.attending).toLowerCase() !== 'no';
-                });
-
-                var rsvpByEmail = {};
-                for (var i = 0; i < attendingRsvps.length; i++) {
-                    var email = String(attendingRsvps[i].email).toLowerCase().trim();
-                    if (email) rsvpByEmail[email] = attendingRsvps[i];
-                }
-
-                var regByEmail = {};
-                for (var i = 0; i < registrations.length; i++) {
-                    var email = String(registrations[i].email).toLowerCase().trim();
-                    if (!email) continue;
-                    var existing = regByEmail[email];
-                    if (!existing || String(registrations[i].timestamp) > String(existing.timestamp)) {
-                        regByEmail[email] = registrations[i];
-                    }
-                }
-
-                var matched = 0;
-                var rsvpNotReg = [];
-                var regNotRsvp = [];
-
-                var rsvpEmails = Object.keys(rsvpByEmail);
-                for (var i = 0; i < rsvpEmails.length; i++) {
-                    if (regByEmail[rsvpEmails[i]]) {
-                        matched++;
-                    } else {
-                        var r = rsvpByEmail[rsvpEmails[i]];
-                        rsvpNotReg.push({ name: String(r.name).trim(), email: rsvpEmails[i] });
-                    }
-                }
-
-                var regEmails = Object.keys(regByEmail);
-                for (var i = 0; i < regEmails.length; i++) {
-                    if (!rsvpByEmail[regEmails[i]]) {
-                        var r = regByEmail[regEmails[i]];
-                        var name = (String(r.first_name).trim() + ' ' + String(r.last_name).trim()).trim();
-                        regNotRsvp.push({ name: name, email: regEmails[i] });
-                    }
-                }
-
-                if (rsvpNotReg.length === 0 && regNotRsvp.length === 0 && matched === 0) {
-                    var li1 = document.createElement('li');
-                    li1.textContent = 'No data available';
-                    rsvpOnly.appendChild(li1);
-                    var li2 = document.createElement('li');
-                    li2.textContent = 'No data available';
-                    regOnly.appendChild(li2);
-                    matchedEl.textContent = '0';
-                    return;
-                }
-
-                for (var i = 0; i < rsvpNotReg.length; i++) {
-                    var li = document.createElement('li');
-                    li.textContent = rsvpNotReg[i].name + ' (' + rsvpNotReg[i].email + ')';
-                    rsvpOnly.appendChild(li);
-                }
-                if (rsvpNotReg.length === 0) {
-                    var li = document.createElement('li');
-                    li.textContent = 'None';
-                    rsvpOnly.appendChild(li);
-                }
-
-                for (var i = 0; i < regNotRsvp.length; i++) {
-                    var li = document.createElement('li');
-                    li.textContent = regNotRsvp[i].name + ' (' + regNotRsvp[i].email + ')';
-                    regOnly.appendChild(li);
-                }
-                if (regNotRsvp.length === 0) {
-                    var li = document.createElement('li');
-                    li.textContent = 'None';
-                    regOnly.appendChild(li);
-                }
-
-                matchedEl.textContent = matched;
             }
 
             // --- Render All ---
@@ -858,7 +670,6 @@
                 renderPublicView();
                 if (adminUnlocked) {
                     renderTable();
-                    renderComparison();
                 }
             }
 
@@ -876,7 +687,6 @@
                     input.style.display = 'none';
                     errorEl.textContent = '';
                     renderTable();
-                    renderComparison();
                 } else {
                     errorEl.textContent = 'Incorrect password.';
                 }
@@ -910,20 +720,6 @@
                     var all = document.querySelectorAll('.stat-card');
                     for (var j = 0; j < all.length; j++) all[j].classList.remove('active-filter');
                     if (currentDrill) this.classList.add('active-filter');
-                    renderTable();
-                    document.getElementById('reg-table').scrollIntoView({ behavior: 'smooth' });
-                });
-            }
-
-            // Budget bar drill-down
-            var budgetItems = document.querySelectorAll('.budget-item');
-            for (var i = 0; i < budgetItems.length; i++) {
-                budgetItems[i].addEventListener('click', function () {
-                    if (!adminUnlocked) return;
-                    var filter = this.getAttribute('data-filter');
-                    currentDrill = (currentDrill === filter) ? null : filter;
-                    var all = document.querySelectorAll('.stat-card');
-                    for (var j = 0; j < all.length; j++) all[j].classList.remove('active-filter');
                     renderTable();
                     document.getElementById('reg-table').scrollIntoView({ behavior: 'smooth' });
                 });
