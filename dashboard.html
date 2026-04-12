@@ -48,50 +48,61 @@
             color: #6B2D3E;
         }
 
-        .finance-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .finance-card {
-            background-color: #f0ece2;
+        .deposit-card {
+            background-color: #f5eef0;
+            border: 2px solid #6B2D3E;
             border-radius: 6px;
             padding: 1.25rem;
             text-align: center;
         }
 
-        .finance-card.highlight {
-            background-color: #6B2D3E;
+        .deposit-card .stat-label {
+            color: #6B2D3E;
+            font-weight: 600;
         }
 
-        .finance-card.highlight .finance-label {
-            color: #d4c9a8;
+        .break-even-section {
+            background-color: #f0ece2;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #555;
         }
 
-        .finance-card.highlight .finance-value {
-            color: #faf9f6;
-        }
-
-        .finance-label {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 0.3rem;
-        }
-
-        .finance-value {
-            font-size: 1.6rem;
+        .break-even-section .break-even-value {
             font-weight: bold;
             color: #6B2D3E;
         }
 
-        .finance-value.surplus {
-            color: #6B2D3E;
+        .progress-section {
+            background-color: #f0ece2;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
 
-        .finance-value.deficit {
-            color: #a03030;
+        .progress-pct {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #6B2D3E;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-bg {
+            background-color: #e0dcd3;
+            border-radius: 4px;
+            height: 14px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background-color: #d4c9a8;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
         }
 
         .refresh-row {
@@ -263,11 +274,11 @@
         }
 
         @media (max-width: 480px) {
-            .stats-grid, .finance-grid {
+            .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .stat-value, .finance-value {
+            .stat-value {
                 font-size: 1.3rem;
             }
 
@@ -308,42 +319,45 @@
 
         <!-- Public View -->
         <section id="public-view">
-            <h2>Registration Progress</h2>
+            <h2>Financial Overview</h2>
 
             <div class="stats-grid">
                 <div class="stat-card" data-filter="all">
-                    <div class="stat-label">Individuals Registered</div>
-                    <div class="stat-value" id="stat-individuals">0</div>
+                    <div class="stat-label">We Owe: Total Obligation</div>
+                    <div class="stat-value" id="stat-obligation">$13,567.80</div>
+                </div>
+                <div class="stat-card deposit-card">
+                    <div class="stat-label">We Owe: Deposit Paid</div>
+                    <div class="stat-value" id="stat-deposit">$1,000.00</div>
                 </div>
                 <div class="stat-card" data-filter="paid">
-                    <div class="stat-label">Paid</div>
-                    <div class="stat-value" id="stat-paid-count">0</div>
+                    <div class="stat-label">Collected: Total Collected</div>
+                    <div class="stat-value" id="stat-collected">$0.00</div>
                 </div>
                 <div class="stat-card" data-filter="unpaid">
-                    <div class="stat-label">Unpaid</div>
-                    <div class="stat-value" id="stat-unpaid-count">0</div>
+                    <div class="stat-label">Collected: Remaining</div>
+                    <div class="stat-value" id="stat-remaining">$0.00</div>
                 </div>
             </div>
 
-            <h2>Financial Summary</h2>
+            <div class="progress-section">
+                <div class="progress-pct" id="financial-progress-pct">0.0% of obligation collected</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="financial-progress-fill" style="width:0%"></div>
+                </div>
+            </div>
 
-            <div class="finance-grid">
-                <div class="finance-card">
-                    <div class="finance-label">Deposit</div>
-                    <div class="finance-value" id="fin-deposit">$1,000</div>
+            <h2>Registration Progress</h2>
+
+            <div class="progress-section">
+                <div class="progress-pct" id="reg-progress-pct">0 of 45 registered</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="reg-progress-fill" style="width:0%"></div>
                 </div>
-                <div class="finance-card">
-                    <div class="finance-label">Obligation</div>
-                    <div class="finance-value" id="fin-obligation">$0</div>
-                </div>
-                <div class="finance-card">
-                    <div class="finance-label">Collected</div>
-                    <div class="finance-value" id="fin-collected">$0</div>
-                </div>
-                <div class="finance-card highlight">
-                    <div class="finance-label">Remaining</div>
-                    <div class="finance-value" id="fin-remaining">$0</div>
-                </div>
+            </div>
+
+            <div class="break-even-section" id="break-even-section">
+                <span class="break-even-value" id="break-even-text">Calculating...</span>
             </div>
 
             <div class="refresh-row">
@@ -404,9 +418,10 @@
             var SHEETS_ID = '1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo';
             var REG_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Registrations';
             var ADMIN_PASSWORD = 'Rowell2026';
-            var DEPOSIT = 1000;
+            var TOTAL_OBLIGATION = 13567.80;
+            var DEPOSIT_PAID = 1000.00;
+            var TARGET_HEADCOUNT = 45;
             var ADULT_PRICE = 305;
-            var CHILD_PRICE = 240;
 
             var registrations = [];
             var adminUnlocked = false;
@@ -484,52 +499,43 @@
 
             // --- Public View Rendering ---
 
-            function fmtDollars(n) {
-                return '$' + Math.abs(n).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-            }
-
             function renderPublicView() {
-                var totalIndividuals = 0;
-                var totalObligation = 0;
+                var totalRegistered = 0;
                 var totalCollected = 0;
-                var paidFamilies = 0;
-                var unpaidFamilies = 0;
 
                 for (var i = 0; i < registrations.length; i++) {
                     var r = registrations[i];
                     var adults = parseNum(r.num_adults);
                     var children = parseNum(r.num_children);
                     var under5 = parseNum(r.num_under5);
-                    totalIndividuals += adults + children + under5;
-
-                    totalObligation += parseNum(r.total_due);
+                    totalRegistered += adults + children + under5;
                     totalCollected += parseNum(r.amount_paid);
-
-                    var status = String(r.payment_status).toUpperCase().trim();
-                    if (status === 'PAID') {
-                        paidFamilies++;
-                    } else {
-                        unpaidFamilies++;
-                    }
                 }
 
-                var remaining = totalObligation - (DEPOSIT + totalCollected);
+                var remaining = TOTAL_OBLIGATION - (DEPOSIT_PAID + totalCollected);
 
-                document.getElementById('stat-individuals').textContent = totalIndividuals;
-                document.getElementById('stat-paid-count').textContent = paidFamilies;
-                document.getElementById('stat-unpaid-count').textContent = unpaidFamilies;
+                document.getElementById('stat-obligation').textContent = '$' + TOTAL_OBLIGATION.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('stat-deposit').textContent = '$' + DEPOSIT_PAID.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('stat-collected').textContent = '$' + totalCollected.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('stat-remaining').textContent = '$' + remaining.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-                document.getElementById('fin-deposit').textContent = fmtDollars(DEPOSIT);
-                document.getElementById('fin-obligation').textContent = fmtDollars(totalObligation);
-                document.getElementById('fin-collected').textContent = fmtDollars(totalCollected);
+                var financialPct = TOTAL_OBLIGATION > 0
+                    ? ((DEPOSIT_PAID + totalCollected) / TOTAL_OBLIGATION) * 100
+                    : 0;
+                document.getElementById('financial-progress-pct').textContent = financialPct.toFixed(1) + '% of obligation collected';
+                document.getElementById('financial-progress-fill').style.width = Math.min(100, financialPct) + '%';
 
-                var remainingEl = document.getElementById('fin-remaining');
-                if (remaining <= 0) {
-                    remainingEl.textContent = fmtDollars(remaining) + ' surplus';
-                    remainingEl.className = 'finance-value surplus';
+                document.getElementById('reg-progress-pct').textContent = totalRegistered + ' of ' + TARGET_HEADCOUNT + ' registered';
+                var regPct = TARGET_HEADCOUNT > 0 ? Math.min(100, Math.round((totalRegistered / TARGET_HEADCOUNT) * 100)) : 0;
+                document.getElementById('reg-progress-fill').style.width = regPct + '%';
+
+                var netRemaining = TOTAL_OBLIGATION - DEPOSIT_PAID - totalCollected;
+                var breakEvenEl = document.getElementById('break-even-text');
+                if (netRemaining <= 0) {
+                    breakEvenEl.textContent = 'Obligation covered.';
                 } else {
-                    remainingEl.textContent = fmtDollars(remaining);
-                    remainingEl.className = 'finance-value deficit';
+                    var needed = Math.ceil(netRemaining / ADULT_PRICE);
+                    breakEvenEl.textContent = 'Approximately ' + needed + ' more adult registrations needed to cover obligation';
                 }
             }
 
