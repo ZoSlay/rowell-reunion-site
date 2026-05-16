@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gift Bags — Rowell Family Reunion 2026</title>
+<style>
+  /* ============ Palette (matches reunion site) ============ */
+  :root {
+    --cream: #FAF3E0;
+    --green: #2E5339;
+    --green-dark: #1F3D29;
+    --gold: #C8902A;
+    --gold-soft: #E5B860;
+    --teal: #2A7B7B;
+    --teal-dark: #1f6060;
+    --ink: #2C2C2C;
+    --muted: #6B6B6B;
+    --paper: #FFFFFF;
+    --line: #E8DFC9;
+    --kids: #E07A5F;       /* warm coral */
+    --teens: #81B29A;      /* sage */
+    --adults: #6A8EAE;     /* dusty blue */
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.6;
+    background-color: var(--cream);
+  }
+
+  h1, h2, h3, h4 { font-family: Georgia, "Times New Roman", serif; }
+
+  /* ============ Hero ============ */
+  .hero {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    color: var(--cream);
+    text-align: center;
+    padding: 4rem 1.5rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(200,144,42,0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(229,184,96,0.12) 0%, transparent 45%);
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero h1 {
+    font-size: 2.6rem;
+    margin-bottom: 0.5rem;
+    color: var(--cream);
+  }
+  .hero .ribbon {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--green-dark);
+    font-family: Georgia, serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero .subtitle {
+    font-size: 1.15rem;
+    font-style: italic;
+    opacity: 0.9;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat .num {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 2.2rem;
+    color: var(--gold-soft);
+    font-weight: bold;
+  }
+  .hero-stat .lbl {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.85;
+    margin-top: 0.25rem;
+  }
+
+  /* ============ Layout ============ */
+  main { max-width: 940px; margin: 0 auto; padding: 3rem 1.5rem; }
+  section { margin-bottom: 3rem; }
+
+  /* ============ Section headings ============ */
+  .section-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .section-title h2 {
+    display: inline-block;
+    background-color: var(--cream);
+    padding: 0.25rem 1.5rem;
+    color: var(--green);
+    font-size: 1.7rem;
+    position: relative;
+    z-index: 1;
+  }
+  .section-title::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    z-index: 0;
+  }
+  .section-lead {
+    text-align: center;
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+  }
+
+  /* ============ Base bag card grid ============ */
+  .base-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .base-card {
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    border-top: 4px solid var(--gold);
+  }
+  .base-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  }
+  .base-card .icon {
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .base-card .item-name {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    color: var(--green);
+    margin-bottom: 0.3rem;
+    font-size: 1.05rem;
+  }
+  .base-card .item-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+  }
+  .base-card .item-price {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    color: var(--gold);
+    font-size: 0.95rem;
+  }
+  .base-subtotal {
+    background: var(--green);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .base-subtotal .label {
+    font-family: Georgia, serif;
+    font-size: 1.05rem;
+  }
+  .base-subtotal .total {
+    font-family: Georgia, serif;
+    font-size: 1.4rem;
+    color: var(--gold-soft);
+    font-weight: bold;
+  }
+
+  /* ============ Age tier cards ============ */
+  .tier-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .tier-card {
+    background: var(--paper);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .tier-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+  }
+  .tier-header {
+    padding: 1.25rem 1.5rem;
+    color: white;
+    text-align: center;
+  }
+  .tier-header.kids { background: linear-gradient(135deg, var(--kids), #c66250); }
+  .tier-header.teens { background: linear-gradient(135deg, var(--teens), #5e9079); }
+  .tier-header.adults { background: linear-gradient(135deg, var(--adults), #4f7290); }
+  .tier-header .age-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .tier-header h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.15rem;
+  }
+  .tier-header .tier-emoji {
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .tier-body {
+    padding: 1.25rem 1.5rem;
+  }
+  .tier-body ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  .tier-body li {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 0.92rem;
+  }
+  .tier-body li:last-child { border-bottom: none; }
+  .tier-footer {
+    background: var(--cream);
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 2px solid var(--line);
+  }
+  .tier-footer .addon-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .tier-footer .addon-cost {
+    font-family: Georgia, serif;
+    color: var(--gold);
+    font-weight: bold;
+    font-size: 1.05rem;
+  }
+  .tier-footer .loaded-total {
+    font-family: Georgia, serif;
+    color: var(--green);
+    font-weight: bold;
+  }
+
+  /* ============ Budget pop-out ============ */
+  .budget-box {
+    background: linear-gradient(135deg, var(--paper) 0%, #FFFCF5 100%);
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    padding: 2rem;
+    text-align: center;
+  }
+  .budget-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .budget-row:last-child { border-bottom: none; }
+  .budget-row.highlight {
+    font-family: Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--green);
+    font-weight: bold;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 2px solid var(--gold);
+  }
+  .budget-stamp {
+    display: inline-block;
+    background: var(--teal);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 999px;
+    font-weight: bold;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+
+  /* ============ Tumbler shortlist ============ */
+  .tumbler-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .tumbler-card {
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s, transform 0.2s;
+    border-left: 5px solid var(--line);
+    position: relative;
+  }
+  .tumbler-card:hover {
+    box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+    transform: translateX(3px);
+  }
+  .tumbler-card.starred {
+    border-left-color: var(--gold);
+    background: linear-gradient(to right, #FFFCF5, var(--paper) 8%);
+  }
+  .tumbler-card .star {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    background: var(--gold);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tumbler-card h4 {
+    color: var(--green);
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+    margin-right: 6rem;
+  }
+  .tumbler-card .desc {
+    font-size: 0.9rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .tumbler-card .price-tag {
+    font-family: Georgia, serif;
+    color: var(--gold);
+    font-weight: bold;
+    margin-right: 1rem;
+  }
+  .tumbler-card a.view-link {
+    color: var(--teal);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .tumbler-card a.view-link:hover {
+    color: var(--teal-dark);
+    text-decoration: underline;
+  }
+  .tumbler-card a.view-link::after {
+    content: " →";
+  }
+
+  /* ============ Vendor strip ============ */
+  .vendor-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  .vendor-pill {
+    background: var(--paper);
+    border: 1.5px solid var(--gold);
+    color: var(--green);
+    padding: 0.5rem 1.1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .vendor-pill:hover {
+    background: var(--gold);
+    color: white;
+  }
+
+  /* ============ Logistics ============ */
+  .logistics {
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  .logistics-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .logistics-item:last-child { border-bottom: none; }
+  .logistics-item .check {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    font-family: Georgia, serif;
+  }
+  .logistics-item .text {
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  /* ============ Footer ============ */
+  footer {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    margin-top: 2rem;
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.85rem; }
+    .hero .subtitle { font-size: 1rem; }
+    .hero-stats { gap: 1.25rem; }
+    .hero-stat .num { font-size: 1.7rem; }
+    main { padding: 2rem 1rem; }
+    .section-title h2 { font-size: 1.4rem; padding: 0.25rem 1rem; }
+    .tumbler-card .star { position: static; display: inline-block; margin-bottom: 0.4rem; }
+    .tumbler-card h4 { margin-right: 0; }
+  }
+
+  /* ============ Site nav (matches other pages) ============ */
+  .site-nav {
+    background-color: var(--green);
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+  }
+  .site-nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .site-nav a {
+    color: var(--cream);
+    text-decoration: none;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.95rem;
+    transition: opacity 0.2s;
+  }
+  .site-nav a:hover { opacity: 0.8; }
+  .site-nav .nav-active {
+    font-weight: bold;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 2px;
+  }
+  @media (max-width: 640px) {
+    .site-nav ul { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="register.html">Registration</a></li>
+    <li><a href="next-steps.html">Next Steps</a></li>
+    <li><a href="gift-bags.html" class="nav-active">Gift Bags</a></li>
+    <li><a href="family-history.html">Family History</a></li>
+    <li><a href="in-memoriam.html">In Memoriam</a></li>
+    <li><a href="past-reunions.html">Past Reunions</a></li>
+    <li><a href="generations.html">Generations</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+  </ul>
+</nav>
+
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-content">
+    <span class="ribbon">Welcome Gift</span>
+    <h1>Rowell Family Reunion Gift Bags</h1>
+    <p class="subtitle">A keepsake for every Rowell — built around Percy's tumbler idea, with a little something extra for kids, teens, and adults.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="num">40</span><span class="lbl">Bags</span></div>
+      <div class="hero-stat"><span class="num">~$24</span><span class="lbl">Per Bag</span></div>
+      <div class="hero-stat"><span class="num">3</span><span class="lbl">Age Tiers</span></div>
+      <div class="hero-stat"><span class="num">~$960</span><span class="lbl">All In</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== BASE BAG ===== -->
+  <section>
+    <div class="section-title"><h2>What's in every bag</h2></div>
+    <p class="section-lead">The base bag is identical for every family member — anchored on a custom tumbler from Percy's pick.</p>
+
+    <div class="base-grid">
+      <div class="base-card">
+        <div class="icon">🎒</div>
+        <div class="item-name">Family-crest tote</div>
+        <div class="item-note">Drawstring or canvas bag with the Rowell crest imprint.</div>
+        <div class="item-price">~$3.50</div>
+      </div>
+      <div class="base-card">
+        <div class="icon">🥤</div>
+        <div class="item-name">Custom tumbler ★</div>
+        <div class="item-note">Percy's pick: 16oz Big Sur Grande, min order 50.</div>
+        <div class="item-price">~$5.39</div>
+      </div>
+      <div class="base-card">
+        <div class="icon">🔑</div>
+        <div class="item-name">Family-crest keychain</div>
+        <div class="item-note">Engraved with the Rowell crest or family name.</div>
+        <div class="item-price">~$2.50</div>
+      </div>
+      <div class="base-card">
+        <div class="icon">✉️</div>
+        <div class="item-name">Welcome letter + itinerary</div>
+        <div class="item-note">Printed schedule card, hotel info, family note.</div>
+        <div class="item-price">~$1.00</div>
+      </div>
+      <div class="base-card">
+        <div class="icon">🖼️</div>
+        <div class="item-name">Reunion magnet or mini frame</div>
+        <div class="item-note">Custom-printed keepsake for the fridge.</div>
+        <div class="item-price">~$2.00</div>
+      </div>
+      <div class="base-card">
+        <div class="icon">🍫</div>
+        <div class="item-name">Snack pack</div>
+        <div class="item-note">Granola bar, small candy, bottled water.</div>
+        <div class="item-price">~$3.00</div>
+      </div>
+    </div>
+
+    <div class="base-subtotal">
+      <span class="label">Base bag subtotal (per person)</span>
+      <span class="total">$17.39</span>
+    </div>
+  </section>
+
+  <!-- ===== AGE TIERS ===== -->
+  <section>
+    <div class="section-title"><h2>Age-tier add-ons</h2></div>
+    <p class="section-lead">A small extra slipped into each bag at distribution, so every Rowell gets something just for them.</p>
+
+    <div class="tier-grid">
+
+      <div class="tier-card">
+        <div class="tier-header kids">
+          <div class="tier-emoji">🖍️</div>
+          <span class="age-badge">12 &amp; Under</span>
+          <h3>Kids</h3>
+        </div>
+        <div class="tier-body">
+          <ul>
+            <li>Family-themed sticker sheet</li>
+            <li>Small puzzle or figurine</li>
+            <li>Crayon pack</li>
+          </ul>
+        </div>
+        <div class="tier-footer">
+          <span class="addon-label">Add-on</span>
+          <span><span class="addon-cost">+$6.00</span> &nbsp; <span class="loaded-total">= $23.39 bag</span></span>
+        </div>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-header teens">
+          <div class="tier-emoji">🎧</div>
+          <span class="age-badge">Ages 13-17</span>
+          <h3>Teens</h3>
+        </div>
+        <div class="tier-body">
+          <ul>
+            <li>Photo-strip props for the reunion</li>
+            <li>Family playlist QR card</li>
+            <li>Lip balm or earbud case</li>
+          </ul>
+        </div>
+        <div class="tier-footer">
+          <span class="addon-label">Add-on</span>
+          <span><span class="addon-cost">+$6.00</span> &nbsp; <span class="loaded-total">= $23.39 bag</span></span>
+        </div>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-header adults">
+          <div class="tier-emoji">📜</div>
+          <span class="age-badge">Ages 18+</span>
+          <h3>Adults</h3>
+        </div>
+        <div class="tier-body">
+          <ul>
+            <li>Mini hand sanitizer</li>
+            <li>Mini lotion</li>
+            <li>Family-history postcard / heritage map</li>
+          </ul>
+        </div>
+        <div class="tier-footer">
+          <span class="addon-label">Add-on</span>
+          <span><span class="addon-cost">+$7.00</span> &nbsp; <span class="loaded-total">= $24.39 bag</span></span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== BUDGET ===== -->
+  <section>
+    <div class="section-title"><h2>Budget at a glance</h2></div>
+    <div class="budget-box">
+      <div class="budget-row">
+        <span>Per-bag average (loaded)</span>
+        <strong>~$24.00</strong>
+      </div>
+      <div class="budget-row">
+        <span>Range across tiers</span>
+        <strong>$23.39 — $24.39</strong>
+      </div>
+      <div class="budget-row">
+        <span>Total for 40 attendees</span>
+        <strong>~$960</strong>
+      </div>
+      <div class="budget-row">
+        <span>Tracker placeholder</span>
+        <strong>$1,000 ($25/pp × 40)</strong>
+      </div>
+      <div class="budget-row highlight">
+        <span>Status vs. $20-30 target</span>
+        <span>Within budget ✓</span>
+      </div>
+      <span class="budget-stamp">All-in around $24 per Rowell</span>
+    </div>
+  </section>
+
+  <!-- ===== TUMBLER SHORTLIST ===== -->
+  <section>
+    <div class="section-title"><h2>Tumbler shortlist (Percy's research)</h2></div>
+    <p class="section-lead">Five candidates Percy flagged. Working default is the Big Sur Grande for the best unit cost. Click any link to view.</p>
+
+    <div class="tumbler-list">
+
+      <div class="tumbler-card">
+        <h4>Custom Family Reunion Genealogy Tree Tumbler</h4>
+        <div class="desc">Custom-printed with family-tree art. Higher unit cost but striking design.</div>
+        <span class="price-tag">~$20-30 ea</span>
+        <a class="view-link" href="https://www.zazzle.com/custom_family_reunion_genealogy_tree_insulated_tumbler-256113618016931311" target="_blank" rel="noopener">View on Zazzle</a>
+      </div>
+
+      <div class="tumbler-card starred">
+        <span class="star">Percy's Pick</span>
+        <h4>16oz Grande Big Sur Double Wall Tumbler</h4>
+        <div class="desc">Best value in the shortlist. Min order 50 units. $229.50 + $40 setup = $269.50 total → $5.39 ea.</div>
+        <span class="price-tag">$5.39 ea (×50)</span>
+        <a class="view-link" href="https://www.pens.com/us/p/16oz-grande-big-sur-double-wall-tumbler/prd-uo7cz6gw/" target="_blank" rel="noopener">View on Pens.com</a>
+      </div>
+
+      <div class="tumbler-card">
+        <h4>Match Day 16oz Big Sur Stainless Travel Mug</h4>
+        <div class="desc">Travel-style stainless mug. $40 setup applies; request unit pricing.</div>
+        <span class="price-tag">Quote</span>
+        <a class="view-link" href="https://www.pens.com/us/p/match-day-16oz-big-sur-stainless-steel-travel-mug/prd-jqgjdjzc/" target="_blank" rel="noopener">View on Pens.com</a>
+      </div>
+
+      <div class="tumbler-card">
+        <h4>Full Color 16oz Big Sur Travel Tumbler</h4>
+        <div class="desc">Full-color imprint option — higher print quality, slight premium over single-color.</div>
+        <span class="price-tag">Quote</span>
+        <a class="view-link" href="https://www.pens.com/us/p/full-color-16oz-big-sur-travel-tumbler/prd-fy5gncql/" target="_blank" rel="noopener">View on Pens.com</a>
+      </div>
+
+      <div class="tumbler-card">
+        <h4>Good Value 16oz Fashion Metallic Tumbler</h4>
+        <div class="desc">Cheapest tier in Percy's shortlist. Metallic finish, simpler imprint.</div>
+        <span class="price-tag">Lowest tier</span>
+        <a class="view-link" href="https://www.pens.com/us/p/good-value-16-oz-fashion-metallic-tumbler/prd-rdzjhmeg/" target="_blank" rel="noopener">View on Pens.com</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== VENDORS ===== -->
+  <section>
+    <div class="section-title"><h2>Other vendors to source from</h2></div>
+    <p class="section-lead">Beyond Percy's tumbler shortlist, these are great sources for the rest of the bag contents.</p>
+    <div class="vendor-strip">
+      <a class="vendor-pill" href="https://crestline.com/b/family-reunions" target="_blank" rel="noopener">Crestline — Family Reunions</a>
+      <a class="vendor-pill" href="https://www.lazerdesigns.com/family-reunion-gift-ideas" target="_blank" rel="noopener">Lazer Designs</a>
+      <a class="vendor-pill" href="https://www.4imprint.com/" target="_blank" rel="noopener">4imprint</a>
+      <a class="vendor-pill" href="https://www.mixbook.com/inspiration/family-reunion-gift-ideas" target="_blank" rel="noopener">Mixbook (custom magnets)</a>
+      <a class="vendor-pill" href="https://www.vistaprint.com/" target="_blank" rel="noopener">Vistaprint</a>
+      <a class="vendor-pill" href="https://www.etsy.com/market/family_reunion_key_chains" target="_blank" rel="noopener">Etsy — Family Reunion</a>
+      <a class="vendor-pill" href="https://www.amazon.com/personalized-family-reunion-gifts-bulk/s?k=personalized+family+reunion+gifts+in+bulk" target="_blank" rel="noopener">Amazon (bulk)</a>
+    </div>
+  </section>
+
+  <!-- ===== LOGISTICS ===== -->
+  <section>
+    <div class="section-title"><h2>Logistics &amp; open decisions</h2></div>
+    <div class="logistics">
+      <div class="logistics-item">
+        <div class="check">1</div>
+        <div class="text">Lock the tumbler choice — Percy's Big Sur Grande is the working default at <strong>$5.39 each</strong> (50-unit minimum).</div>
+      </div>
+      <div class="logistics-item">
+        <div class="check">2</div>
+        <div class="text">Decide on the family crest art — needed before any custom item can be ordered.</div>
+      </div>
+      <div class="logistics-item">
+        <div class="check">3</div>
+        <div class="text">Lead time: tumblers usually ship in 2-3 weeks once art is approved. With the reunion on <strong>July 18</strong>, place the order by <strong>mid-June</strong>.</div>
+      </div>
+      <div class="logistics-item">
+        <div class="check">4</div>
+        <div class="text">Bag assembly: 40 bags is roughly 1-2 hours of family assembly at the hotel Friday evening — could double as a hospitality activity.</div>
+      </div>
+      <div class="logistics-item">
+        <div class="check">5</div>
+        <div class="text">Distribution: hand bags out at Friday check-in / welcome reception so attendees have the tumbler for Saturday's banquet.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Rowell Family Reunion 2026 · Gift Bag Plan</p>
+</footer>
+
+</body>
+</html>
