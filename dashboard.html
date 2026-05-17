@@ -49,12 +49,19 @@
 
         /* Reg table — kept, "just the facts" */
         .table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
-        .reg-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 1100px; }
+        .reg-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 1300px; }
         .reg-table th { background-color: #6B2D3E; color: #faf9f6; padding: 0.55rem 0.7rem; text-align: left; cursor: pointer; white-space: nowrap; user-select: none; font-weight: 600; }
         .reg-table th:hover { background-color: #552230; }
         .reg-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid #e0dcd3; white-space: normal; word-break: break-word; vertical-align: top; }
         .reg-table td.num { text-align: right; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
         .reg-table tbody tr:hover { background-color: #f0ece2; }
+        /* Editable cells */
+        .reg-table td.editable { cursor: text; background-color: #fefdf8; }
+        .reg-table td.editable:hover { background-color: #fff8e1; }
+        .reg-table td.editable:focus { outline: 2px solid #6B2D3E; background-color: #fff; }
+        .reg-table td.saving { opacity: 0.55; }
+        .reg-table td.saved { background-color: #e8f5e9 !important; transition: background-color 1.5s; }
+        .reg-table td.save-failed { background-color: #ffebee !important; }
         .status-paid { color: #2E7D32; font-weight: bold; }
         .status-partial { color: #b8860b; font-weight: bold; }
         .status-unpaid { color: #a03030; font-weight: bold; }
@@ -135,6 +142,7 @@
             </ul>
 
             <h2>Registrants</h2>
+            <p style="font-size:0.85rem; color:#666; margin-bottom:0.75rem;">Editable cells (highlighted on hover): Email, Phone, Dietary, Paid, Status, Confirmation, Notes. Click a cell to edit; click away or press Tab to save. Setting Status to <code>PAID</code> triggers the auto-confirmation email.</p>
             <div class="filter-row">
                 <input type="text" id="table-filter" placeholder="Search by name, email, status…">
                 <button class="btn-clear" id="btn-clear-filter">Clear</button>
@@ -155,6 +163,8 @@
                             <th data-col="due">Due</th>
                             <th data-col="paid">Paid</th>
                             <th data-col="status">Status</th>
+                            <th data-col="confirmation">Confirmation</th>
+                            <th data-col="notes">Notes</th>
                         </tr>
                     </thead>
                     <tbody id="reg-tbody"></tbody>
@@ -215,6 +225,7 @@
         (function () {
             var SHEETS_ID = '1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo';
             var REG_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Registrations';
+            var SHEETS_POST_URL = 'https://script.google.com/macros/s/AKfycbx9YibTmYq-TbiNUvm-fpPzw6GT6BV52A04Iy5yKdGIhHkT8Isk9dOv-_rKcXCf0N-eMg/exec';
             var ADMIN_PASSWORD = 'Rowell2026';
             var TOTAL_OBLIGATION = 13378.34;
             var DEPOSIT_PAID = 1000.00;
@@ -250,8 +261,9 @@
 
             function gvizToObjects(table, labels) {
                 var rows = (table && table.rows) || [];
-                return rows.map(function (row) {
-                    var obj = {};
+                return rows.map(function (row, idx) {
+                    // _sheetRow: 1-indexed sheet row number. Header is row 1, data starts at row 2.
+                    var obj = { _sheetRow: idx + 2 };
                     for (var i = 0; i < labels.length; i++) {
                         obj[labels[i]] = cellVal(row, i);
                     }
@@ -326,6 +338,7 @@
             function getTableData() {
                 return registrations.map(function (r) {
                     return {
+                        _sheetRow: r._sheetRow,
                         family_name: String(r.family_name).trim(),
                         name: (String(r.first_name).trim() + ' ' + String(r.last_name).trim()).trim(),
                         email: String(r.email).trim(),
@@ -337,7 +350,9 @@
                         method: String(r.payment_method).trim(),
                         due: parseNum(r.total_due),
                         paid: parseNum(r.amount_paid),
-                        status: String(r.payment_status).toUpperCase().trim() || 'UNPAID'
+                        status: String(r.payment_status).toUpperCase().trim() || 'UNPAID',
+                        confirmation: String(r.confirmation_sent).trim(),
+                        notes: String(r.notes).trim()
                     };
                 });
             }
@@ -380,7 +395,7 @@
                 if (rows.length === 0) {
                     var tr = document.createElement('tr');
                     var td = document.createElement('td');
-                    td.setAttribute('colspan', '12');
+                    td.setAttribute('colspan', '14');
                     td.className = 'empty-msg';
                     td.textContent = registrations.length === 0 ? 'No registrations yet' : 'No matching registrations';
                     tr.appendChild(td);
@@ -388,31 +403,120 @@
                     return;
                 }
 
-                var cols = ['family_name', 'name', 'email', 'phone', 'adults', 'children', 'under5', 'dietary', 'method', 'due', 'paid', 'status'];
+                var cols = ['family_name', 'name', 'email', 'phone', 'adults', 'children', 'under5', 'dietary', 'method', 'due', 'paid', 'status', 'confirmation', 'notes'];
 
                 var NUM_COLS = { adults: 1, children: 1, under5: 1, due: 1, paid: 1 };
+
+                // Display-col -> sheet-col mapping. Only listed cols are editable; others render read-only.
+                // Sheet col strings must match Apps Script REG_COLUMN_MAP keys.
+                var EDITABLE = {
+                    email: 'email',
+                    phone: 'phone',
+                    dietary: 'dietary_notes',
+                    paid: 'amount_paid',
+                    status: 'payment_status',
+                    confirmation: 'confirmation_sent',
+                    notes: 'notes'
+                };
 
                 for (var i = 0; i < rows.length; i++) {
                     var r = rows[i];
                     var tr = document.createElement('tr');
                     for (var c = 0; c < cols.length; c++) {
+                        var col = cols[c];
                         var tdEl = document.createElement('td');
-                        var val = r[cols[c]];
-                        if (cols[c] === 'due' || cols[c] === 'paid') {
-                            tdEl.textContent = '$' + val.toFixed(2);
+                        var val = r[col];
+                        var displayText;
+                        if (col === 'due' || col === 'paid') {
+                            displayText = '$' + Number(val || 0).toFixed(2);
                         } else {
-                            tdEl.textContent = val;
+                            displayText = (val == null) ? '' : String(val);
                         }
-                        if (NUM_COLS[cols[c]]) tdEl.classList.add('num');
-                        if (cols[c] === 'status') {
-                            if (val === 'PAID') tdEl.className = 'status-paid';
-                            else if (val === 'PARTIAL') tdEl.className = 'status-partial';
-                            else tdEl.className = 'status-unpaid';
+                        tdEl.textContent = displayText;
+                        if (NUM_COLS[col]) tdEl.classList.add('num');
+                        if (col === 'status') {
+                            if (val === 'PAID') tdEl.classList.add('status-paid');
+                            else if (val === 'PARTIAL') tdEl.classList.add('status-partial');
+                            else tdEl.classList.add('status-unpaid');
+                        }
+                        var sheetKey = EDITABLE[col];
+                        if (sheetKey && r._sheetRow) {
+                            tdEl.classList.add('editable');
+                            tdEl.contentEditable = 'true';
+                            tdEl.setAttribute('data-row', r._sheetRow);
+                            tdEl.setAttribute('data-col', sheetKey);
+                            tdEl.setAttribute('data-original', displayText);
+                            tdEl.addEventListener('blur', handleCellEdit);
+                            // Block Enter from inserting a newline -- treat it as commit (blur the cell)
+                            tdEl.addEventListener('keydown', function (e) {
+                                if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+                                if (e.key === 'Escape') {
+                                    e.preventDefault();
+                                    e.target.textContent = e.target.getAttribute('data-original') || '';
+                                    e.target.blur();
+                                }
+                            });
                         }
                         tr.appendChild(tdEl);
                     }
                     tbody.appendChild(tr);
                 }
+            }
+
+            // Save an inline cell edit. Called on td blur.
+            function handleCellEdit(e) {
+                var cell = e.target;
+                var newRaw = (cell.textContent || '').trim();
+                var oldRaw = cell.getAttribute('data-original') || '';
+                if (newRaw === oldRaw) return;  // no change
+
+                var sheetRow = cell.getAttribute('data-row');
+                var sheetCol = cell.getAttribute('data-col');
+
+                // For amount_paid, strip $ for the wire payload (Apps Script also coerces)
+                var wireValue = newRaw;
+                if (sheetCol === 'amount_paid') {
+                    wireValue = newRaw.replace(/^\$/, '').trim();
+                }
+
+                cell.classList.add('saving');
+                cell.classList.remove('saved', 'save-failed');
+
+                fetch(SHEETS_POST_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: 'cell_update',
+                        sheet: 'Registrations',
+                        row: Number(sheetRow),
+                        column: sheetCol,
+                        value: wireValue
+                    })
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (resp) {
+                    cell.classList.remove('saving');
+                    if (resp && resp.status === 'success') {
+                        cell.setAttribute('data-original', newRaw);
+                        cell.classList.add('saved');
+                        setTimeout(function () { cell.classList.remove('saved'); }, 1500);
+                        // If we just edited a column that the dashboard summary depends on
+                        // (amount_paid / payment_status), refresh stats + table. Otherwise leave alone.
+                        if (sheetCol === 'amount_paid' || sheetCol === 'payment_status') {
+                            // Wait a beat for onPaymentStatusEdit to stamp confirmation_sent (if PAID), then refetch.
+                            setTimeout(fetchData, 1200);
+                        }
+                    } else {
+                        cell.textContent = oldRaw;
+                        cell.classList.add('save-failed');
+                        showError('Save failed: ' + ((resp && resp.message) || 'unknown error'));
+                    }
+                })
+                .catch(function (err) {
+                    cell.classList.remove('saving');
+                    cell.textContent = oldRaw;
+                    cell.classList.add('save-failed');
+                    showError('Save failed: ' + ((err && err.message) || 'network error'));
+                });
             }
 
             function renderAll() {

@@ -1,7 +1,18 @@
 /**
- * Rowell Reunion Form Handler v5 (REUNION-DOCS-UPLOAD-001)
+ * Rowell Reunion Form Handler v6 (REUNION-INLINE-EDIT-001)
  *
- * Changes from v4:
+ * Changes from v5:
+ * - Added 'cell_update' type for inline-editable admin table cells on
+ *   dashboard.html. Updates a single cell on a named sheet at a named
+ *   row + column. Used by the Treasurer to mark payments PAID, edit
+ *   notes/dietary/contact fields without leaving the admin page.
+ * - Made onPaymentStatusEdit() read the cell value directly via
+ *   e.range.getValue() instead of relying on e.value. Installable
+ *   triggers fire on programmatic edits (from cell_update) but
+ *   e.value may not be populated in that path — reading the range
+ *   directly works for both human and programmatic edits.
+ *
+ * Changes in v5:
  * - Added 'document_upload' type for the admin-documents.html upload form.
  *   Decodes a base64-encoded file payload, writes it to a Drive folder
  *   ("Rowell Reunion 2026 Documents"), sets share-by-link permissions, and
@@ -63,6 +74,8 @@ function doPost(e) {
       return handleGenerationsSubmission(data);
     } else if (type === 'document_upload') {
       return handleDocumentUpload(data);
+    } else if (type === 'cell_update') {
+      return handleCellUpdate(data);
     } else {
       return jsonResponse({ status: 'error', message: 'Unknown type: ' + type });
     }
@@ -243,7 +256,11 @@ function onPaymentStatusEdit(e) {
     var row = e.range.getRow();
     if (row < 2) return;  // skip header row
 
-    var newValue = String(e.value || '').toUpperCase().trim();
+    // Read the cell value directly. e.value is unreliable for programmatic
+    // edits (e.g., when the inline-edit table on dashboard.html writes via
+    // cell_update -> handleCellUpdate -> setValue). Reading the range
+    // gives us the right answer for both human and programmatic edits.
+    var newValue = String(e.range.getValue() || '').toUpperCase().trim();
     if (newValue !== 'PAID') return;  // only fire on PAID flip
 
     // Read the row data
@@ -392,6 +409,80 @@ function handleDocumentUpload(data) {
     drive_url: fileUrl,
     drive_id: fileId,
     size_bytes: sizeBytes
+  });
+}
+
+/**
+ * Inline cell update handler — called via doPost when type === 'cell_update'.
+ * Expects payload: { sheet, row, column, value }
+ *   - sheet:  sheet tab name (e.g., 'Registrations')
+ *   - row:    1-indexed sheet row number (>=2; row 1 is header)
+ *   - column: column-key string from REG_COLUMN_MAP / GENERATIONS_COLUMN_MAP
+ *   - value:  new value to write (string)
+ *
+ * For Registrations sheet, editing payment_status (column N) will also
+ * trip the installable onPaymentStatusEdit trigger and fire the auto-
+ * confirmation email if value is "PAID". That's the desired chain.
+ */
+var REG_COLUMN_MAP = {
+  'timestamp': 1, 'family_name': 2, 'first_name': 3, 'last_name': 4,
+  'email': 5, 'phone': 6, 'num_adults': 7, 'num_children': 8,
+  'num_under5': 9, 'dietary_notes': 10, 'payment_method': 11,
+  'total_due': 12, 'amount_paid': 13, 'payment_status': 14,
+  'confirmation_sent': 15, 'notes': 16
+};
+
+function handleCellUpdate(data) {
+  if (!data.sheet || !data.row || !data.column) {
+    return jsonResponse({ status: 'error', message: 'Missing sheet/row/column' });
+  }
+
+  var rowNum = parseInt(data.row, 10);
+  if (!rowNum || rowNum < 2) {
+    return jsonResponse({ status: 'error', message: 'Invalid row (must be >= 2)' });
+  }
+
+  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var sheet = ss.getSheetByName(data.sheet);
+  if (!sheet) {
+    return jsonResponse({ status: 'error', message: 'Sheet not found: ' + data.sheet });
+  }
+
+  // Resolve column name -> column number. For now only Registrations sheet
+  // edits are supported (the use case Cassandra needs).
+  var colMap;
+  if (data.sheet === 'Registrations') {
+    colMap = REG_COLUMN_MAP;
+  } else {
+    return jsonResponse({ status: 'error', message: 'cell_update not supported on sheet: ' + data.sheet });
+  }
+
+  var colNum = colMap[data.column];
+  if (!colNum) {
+    return jsonResponse({ status: 'error', message: 'Unknown column: ' + data.column });
+  }
+
+  // Numeric coercion for currency columns -- strip $ and , and parse.
+  // Fall back to raw value if not parseable so treasurer notes still land.
+  var value = data.value == null ? '' : data.value;
+  if (data.column === 'total_due' || data.column === 'amount_paid') {
+    var s = String(value).replace(/[$,]/g, '').trim();
+    if (s === '') {
+      value = '';
+    } else {
+      var n = parseFloat(s);
+      if (!isNaN(n)) value = n;
+    }
+  }
+
+  sheet.getRange(rowNum, colNum).setValue(value);
+
+  return jsonResponse({
+    status: 'success',
+    sheet: data.sheet,
+    row: rowNum,
+    column: data.column,
+    value: value
   });
 }
 
