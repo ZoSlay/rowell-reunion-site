@@ -588,11 +588,11 @@
             <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;">
                 <div style="background-color: #FAF3E0; border-radius: 8px; padding: 1rem 1.5rem; flex: 1; min-width: 180px; text-align: center;">
                     <div style="font-size: 0.9rem; color: #888; margin-bottom: 0.25rem;">Adult (13+)</div>
-                    <div style="font-size: 1.8rem; font-weight: 700; color: #2E5339;">$305</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #2E5339;">$353</div>
                 </div>
                 <div style="background-color: #FAF3E0; border-radius: 8px; padding: 1rem 1.5rem; flex: 1; min-width: 180px; text-align: center;">
                     <div style="font-size: 0.9rem; color: #888; margin-bottom: 0.25rem;">Child (5&ndash;12)</div>
-                    <div style="font-size: 1.8rem; font-weight: 700; color: #2E5339;">$240</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #2E5339;">$282</div>
                 </div>
             </div>
             <p style="margin-top: 0.75rem; font-size: 0.9rem; color: #888; font-style: italic;">Children under 5 attend free.</p>
@@ -684,8 +684,8 @@
                 <div class="basket-summary">
                     <h3>Family Total Due</h3>
                     <ul class="basket-breakdown">
-                        <li><span id="basket-adults-label">0 adults × $305</span> <span id="basket-adults-cost">$0</span></li>
-                        <li><span id="basket-children-label">0 children × $240</span> <span id="basket-children-cost">$0</span></li>
+                        <li><span id="basket-adults-label">0 adults × $353</span> <span id="basket-adults-cost">$0</span></li>
+                        <li><span id="basket-children-label">0 children × $282</span> <span id="basket-children-cost">$0</span></li>
                         <li><span id="basket-under5-label">0 children under 5</span> <span>Free</span></li>
                     </ul>
                     <div class="basket-total" id="basket-total">$0</div>
@@ -748,8 +748,8 @@
             var under5Input = document.getElementById('under5');
             var basketTotalEl = document.getElementById('basket-total');
 
-            var ADULT_PRICE = 305;
-            var CHILD_PRICE = 240;
+            var ADULT_PRICE = 353;
+            var CHILD_PRICE = 282;
 
             function getInt(input) {
                 var v = parseInt(input.value, 10);
@@ -764,9 +764,9 @@
                 var childCost = children * CHILD_PRICE;
                 var totalCost = adultCost + childCost;
 
-                document.getElementById('basket-adults-label').textContent = adults + ' adult' + (adults !== 1 ? 's' : '') + ' \u00D7 $305';
+                document.getElementById('basket-adults-label').textContent = adults + ' adult' + (adults !== 1 ? 's' : '') + ' \u00D7 $353';
                 document.getElementById('basket-adults-cost').textContent = '$' + adultCost;
-                document.getElementById('basket-children-label').textContent = children + ' child' + (children !== 1 ? 'ren' : '') + ' \u00D7 $240';
+                document.getElementById('basket-children-label').textContent = children + ' child' + (children !== 1 ? 'ren' : '') + ' \u00D7 $282';
                 document.getElementById('basket-children-cost').textContent = '$' + childCost;
                 document.getElementById('basket-under5-label').textContent = under5 + ' child' + (under5 !== 1 ? 'ren' : '') + ' under 5';
                 basketTotalEl.textContent = '$' + totalCost;
