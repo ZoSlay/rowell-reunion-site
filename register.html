@@ -717,7 +717,8 @@
         <!-- Section 6 — Payment Instructions -->
         <div class="info-card">
             <h2>Payment Instructions</h2>
-            <p>After registering, please send your payment via Venmo. Your payment amount is the estimated family total shown during registration.</p>
+            <p>After registering, please send your payment via Venmo. Your payment amount is the family total shown during registration.</p>
+            <p>Payments are deposited in the <strong>family reunion account managed by our Treasurer, Cassandra Rowell Miller</strong> (<a href="mailto:casmille@san.rr.com">casmille@san.rr.com</a>), who will confirm payment for all registrants.</p>
             <p><strong>Payment is not processed automatically</strong> &mdash; you must complete payment manually using the instructions below.</p>
 
             <div class="payment-info">
@@ -729,7 +730,7 @@
                 <p>Memo: "Rowell Reunion - [Your Name]"</p>
             </div>
 
-            <p class="estimate-note">You must send payment separately via Venmo using the instructions above.</p>
+            <p class="estimate-note">Questions about payment? Contact Cassandra at <a href="mailto:casmille@san.rr.com">casmille@san.rr.com</a>.</p>
         </div>
     </main>
 
@@ -920,16 +921,10 @@
                 });
             });
 
-            // On load: prefill from localStorage if available
-            var saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try {
-                    var data = JSON.parse(saved);
-                    prefillForm(data);
-                } catch (e) {
-                    // ignore corrupt data
-                }
-            }
+            // On load: clear any prior registration data so every visitor sees a fresh,
+            // empty form. The submit handler re-saves on send so thank-you.html can read
+            // it for the Venmo deep-link, but it does not persist past this page leave.
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* localStorage unavailable */ }
         })();
     </script>
 </body>

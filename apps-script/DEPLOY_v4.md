@@ -63,12 +63,12 @@ If something doesn't work, check Apps Script's **Executions** tab in the left si
 
 ## Account owner onboarding (one-time)
 
-The Venmo account owner sees the inbound payment notifications. They need to mark `PAID` in the Sheet so the auto-confirmation fires.
+The Venmo account owner — **Treasurer Cassandra Rowell Miller (`casmille@san.rr.com`)** — sees the inbound payment notifications and is responsible for confirming payment for all registrants. She needs to mark `PAID` in the Sheet so the auto-confirmation fires.
 
 ### Step A: Share Sheet edit access
 - Open the Google Sheet (`https://docs.google.com/spreadsheets/d/1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo/edit`)
-- `Share` → add the account owner's Google account with **Editor** access
-- Send them the link
+- `Share` → add Cassandra's Google account (`casmille@san.rr.com` or her preferred Google login) with **Editor** access
+- Send her the link + the one-pager below
 
 ### Step B: Brief them with this one-pager
 
