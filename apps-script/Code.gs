@@ -352,12 +352,19 @@ function onPaymentStatusEdit(e) {
   }
 }
 
+// Pinned Drive folder for uploaded reunion documents. Lives at:
+//   My Drive / Family Reunion Documunts / Rowell Reunion 2026 Documents
+// If this folder is ever moved, the ID stays valid. If it is deleted or the
+// script-owner loses access, upload returns a clear error rather than
+// silently creating a new folder in Drive root.
+var UPLOAD_FOLDER_ID = '1CWQ5sDfQHbMtcrSERK-58Gv5SBGsqtEn';
+
 /**
  * Document upload handler — called via doPost when type === 'document_upload'.
  * Expects payload: { filename, mime_type, file_base64, title, description, uploaded_by }
  * Behavior:
  *   - Decode base64 to Blob
- *   - Find-or-create the "Rowell Reunion 2026 Documents" Drive folder
+ *   - Open the pinned UPLOAD_FOLDER_ID Drive folder
  *   - Create file in that folder
  *   - Set sharing to anyone-with-link can view
  *   - Find-or-create the "Documents" sheet tab and append a metadata row
@@ -368,14 +375,16 @@ function handleDocumentUpload(data) {
     return jsonResponse({ status: 'error', message: 'Missing filename or file_base64' });
   }
 
-  // Find or create the Drive folder
-  var folderName = 'Rowell Reunion 2026 Documents';
+  // Open the pinned upload folder by ID.
   var folder;
-  var folderIter = DriveApp.getFoldersByName(folderName);
-  if (folderIter.hasNext()) {
-    folder = folderIter.next();
-  } else {
-    folder = DriveApp.createFolder(folderName);
+  try {
+    folder = DriveApp.getFolderById(UPLOAD_FOLDER_ID);
+  } catch (err) {
+    Logger.log('handleDocumentUpload: cannot open UPLOAD_FOLDER_ID ' + UPLOAD_FOLDER_ID + ': ' + err.toString());
+    return jsonResponse({
+      status: 'error',
+      message: 'Upload folder not accessible. Folder may have been deleted or moved out of script-owner access. Contact Lorenzo.'
+    });
   }
 
   // Decode + create file
