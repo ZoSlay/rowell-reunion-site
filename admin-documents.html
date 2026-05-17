@@ -149,11 +149,12 @@
                     <thead>
                         <tr>
                             <th data-col="title">Title</th>
+                            <th data-col="filename">Filename</th>
                             <th data-col="description">Description</th>
                             <th data-col="uploaded_by">Uploaded by</th>
                             <th data-col="size_bytes">Size</th>
                             <th data-col="timestamp">Date</th>
-                            <th>Open</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="docs-tbody"></tbody>
@@ -225,14 +226,17 @@
                 fetch(DOCS_URL).then(function (r) { return r.text(); }).then(function (text) {
                     var data;
                     try { data = parseGviz(text); } catch (e) {
-                        renderEmpty('No documents yet (or sheet not created — upload your first to initialize it).');
+                        renderEmpty('No documents have been uploaded yet. Use the form above to upload your first.');
                         return;
                     }
                     if (data.status === 'error') {
-                        renderEmpty('No documents yet (or sheet not created — upload your first to initialize it).');
+                        renderEmpty('No documents have been uploaded yet. Use the form above to upload your first.');
                         return;
                     }
-                    documents = gvizToObjects(data.table, DOC_COLS);
+                    documents = gvizToObjects(data.table, DOC_COLS).filter(function (r) {
+                        // Filter out any blank/orphan rows (e.g., spreadsheet has a trailing empty row)
+                        return r.filename || r.drive_url || r.title;
+                    });
                     renderTable();
                     document.getElementById('last-refreshed').textContent =
                         'Last refreshed: ' + new Date().toLocaleTimeString();
@@ -246,11 +250,23 @@
                 while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
                 var tr = document.createElement('tr');
                 var td = document.createElement('td');
-                td.setAttribute('colspan', '6');
+                td.setAttribute('colspan', '7');
                 td.className = 'empty-msg';
                 td.textContent = msg;
                 tr.appendChild(td);
                 tbody.appendChild(tr);
+            }
+
+            // Convert a Drive view URL ( /file/d/{ID}/view ) or drive_id into a forced-download URL.
+            function buildDownloadUrl(driveId, driveUrl) {
+                if (driveId) {
+                    return 'https://drive.google.com/uc?export=download&id=' + encodeURIComponent(driveId);
+                }
+                if (driveUrl) {
+                    var m = String(driveUrl).match(/\/file\/d\/([^/]+)/);
+                    if (m) return 'https://drive.google.com/uc?export=download&id=' + encodeURIComponent(m[1]);
+                }
+                return null;
             }
 
             function formatSize(bytes) {
@@ -289,7 +305,7 @@
                 while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
 
                 if (!documents || documents.length === 0) {
-                    renderEmpty('No documents uploaded yet.');
+                    renderEmpty('No documents have been uploaded yet. Use the form above to upload your first.');
                     return;
                 }
 
@@ -303,6 +319,11 @@
                     tdTitle.className = 'col-title';
                     tdTitle.textContent = r.title || r.filename || '(untitled)';
                     tr.appendChild(tdTitle);
+
+                    var tdFilename = document.createElement('td');
+                    tdFilename.className = 'col-filename';
+                    tdFilename.textContent = r.filename || '';
+                    tr.appendChild(tdFilename);
 
                     var tdDesc = document.createElement('td');
                     tdDesc.className = 'col-desc';
@@ -326,12 +347,24 @@
                     var tdAct = document.createElement('td');
                     tdAct.className = 'col-action';
                     if (r.drive_url) {
-                        var a = document.createElement('a');
-                        a.href = r.drive_url;
-                        a.target = '_blank';
-                        a.rel = 'noopener';
-                        a.textContent = 'Open →';
-                        tdAct.appendChild(a);
+                        var aOpen = document.createElement('a');
+                        aOpen.href = r.drive_url;
+                        aOpen.target = '_blank';
+                        aOpen.rel = 'noopener';
+                        aOpen.textContent = 'Open';
+                        tdAct.appendChild(aOpen);
+
+                        var dlUrl = buildDownloadUrl(r.drive_id, r.drive_url);
+                        if (dlUrl) {
+                            var sep = document.createTextNode(' · ');
+                            tdAct.appendChild(sep);
+                            var aDl = document.createElement('a');
+                            aDl.href = dlUrl;
+                            aDl.textContent = 'Download';
+                            // Hint to the browser this is a download, not a navigation
+                            aDl.setAttribute('download', r.filename || '');
+                            tdAct.appendChild(aDl);
+                        }
                     }
                     tr.appendChild(tdAct);
 
@@ -350,6 +383,22 @@
                 statusEl.className = 'upload-status ' + kind;
                 statusEl.innerHTML = htmlMsg;
             }
+
+            // Auto-populate title from filename (stripped of extension) when a file is picked,
+            // but only if title is currently empty so we don't overwrite the user's typed title.
+            fileInput.addEventListener('change', function () {
+                var titleInput = document.getElementById('upload-title');
+                if (titleInput.value.trim()) return;  // respect user's manual entry
+                var f = fileInput.files[0];
+                if (!f) return;
+                var name = f.name || '';
+                // Strip the last extension only (handles "report.final.pdf" -> "report.final")
+                var dot = name.lastIndexOf('.');
+                var base = (dot > 0) ? name.substring(0, dot) : name;
+                // Replace underscores and hyphens with spaces for readability
+                base = base.replace(/[_\-]+/g, ' ').trim();
+                titleInput.value = base;
+            });
 
             uploadForm.addEventListener('submit', function (e) {
                 e.preventDefault();

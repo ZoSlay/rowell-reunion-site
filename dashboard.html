@@ -49,10 +49,11 @@
 
         /* Reg table — kept, "just the facts" */
         .table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
-        .reg-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .reg-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 1100px; }
         .reg-table th { background-color: #6B2D3E; color: #faf9f6; padding: 0.55rem 0.7rem; text-align: left; cursor: pointer; white-space: nowrap; user-select: none; font-weight: 600; }
         .reg-table th:hover { background-color: #552230; }
-        .reg-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid #e0dcd3; }
+        .reg-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid #e0dcd3; white-space: normal; word-break: break-word; vertical-align: top; }
+        .reg-table td.num { text-align: right; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
         .reg-table tbody tr:hover { background-color: #f0ece2; }
         .status-paid { color: #2E7D32; font-weight: bold; }
         .status-partial { color: #b8860b; font-weight: bold; }
@@ -389,6 +390,8 @@
 
                 var cols = ['family_name', 'name', 'email', 'phone', 'adults', 'children', 'under5', 'dietary', 'method', 'due', 'paid', 'status'];
 
+                var NUM_COLS = { adults: 1, children: 1, under5: 1, due: 1, paid: 1 };
+
                 for (var i = 0; i < rows.length; i++) {
                     var r = rows[i];
                     var tr = document.createElement('tr');
@@ -400,6 +403,7 @@
                         } else {
                             tdEl.textContent = val;
                         }
+                        if (NUM_COLS[cols[c]]) tdEl.classList.add('num');
                         if (cols[c] === 'status') {
                             if (val === 'PAID') tdEl.className = 'status-paid';
                             else if (val === 'PARTIAL') tdEl.className = 'status-partial';
