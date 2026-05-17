@@ -231,6 +231,32 @@ function handleGenerationsSubmission(data) {
 }
 
 /**
+ * One-time installer for the onPaymentStatusEdit trigger.
+ *
+ * This is a STANDALONE Apps Script (not container-bound to a specific Sheet),
+ * so the trigger-creation UI does NOT offer "From spreadsheet" as an event
+ * source. The trigger must be installed programmatically. Run this function
+ * once from the Apps Script editor (▶ Run with installPaymentTrigger
+ * selected). It is idempotent: re-running it removes any prior trigger of the
+ * same name before creating a new one, so calling it again after Code.gs
+ * changes is safe.
+ */
+function installPaymentTrigger() {
+  var SHEET_ID = '1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo';
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'onPaymentStatusEdit') {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  ScriptApp.newTrigger('onPaymentStatusEdit')
+    .forSpreadsheet(SHEET_ID)
+    .onEdit()
+    .create();
+  Logger.log('onPaymentStatusEdit trigger installed for sheet ' + SHEET_ID);
+}
+
+/**
  * Installable onEdit trigger for the Registrations sheet.
  * Fires the auto-confirmation email when payment_status flips to PAID.
  *
