@@ -105,6 +105,64 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Payment block */
+        .pay-block {
+            background-color: #FAF3E0;
+            border: 2px solid #C8902A;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .pay-block .pay-label {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .pay-block .pay-amount {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2E5339;
+            margin-bottom: 1rem;
+        }
+        .pay-btn {
+            display: inline-block;
+            background-color: #008CFF;  /* Venmo blue */
+            color: #fff;
+            padding: 0.85rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: background-color 0.2s;
+            margin: 0.5rem 0;
+        }
+        .pay-btn:hover {
+            background-color: #006FCC;
+        }
+        .pay-meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.75rem;
+            line-height: 1.5;
+        }
+        .pay-meta code {
+            background-color: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.88rem;
+            border: 1px solid #e0dcd3;
+        }
+        .pay-followup {
+            font-size: 0.88rem;
+            color: #555;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
         .nav-links {
             display: flex;
             justify-content: center;
@@ -210,8 +268,19 @@
 
     <main>
         <div class="confirmation-card">
-            <h2>Thank You!</h2>
-            <p>Thank you for registering for the Rowell Family Reunion 2026. Please complete your payment via Venmo using the details provided during registration.</p>
+            <h2>Registration Submitted ✓</h2>
+            <p id="registration-greeting">Your registration has been recorded.</p>
+
+            <div class="pay-block" id="pay-block">
+                <div class="pay-label">Family Total Due</div>
+                <div class="pay-amount" id="pay-amount">—</div>
+                <a id="pay-venmo-btn" class="pay-btn" href="https://venmo.com/u/Rowell-Family-Reunion" target="_blank" rel="noopener">Pay via Venmo</a>
+                <div class="pay-meta">
+                    Pay to <code>@Rowell-Family-Reunion</code> with memo <code id="pay-memo">Rowell Reunion</code>
+                </div>
+                <p class="pay-followup">You'll receive a confirmation number by email once your payment is verified by the reunion committee.</p>
+            </div>
+
             <p class="closing-msg">We look forward to seeing you in July!</p>
             <div class="nav-links">
                 <a href="index.html" class="btn-primary">Back to Home</a>
@@ -223,5 +292,59 @@
     <footer>
         <p>Rowell Family Reunion 2026</p>
     </footer>
+
+    <script>
+    (function () {
+        var STORAGE_KEY = 'rowellRegistration';
+        var VENMO_HANDLE = 'Rowell-Family-Reunion';
+
+        var raw = null;
+        try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { /* localStorage unavailable */ }
+
+        var data = null;
+        if (raw) {
+            try { data = JSON.parse(raw); } catch (e) { /* corrupt -- ignore */ }
+        }
+
+        if (!data || !data.totalDue) {
+            // No registration data on this device -- hide the pay-block, keep generic thank-you.
+            var pb = document.getElementById('pay-block');
+            if (pb) pb.style.display = 'none';
+            document.getElementById('registration-greeting').textContent =
+                'Thank you for registering. Please complete your payment via Venmo to @Rowell-Family-Reunion using the family total shown during registration.';
+            return;
+        }
+
+        var fullName = (data.fullName || '').trim();
+        var firstName = fullName.split(/\s+/)[0] || '';
+        var lastName = fullName.split(/\s+/).slice(1).join(' ') || '';
+        var memoName = lastName || fullName || 'Family';
+        var memo = 'Rowell Reunion - ' + memoName;
+        var amount = Number(data.totalDue) || 0;
+
+        // Personalize greeting
+        if (firstName) {
+            document.getElementById('registration-greeting').textContent =
+                'Thanks, ' + firstName + '. Your registration for the ' + memoName + ' family is recorded.';
+        }
+
+        // Fill amount
+        document.getElementById('pay-amount').textContent = '$' + amount;
+
+        // Fill memo
+        document.getElementById('pay-memo').textContent = memo;
+
+        // Build Venmo deep-link: opens app on mobile, profile page on desktop
+        // Format: https://venmo.com/<handle>?txn=pay&amount=N&note=URL_ENCODED
+        var venmoUrl = 'https://venmo.com/' + VENMO_HANDLE
+            + '?txn=pay'
+            + '&amount=' + encodeURIComponent(amount.toFixed(2))
+            + '&note=' + encodeURIComponent(memo);
+
+        var btn = document.getElementById('pay-venmo-btn');
+        btn.href = venmoUrl;
+        btn.textContent = 'Pay $' + amount + ' via Venmo';
+    })();
+    </script>
 </body>
 </html>

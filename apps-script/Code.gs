@@ -1,7 +1,20 @@
 /**
- * Rowell Reunion Form Handler v3 (REUNION-GENERATIONS-INTAKE-001)
+ * Rowell Reunion Form Handler v4 (REUNION-PAYMENT-CONFIRM-001)
  *
- * Changes from v2:
+ * Changes from v3:
+ * - Added onPaymentStatusEdit(e) handler — fires when the payment_status
+ *   column on the Registrations sheet flips to PAID. Auto-generates a
+ *   confirmation number (RFR-2026-NNN), writes it to the confirmation_sent
+ *   column, and emails the registrant.
+ * - Idempotent: re-edits to a row that already has a confirmation number
+ *   do NOT re-send the email.
+ * - REQUIRES INSTALLABLE TRIGGER: simple onEdit cannot send email to
+ *   non-script-owner addresses. Operator must add the trigger manually
+ *   via Edit -> Current project's triggers -> Add trigger ->
+ *   choose function "onPaymentStatusEdit", event source "From spreadsheet",
+ *   event type "On edit".
+ *
+ * Changes in v3:
  * - Added 'generations_submission' type for the generations.html intake form
  * - Auto-creates 'Generations Submissions' sheet tab on first submission
  * - Sends a notification email to rowellfamilyreunion2026@gmail.com for each submission
@@ -191,6 +204,98 @@ function handleGenerationsSubmission(data) {
   MailApp.sendEmail(emailOptions);
 
   return jsonResponse({ status: 'success', type: 'generations_submission' });
+}
+
+/**
+ * Installable onEdit trigger for the Registrations sheet.
+ * Fires the auto-confirmation email when payment_status flips to PAID.
+ *
+ * Registrations sheet schema (1-indexed columns):
+ *   1: timestamp        9: num_under5     13: amount_paid
+ *   2: family_name     10: dietary_notes  14: payment_status   <-- watching this
+ *   3: first_name      11: payment_method 15: confirmation_sent
+ *   4: last_name       12: total_due      16: notes
+ *   5: email
+ *   6: phone
+ *   7: num_adults
+ *   8: num_children
+ */
+function onPaymentStatusEdit(e) {
+  try {
+    if (!e || !e.range) return;
+    var sheet = e.range.getSheet();
+    if (sheet.getName() !== 'Registrations') return;
+
+    var col = e.range.getColumn();
+    if (col !== 14) return;  // only the payment_status column
+
+    var row = e.range.getRow();
+    if (row < 2) return;  // skip header row
+
+    var newValue = String(e.value || '').toUpperCase().trim();
+    if (newValue !== 'PAID') return;  // only fire on PAID flip
+
+    // Read the row data
+    var rowData = sheet.getRange(row, 1, 1, 16).getValues()[0];
+    var firstName        = String(rowData[2] || '').trim();
+    var lastName         = String(rowData[3] || '').trim();
+    var email            = String(rowData[4] || '').trim();
+    var amountPaid       = rowData[12];
+    var totalDue         = rowData[11];
+    var existingConfirm  = String(rowData[14] || '').trim();
+
+    if (!email) {
+      // No email -- can't send. Log only.
+      Logger.log('onPaymentStatusEdit: row ' + row + ' has no email; skipping email send.');
+      return;
+    }
+
+    if (existingConfirm) {
+      // Already confirmed -- idempotent guard, do not re-send.
+      Logger.log('onPaymentStatusEdit: row ' + row + ' already has confirmation "' + existingConfirm + '"; skipping.');
+      return;
+    }
+
+    // Generate confirmation number: RFR-2026-NNN (row-padded)
+    var confirmationNumber = 'RFR-2026-' + ('00' + row).slice(-3);
+
+    // Compose the email
+    var displayName = (firstName + ' ' + lastName).trim() || 'Family';
+    var subject = 'Rowell Family Reunion 2026 — Payment Confirmed (' + confirmationNumber + ')';
+
+    var amountLine = '';
+    if (amountPaid !== '' && amountPaid != null) {
+      amountLine = 'Amount received: $' + amountPaid + '\n';
+    } else if (totalDue !== '' && totalDue != null) {
+      amountLine = 'Registration total: $' + totalDue + '\n';
+    }
+
+    var body = 'Hi ' + (firstName || displayName) + ',\n\n'
+      + 'Your registration payment for the Rowell Family Reunion 2026 has been received.\n\n'
+      + '────────────────────────────────────────\n'
+      + 'CONFIRMATION NUMBER: ' + confirmationNumber + '\n'
+      + amountLine
+      + '────────────────────────────────────────\n\n'
+      + 'Please keep this confirmation number for your records.\n\n'
+      + 'See you July 17–19, 2026 at the Hilton Alexandria Old Town in Washington, DC!\n\n'
+      + 'Lorenzo Slay\n'
+      + '2026 Reunion President\n'
+      + 'rowellfamilyreunion2026@gmail.com\n';
+
+    MailApp.sendEmail({
+      to: email,
+      subject: subject,
+      body: body,
+      replyTo: 'rowellfamilyreunion2026@gmail.com'
+    });
+
+    // Stamp the confirmation number into the sheet (idempotent guard for future edits)
+    sheet.getRange(row, 15).setValue(confirmationNumber);
+
+    Logger.log('onPaymentStatusEdit: sent confirmation ' + confirmationNumber + ' to ' + email + ' (row ' + row + ')');
+  } catch (err) {
+    Logger.log('onPaymentStatusEdit ERROR: ' + err.toString());
+  }
 }
 
 function jsonResponse(obj) {
