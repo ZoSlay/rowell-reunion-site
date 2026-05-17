@@ -1,13 +1,19 @@
 /**
- * Rowell Reunion Form Handler v2 (REUNION-019)
+ * Rowell Reunion Form Handler v3 (REUNION-GENERATIONS-INTAKE-001)
  *
- * Changes from v1:
+ * Changes from v2:
+ * - Added 'generations_submission' type for the generations.html intake form
+ * - Auto-creates 'Generations Submissions' sheet tab on first submission
+ * - Sends a notification email to rowellfamilyreunion2026@gmail.com for each submission
+ *
+ * Changes in v2:
  * - Registration payload: removed hotel_intent, breakfast_count, museum_count, estimated_total
  * - Registration payload: added total_due
  * - Registrations tab headers updated to match new schema
  *
  * Deploy as: Web App → Execute as me → Anyone has access
- * After pasting, create a NEW deployment (do not edit existing v1).
+ * Re-deploy after pasting: Deploy → Manage deployments → pencil-edit current →
+ *   New version → save. (Keeps the same SHEETS_URL so the site code does not change.)
  */
 
 function doGet(e) {
@@ -31,6 +37,8 @@ function doPost(e) {
       return handleRsvp(data);
     } else if (type === 'feedback') {
       return handleFeedback(data);
+    } else if (type === 'generations_submission') {
+      return handleGenerationsSubmission(data);
     } else {
       return jsonResponse({ status: 'error', message: 'Unknown type: ' + type });
     }
@@ -112,6 +120,77 @@ function handleFeedback(data) {
   MailApp.sendEmail(emailOptions);
 
   return jsonResponse({ status: 'success', type: 'feedback' });
+}
+
+function handleGenerationsSubmission(data) {
+  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var sheet = ss.getSheetByName('Generations Submissions');
+  if (!sheet) {
+    sheet = ss.insertSheet('Generations Submissions');
+    sheet.appendRow([
+      'timestamp',
+      'submitter_name',
+      'submitter_email',
+      'submission_type',
+      'person_full_name',
+      'generation',
+      'parent_name',
+      'parent_not_listed',
+      'birth_date',
+      'marriage_date',
+      'death_date',
+      'spouse_name',
+      'notes',
+      'review_status'
+    ]);
+  }
+
+  sheet.appendRow([
+    new Date().toISOString(),
+    data.submitter_name || '',
+    data.submitter_email || '',
+    data.submission_type || '',
+    data.person_full_name || '',
+    data.generation || '',
+    data.parent_name || '',
+    data.parent_not_listed ? 'yes' : '',
+    data.birth_date || '',
+    data.marriage_date || '',
+    data.death_date || '',
+    data.spouse_name || '',
+    data.notes || '',
+    ''  // review_status — manual entry (pending / applied / declined)
+  ]);
+
+  var subject = 'Generations Submission — ' + (data.submission_type || 'unknown') + ' — ' + (data.person_full_name || 'unnamed');
+  var body = 'Rowell Family Reunion — Generations Submission\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n'
+    + 'Submitter: ' + (data.submitter_name || '') + ' <' + (data.submitter_email || '') + '>\n'
+    + 'Type: ' + (data.submission_type || '') + '\n\n'
+    + 'Person: ' + (data.person_full_name || '') + '\n'
+    + 'Generation: ' + (data.generation || '(not specified)') + '\n'
+    + 'Parent: ' + (data.parent_name || '(not specified)') + (data.parent_not_listed ? ' [PARENT NOT ON PAGE — manual review]' : '') + '\n'
+    + 'Birth date: ' + (data.birth_date || '—') + '\n'
+    + 'Marriage date: ' + (data.marriage_date || '—') + '\n'
+    + 'Death date: ' + (data.death_date || '—') + '\n'
+    + 'Spouse: ' + (data.spouse_name || '—') + '\n\n'
+    + 'Notes:\n' + (data.notes || '(none)') + '\n\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+    + 'Submitted: ' + new Date().toISOString() + '\n'
+    + 'Source: Reunion website Generations intake form\n'
+    + 'Review in: Generations Submissions sheet tab\n';
+
+  var emailOptions = {
+    to: 'rowellfamilyreunion2026@gmail.com',
+    subject: subject,
+    body: body
+  };
+  if (data.submitter_email) {
+    emailOptions.replyTo = data.submitter_email;
+  }
+  MailApp.sendEmail(emailOptions);
+
+  return jsonResponse({ status: 'success', type: 'generations_submission' });
 }
 
 function jsonResponse(obj) {

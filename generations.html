@@ -35,6 +35,32 @@
         footer{text-align:center;padding:1.5rem;font-size:.85rem;color:#888;border-top:1px solid #e0dcd3}
         @media (max-width:768px){.hero-banner{padding:2.5rem 1rem 2rem}.hero-banner h1{font-size:1.6rem}.hero-banner .subtitle{font-size:1rem}.site-nav ul{gap:.75rem}.info-card,.cta-card{padding:1.5rem}.gen-list{grid-template-columns:1fr 1fr}}
         @media (max-width:375px){.hero-banner h1{font-size:1.4rem}main{padding:1.5rem 1rem}.info-card,.cta-card{padding:1rem}.gen-list{grid-template-columns:1fr}}
+        /* Intake form */
+        .form-card{background-color:#fff;border-radius:10px;padding:2rem;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:1.5rem}
+        .form-card h2{color:#6B2D3E;font-size:1.4rem;margin-bottom:.5rem}
+        .form-intro{margin-bottom:1.5rem;font-size:.95rem;color:#444}
+        .form-row{margin-bottom:1.25rem}
+        .form-row>label{display:block;font-weight:600;color:#2C2C2C;margin-bottom:.4rem;font-size:.95rem}
+        .form-row .req{color:#a02020}
+        .form-row input[type="text"],.form-row input[type="email"],.form-row input[type="date"],.form-row select,.form-row textarea{width:100%;padding:.55rem .75rem;border:1px solid #d4ccb8;border-radius:5px;font-size:1rem;font-family:inherit;background-color:#fff}
+        .form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:#6B2D3E;box-shadow:0 0 0 3px rgba(107,45,62,.15)}
+        .form-row select:disabled{background-color:#f5f3ed;color:#888;cursor:not-allowed}
+        .form-row textarea{resize:vertical;min-height:80px}
+        .radio-group{display:flex;flex-direction:column;gap:.5rem}
+        .radio-label{font-weight:400!important;display:flex;align-items:flex-start;gap:.55rem;cursor:pointer;margin-bottom:0!important;font-size:.95rem}
+        .radio-label input[type="radio"]{margin-top:.3rem;flex-shrink:0}
+        .form-help{font-size:.85rem;color:#888;margin-top:.4rem;font-style:italic}
+        .form-row.hidden{display:none}
+        .form-submit{background-color:#6B2D3E;color:#FAF3E0;border:none;padding:.85rem 2rem;font-size:1rem;font-family:Georgia,"Times New Roman",serif;font-weight:600;border-radius:5px;cursor:pointer;transition:background-color .2s}
+        .form-submit:hover{background-color:#552230}
+        .form-submit:disabled{opacity:.6;cursor:not-allowed}
+        .submit-status{margin-top:1rem;padding:.85rem 1rem;border-radius:5px;font-size:.95rem;display:none}
+        .submit-status.success{display:block;background-color:#e8f5e9;border-left:4px solid #2E7D32;color:#1B5E20}
+        .submit-status.error{display:block;background-color:#ffebee;border-left:4px solid #c62828;color:#b71c1c}
+        .submit-status.loading{display:block;background-color:#FAF3E0;border-left:4px solid #C8902A;color:#5a4520}
+        .form-footer-note{margin-top:1.25rem;padding-top:1rem;border-top:1px solid #e0dcd3;font-size:.88rem;color:#666;text-align:center}
+        .form-footer-note a{color:#6B2D3E;text-decoration:none;font-weight:600}
+        .form-footer-note a:hover{text-decoration:underline}
     </style>
 </head>
 <body>
@@ -188,15 +214,254 @@
             </div>
         </div>
 
-        <div class="cta-card">
-            <h2>Submit Births, Marriages &amp; Corrections</h2>
-            <p>This roll call reflects the family as of May 2026. Please send new births, marriages, name changes, or corrections to Lorenzo Slay, 2026 Reunion President, so we can keep the generations record current.</p>
-            <a href="mailto:rowellfamilyreunion2026@gmail.com?subject=Generations%20Update">Email an Update</a>
+        <div class="form-card">
+            <h2>Submit a Generations Update</h2>
+            <p class="form-intro">Report a birth, marriage, name change, passing, or correction. Your submission goes to Lorenzo Slay, 2026 Reunion President, for review and integration into the roll call.</p>
+
+            <form id="generations-form" novalidate>
+                <div class="form-row">
+                    <label for="submitter-name">Your name <span class="req">*</span></label>
+                    <input type="text" id="submitter-name" name="submitter_name" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="submitter-email">Your email <span class="req">*</span></label>
+                    <input type="email" id="submitter-email" name="submitter_email" required>
+                </div>
+
+                <div class="form-row">
+                    <label>What are you submitting? <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="submission_type" value="new_birth" required> New birth or addition</label>
+                        <label class="radio-label"><input type="radio" name="submission_type" value="marriage_or_name"> Marriage or name change</label>
+                        <label class="radio-label"><input type="radio" name="submission_type" value="passed"> Passed &mdash; move to In Memoriam</label>
+                        <label class="radio-label"><input type="radio" name="submission_type" value="new_spouse"> Spouse to add (for future family-tree planning)</label>
+                        <label class="radio-label"><input type="radio" name="submission_type" value="correction"> Correction (typo, wrong date, etc.)</label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="person-name">Person&rsquo;s full name <span class="req">*</span></label>
+                    <input type="text" id="person-name" name="person_full_name" placeholder="Include middle, maiden, and married names" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="generation">Generation</label>
+                    <select id="generation" name="generation">
+                        <option value="">&mdash; select generation &mdash;</option>
+                        <option value="1">First Generation (children of Sylvester &amp; Mattie)</option>
+                        <option value="2">Second Generation (grandchildren)</option>
+                        <option value="3">Third Generation (great grandchildren)</option>
+                        <option value="4">Fourth Generation (great-great grandchildren)</option>
+                        <option value="5">Fifth Generation (great-great-great grandchildren)</option>
+                        <option value="6">Sixth Generation</option>
+                    </select>
+                </div>
+
+                <div class="form-row" id="parent-row">
+                    <label for="parent-name">Parent&rsquo;s name as it appears on this page</label>
+                    <select id="parent-name" name="parent_name" disabled>
+                        <option value="">&mdash; select generation first &mdash;</option>
+                    </select>
+                    <p class="form-help">If the parent isn&rsquo;t in the dropdown yet (for example, you&rsquo;re also adding them), choose &ldquo;Parent not listed&rdquo;.</p>
+                </div>
+
+                <div class="form-row hidden" id="parent-freetext-row">
+                    <label for="parent-name-text">Parent&rsquo;s name (free text)</label>
+                    <input type="text" id="parent-name-text" name="parent_name_text" placeholder="e.g. Sallie Rowell Stroud">
+                </div>
+
+                <div class="form-row conditional hidden" data-show-for="new_birth marriage_or_name">
+                    <label for="birth-date">Birth date</label>
+                    <input type="date" id="birth-date" name="birth_date">
+                </div>
+
+                <div class="form-row conditional hidden" data-show-for="marriage_or_name new_spouse">
+                    <label for="marriage-date">Marriage date</label>
+                    <input type="date" id="marriage-date" name="marriage_date">
+                </div>
+
+                <div class="form-row conditional hidden" data-show-for="passed">
+                    <label for="death-date">Date of passing</label>
+                    <input type="date" id="death-date" name="death_date">
+                </div>
+
+                <div class="form-row conditional hidden" data-show-for="marriage_or_name new_spouse">
+                    <label for="spouse-name">Spouse&rsquo;s name</label>
+                    <input type="text" id="spouse-name" name="spouse_name" placeholder="The family member they married (if known)">
+                </div>
+
+                <div class="form-row">
+                    <label for="notes">Additional notes</label>
+                    <textarea id="notes" name="notes" rows="4" placeholder="Anything else helpful &mdash; context, dates uncertain, sources, etc."></textarea>
+                </div>
+
+                <button type="submit" id="submit-btn" class="form-submit">Submit Update</button>
+
+                <div id="submit-status" class="submit-status" aria-live="polite"></div>
+
+                <p class="form-footer-note">Or email us directly at <a href="mailto:rowellfamilyreunion2026@gmail.com?subject=Generations%20Update">rowellfamilyreunion2026@gmail.com</a>.</p>
+            </form>
         </div>
     </main>
 
     <footer>
         <p>Rowell Family Reunion 2026</p>
     </footer>
+
+    <script>
+    (function () {
+        var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx9YibTmYq-TbiNUvm-fpPzw6GT6BV52A04Iy5yKdGIhHkT8Isk9dOv-_rKcXCf0N-eMg/exec';
+        var FREETEXT_OPTION = '__not_listed__';
+
+        var form = document.getElementById('generations-form');
+        if (!form) return;
+
+        var generationSelect = document.getElementById('generation');
+        var parentSelect = document.getElementById('parent-name');
+        var parentFreetextRow = document.getElementById('parent-freetext-row');
+        var parentFreetextInput = document.getElementById('parent-name-text');
+        var submitBtn = document.getElementById('submit-btn');
+        var statusEl = document.getElementById('submit-status');
+        var conditionalRows = document.querySelectorAll('.form-row.conditional');
+        var typeRadios = form.querySelectorAll('input[name="submission_type"]');
+
+        // Build generation -> parent-name-list map by scraping the existing roll-call lists.
+        // Section index 0 = 1st gen, 1 = 2nd gen, ... index n = (n+1)th generation.
+        function buildParentMap() {
+            var map = {};
+            var sections = document.querySelectorAll('.gen-section');
+            for (var i = 0; i < sections.length; i++) {
+                var names = [];
+                var items = sections[i].querySelectorAll('.gen-list li');
+                for (var j = 0; j < items.length; j++) {
+                    names.push(items[j].textContent.trim());
+                }
+                map[i + 1] = names;
+            }
+            return map;
+        }
+        var PARENT_MAP = buildParentMap();
+
+        function escapeHtml(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // Cascading: when generation changes, repopulate parent dropdown with (gen - 1) list.
+        generationSelect.addEventListener('change', function () {
+            var gen = parseInt(this.value, 10);
+            parentFreetextRow.classList.add('hidden');
+            parentFreetextInput.value = '';
+
+            if (!gen) {
+                parentSelect.disabled = true;
+                parentSelect.innerHTML = '<option value="">&mdash; select generation first &mdash;</option>';
+                return;
+            }
+
+            if (gen === 1) {
+                parentSelect.disabled = true;
+                parentSelect.innerHTML = '<option value="">&mdash; 1st gen are children of Sylvester &amp; Mattie Rowell &mdash;</option>';
+                return;
+            }
+
+            var parents = PARENT_MAP[gen - 1] || [];
+            parentSelect.disabled = false;
+            var html = '<option value="">&mdash; select parent &mdash;</option>';
+            for (var i = 0; i < parents.length; i++) {
+                var n = escapeHtml(parents[i]);
+                html += '<option value="' + n + '">' + n + '</option>';
+            }
+            html += '<option value="' + FREETEXT_OPTION + '">Parent not listed &mdash; I will enter the name</option>';
+            parentSelect.innerHTML = html;
+        });
+
+        // Reveal free-text field when "Parent not listed" picked.
+        parentSelect.addEventListener('change', function () {
+            if (this.value === FREETEXT_OPTION) {
+                parentFreetextRow.classList.remove('hidden');
+                parentFreetextInput.focus();
+            } else {
+                parentFreetextRow.classList.add('hidden');
+                parentFreetextInput.value = '';
+            }
+        });
+
+        // Conditional field visibility based on submission_type radio.
+        function updateConditionalFields() {
+            var selectedType = '';
+            for (var i = 0; i < typeRadios.length; i++) {
+                if (typeRadios[i].checked) { selectedType = typeRadios[i].value; break; }
+            }
+            for (var k = 0; k < conditionalRows.length; k++) {
+                var row = conditionalRows[k];
+                var showFor = (row.getAttribute('data-show-for') || '').split(/\s+/);
+                if (showFor.indexOf(selectedType) >= 0) {
+                    row.classList.remove('hidden');
+                } else {
+                    row.classList.add('hidden');
+                }
+            }
+        }
+        for (var t = 0; t < typeRadios.length; t++) {
+            typeRadios[t].addEventListener('change', updateConditionalFields);
+        }
+
+        // Submit handler.
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            var fd = new FormData(form);
+            var parentDropdownVal = fd.get('parent_name') || '';
+            var parentText = fd.get('parent_name_text') || '';
+            var finalParent = parentDropdownVal === FREETEXT_OPTION ? parentText : parentDropdownVal;
+
+            var payload = {
+                type: 'generations_submission',
+                submitter_name: fd.get('submitter_name') || '',
+                submitter_email: fd.get('submitter_email') || '',
+                submission_type: fd.get('submission_type') || '',
+                person_full_name: fd.get('person_full_name') || '',
+                generation: fd.get('generation') || '',
+                parent_name: finalParent,
+                parent_not_listed: parentDropdownVal === FREETEXT_OPTION,
+                birth_date: fd.get('birth_date') || '',
+                marriage_date: fd.get('marriage_date') || '',
+                death_date: fd.get('death_date') || '',
+                spouse_name: fd.get('spouse_name') || '',
+                notes: fd.get('notes') || ''
+            };
+
+            submitBtn.disabled = true;
+            statusEl.className = 'submit-status loading';
+            statusEl.textContent = 'Submitting…';
+
+            fetch(SHEETS_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(function () {
+                statusEl.className = 'submit-status success';
+                statusEl.textContent = 'Thank you! Your submission has been received and will be reviewed for integration into the page.';
+                form.reset();
+                parentSelect.disabled = true;
+                parentSelect.innerHTML = '<option value="">— select generation first —</option>';
+                parentFreetextRow.classList.add('hidden');
+                for (var c = 0; c < conditionalRows.length; c++) { conditionalRows[c].classList.add('hidden'); }
+            })
+            .catch(function (err) {
+                statusEl.className = 'submit-status error';
+                statusEl.textContent = 'Submission failed. Please email rowellfamilyreunion2026@gmail.com directly. (' + ((err && err.message) || 'network error') + ')';
+            })
+            .finally(function () {
+                submitBtn.disabled = false;
+            });
+        });
+    })();
+    </script>
 </body>
 </html>
