@@ -380,6 +380,33 @@
             margin: 0.5rem 0;
         }
 
+        .payment-handle {
+            background-color: #fff;
+            border: 2px solid #C8902A;
+            border-radius: 5px;
+            padding: 0.85rem 1rem;
+            text-align: center;
+            margin: 0.5rem 0 0.75rem;
+        }
+        .payment-handle a {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.15rem;
+            color: #2E5339;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .payment-handle a:hover {
+            color: #C8902A;
+            text-decoration: underline;
+        }
+        .payment-handle .hint {
+            display: block;
+            font-size: 0.78rem;
+            color: #888;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
         /* Submit button */
         .btn-submit {
             display: block;
@@ -699,13 +726,16 @@
 
             <div class="payment-info">
                 <h3>Venmo</h3>
-                <div class="payment-placeholder">PLACEHOLDER &mdash; Venmo handle will be added before the page goes live.</div>
+                <div class="payment-handle">
+                    <a href="https://venmo.com/u/Rowell-Family-Reunion" target="_blank" rel="noopener">@Rowell-Family-Reunion</a>
+                    <span class="hint">Tap to open in Venmo</span>
+                </div>
                 <p>Memo: "Rowell Reunion - [Your Name]"</p>
             </div>
 
             <div class="payment-info">
                 <h3>Zelle</h3>
-                <div class="payment-placeholder">PLACEHOLDER &mdash; Zelle phone number or email will be added before the page goes live.</div>
+                <div class="payment-placeholder">Zelle details coming soon &mdash; please use Venmo for now.</div>
                 <p>Memo: "Rowell Reunion - [Your Name]"</p>
             </div>
 
