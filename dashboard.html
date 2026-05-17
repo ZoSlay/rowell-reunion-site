@@ -60,6 +60,12 @@
         .empty-msg { text-align: center; padding: 2rem; color: #888; font-style: italic; }
         .error-banner { background-color: #f0ece2; border-left: 4px solid #a03030; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem; color: #a03030; display: none; }
 
+        /* Admin sub-nav */
+        .admin-subnav { display: flex; gap: 1.5rem; padding: 0.75rem 0; border-bottom: 1px solid #e0dcd3; margin-bottom: 1rem; font-size: 0.95rem; }
+        .admin-subnav a { color: #6B2D3E; text-decoration: none; font-weight: 600; }
+        .admin-subnav a:hover { text-decoration: underline; }
+        .admin-subnav a.subnav-active { border-bottom: 2px solid #C8902A; padding-bottom: 0.2rem; }
+
         @media (max-width: 480px) {
             .admin-gate-card { flex-direction: column; align-items: stretch; }
             .filter-row { flex-direction: column; }
@@ -99,6 +105,11 @@
         </section>
 
         <section id="admin-view" style="display:none">
+            <div class="admin-subnav">
+                <a href="dashboard.html" class="subnav-active">Dashboard</a>
+                <a href="admin-documents.html">Documents</a>
+            </div>
+
             <div class="refresh-row">
                 <span id="last-refreshed">Last refreshed: —</span>
                 <div class="btns">
@@ -408,15 +419,22 @@
             }
 
             // Admin gate
+            var SESSION_KEY = 'rowellAdminUnlocked';
+
+            function enterAdminView() {
+                adminUnlocked = true;
+                document.getElementById('admin-gate').style.display = 'none';
+                document.getElementById('admin-view').style.display = 'block';
+                try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) { /* sessionStorage unavailable */ }
+                fetchData();
+            }
+
             document.getElementById('btn-unlock').addEventListener('click', function () {
                 var input = document.getElementById('admin-password');
                 var errorEl = document.getElementById('admin-error');
                 if (input.value === ADMIN_PASSWORD) {
-                    adminUnlocked = true;
-                    document.getElementById('admin-gate').style.display = 'none';
-                    document.getElementById('admin-view').style.display = 'block';
                     errorEl.textContent = '';
-                    fetchData();
+                    enterAdminView();
                 } else {
                     errorEl.textContent = 'Incorrect password.';
                 }
@@ -433,7 +451,15 @@
                 var input = document.getElementById('admin-password');
                 input.value = '';
                 input.focus();
+                try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* sessionStorage unavailable */ }
             });
+
+            // On load: if session already unlocked (e.g. user just came from admin-documents), skip gate.
+            try {
+                if (sessionStorage.getItem(SESSION_KEY) === '1') {
+                    enterAdminView();
+                }
+            } catch (e) { /* sessionStorage unavailable */ }
 
             document.getElementById('btn-refresh').addEventListener('click', fetchData);
 

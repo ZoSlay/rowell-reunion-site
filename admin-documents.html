@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Documents — Rowell Family Reunion 2026</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .site-nav { background-color: #6B2D3E; }
+        .hero { background-color: #6B2D3E; padding: 2rem 1.5rem; }
+        .hero h1 { font-size: 1.6rem; }
+        h2 { color: #6B2D3E; font-size: 1.15rem; margin: 1.75rem 0 0.6rem; padding-bottom: 0.25rem; border-bottom: 1px solid #e0dcd3; }
+
+        /* Admin gate (same pattern as dashboard) */
+        .admin-gate-card { background-color: #f0ece2; border-radius: 6px; padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; max-width: 520px; margin: 2.5rem auto; }
+        .admin-gate-card input[type="password"] { padding: 0.5rem 0.6rem; border: 1px solid #c5bfa7; border-radius: 4px; font-family: inherit; font-size: 1rem; background-color: #faf9f6; flex: 1; min-width: 150px; }
+        .admin-gate-card input:focus { outline: none; border-color: #6B2D3E; box-shadow: 0 0 0 2px rgba(107,45,62,0.2); }
+        .btn-admin { background-color: #6B2D3E; color: #faf9f6; border: none; padding: 0.5rem 1.2rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.95rem; }
+        .btn-admin:hover { background-color: #552230; }
+        .admin-error { color: #a03030; font-size: 0.85rem; width: 100%; }
+
+        /* Admin sub-nav (Dashboard | Documents) */
+        .admin-subnav { display: flex; gap: 1.5rem; padding: 0.75rem 0; border-bottom: 1px solid #e0dcd3; margin-bottom: 1rem; font-size: 0.95rem; }
+        .admin-subnav a { color: #6B2D3E; text-decoration: none; font-weight: 600; }
+        .admin-subnav a:hover { text-decoration: underline; }
+        .admin-subnav a.subnav-active { border-bottom: 2px solid #C8902A; padding-bottom: 0.2rem; }
+
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.85rem; color: #888; flex-wrap: wrap; gap: 0.5rem; }
+        .topbar .btns { display: flex; gap: 0.5rem; }
+        .btn-refresh { background-color: #6B2D3E; color: #faf9f6; border: none; padding: 0.4rem 1rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+        .btn-refresh:hover { background-color: #552230; }
+
+        /* Upload form */
+        .upload-form { background-color: #faf9f6; border: 1px solid #e0dcd3; border-radius: 4px; padding: 1.25rem; margin-bottom: 1.5rem; }
+        .upload-form label { display: block; font-weight: 600; color: #2c2c2c; margin-bottom: 0.4rem; font-size: 0.9rem; margin-top: 0.85rem; }
+        .upload-form label:first-of-type { margin-top: 0; }
+        .upload-form .req { color: #a02020; }
+        .upload-form input[type="text"], .upload-form input[type="email"], .upload-form textarea, .upload-form input[type="file"] { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid #d4ccb8; border-radius: 4px; font-size: 0.95rem; font-family: inherit; background-color: #fff; box-sizing: border-box; }
+        .upload-form input:focus, .upload-form textarea:focus { outline: none; border-color: #6B2D3E; box-shadow: 0 0 0 2px rgba(107,45,62,0.2); }
+        .upload-form textarea { resize: vertical; min-height: 60px; }
+        .upload-form .form-help { font-size: 0.8rem; color: #888; margin-top: 0.3rem; font-style: italic; }
+        .upload-form .btn-upload { background-color: #6B2D3E; color: #faf9f6; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.95rem; font-weight: 600; margin-top: 1rem; }
+        .upload-form .btn-upload:hover { background-color: #552230; }
+        .upload-form .btn-upload:disabled { opacity: 0.6; cursor: not-allowed; }
+        .upload-status { margin-top: 0.85rem; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.9rem; display: none; }
+        .upload-status.success { display: block; background-color: #e8f5e9; border-left: 4px solid #2E7D32; color: #1B5E20; }
+        .upload-status.error { display: block; background-color: #ffebee; border-left: 4px solid #c62828; color: #b71c1c; }
+        .upload-status.loading { display: block; background-color: #FAF3E0; border-left: 4px solid #C8902A; color: #5a4520; }
+        .upload-status a { color: inherit; font-weight: 600; }
+
+        /* Documents table */
+        .table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+        .docs-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .docs-table th { background-color: #6B2D3E; color: #faf9f6; padding: 0.55rem 0.7rem; text-align: left; cursor: pointer; white-space: nowrap; user-select: none; font-weight: 600; }
+        .docs-table th:hover { background-color: #552230; }
+        .docs-table td { padding: 0.5rem 0.7rem; border-bottom: 1px solid #e0dcd3; vertical-align: top; }
+        .docs-table tbody tr:hover { background-color: #f0ece2; }
+        .docs-table .col-title { font-weight: 600; color: #2c2c2c; }
+        .docs-table .col-desc { color: #555; font-size: 0.85rem; max-width: 300px; }
+        .docs-table .col-size, .docs-table .col-date { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85rem; color: #666; white-space: nowrap; }
+        .docs-table .col-action a { color: #6B2D3E; font-weight: 600; text-decoration: none; }
+        .docs-table .col-action a:hover { text-decoration: underline; }
+        .empty-msg { text-align: center; padding: 2rem; color: #888; font-style: italic; }
+        .error-banner { background-color: #f0ece2; border-left: 4px solid #a03030; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem; color: #a03030; display: none; }
+
+        .upload-limits { background-color: #FAF3E0; border-left: 4px solid #C8902A; border-radius: 4px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: #5a4520; }
+        .upload-limits strong { color: #2c2c2c; }
+
+        @media (max-width: 480px) {
+            .admin-gate-card { flex-direction: column; align-items: stretch; }
+            .docs-table .col-desc { max-width: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register.html">Registration</a></li>
+            <li><a href="next-steps.html">Next Steps</a></li>
+            <li><a href="family-history.html">Family History</a></li>
+            <li><a href="in-memoriam.html">In Memoriam</a></li>
+            <li><a href="past-reunions.html">Past Reunions</a></li>
+            <li><a href="generations.html">Generations</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="dashboard.html" class="nav-active">Admin</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1>Admin Documents</h1>
+        <p class="tagline">Upload and access reunion committee documents</p>
+    </header>
+
+    <main>
+        <div id="error-banner" class="error-banner"></div>
+
+        <section id="admin-gate">
+            <div class="admin-gate-card">
+                <input type="password" id="admin-password" placeholder="Enter admin password" autofocus>
+                <button class="btn-admin" id="btn-unlock">Unlock</button>
+                <div class="admin-error" id="admin-error"></div>
+            </div>
+        </section>
+
+        <section id="admin-view" style="display:none">
+            <div class="admin-subnav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="admin-documents.html" class="subnav-active">Documents</a>
+            </div>
+
+            <div class="topbar">
+                <span id="last-refreshed">Last refreshed: —</span>
+                <div class="btns">
+                    <button class="btn-refresh" id="btn-refresh">Refresh</button>
+                    <button class="btn-admin" id="btn-lock">Lock</button>
+                </div>
+            </div>
+
+            <h2>Upload a Document</h2>
+
+            <div class="upload-limits">
+                <strong>Storage:</strong> files upload to a shared Google Drive folder ("Rowell Reunion 2026 Documents") and are listed below for committee access. Anyone with the file link can view; do not upload sensitive material that should not be shared. <strong>Max size ~5 MB</strong> per file (Apps Script payload limit).
+            </div>
+
+            <form class="upload-form" id="upload-form">
+                <label for="upload-title">Title <span class="req">*</span></label>
+                <input type="text" id="upload-title" name="title" required placeholder="e.g. Hotel Contract — Hilton Alexandria Old Town">
+
+                <label for="upload-description">Description (optional)</label>
+                <textarea id="upload-description" name="description" placeholder="What is this document? Any context committee members should know?"></textarea>
+
+                <label for="upload-uploaded-by">Your name <span class="req">*</span></label>
+                <input type="text" id="upload-uploaded-by" name="uploaded_by" required placeholder="Who is uploading">
+
+                <label for="upload-file">File <span class="req">*</span></label>
+                <input type="file" id="upload-file" name="file" required>
+                <p class="form-help">PDFs, Word docs, spreadsheets, images. Up to ~5 MB per file.</p>
+
+                <button type="submit" id="btn-upload" class="btn-upload">Upload Document</button>
+
+                <div id="upload-status" class="upload-status" aria-live="polite"></div>
+            </form>
+
+            <h2>Existing Documents</h2>
+            <div class="table-wrap">
+                <table class="docs-table" id="docs-table">
+                    <thead>
+                        <tr>
+                            <th data-col="title">Title</th>
+                            <th data-col="description">Description</th>
+                            <th data-col="uploaded_by">Uploaded by</th>
+                            <th data-col="size_bytes">Size</th>
+                            <th data-col="timestamp">Date</th>
+                            <th>Open</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docs-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026 · Admin</p>
+    </footer>
+
+    <script>
+        (function () {
+            var SHEETS_ID = '1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo';
+            var DOCS_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Documents';
+            var SHEETS_POST_URL = 'https://script.google.com/macros/s/AKfycbx9YibTmYq-TbiNUvm-fpPzw6GT6BV52A04Iy5yKdGIhHkT8Isk9dOv-_rKcXCf0N-eMg/exec';
+            var ADMIN_PASSWORD = 'Rowell2026';
+            var MAX_FILE_BYTES = 5 * 1024 * 1024;  // 5 MB warn threshold
+            var SESSION_KEY = 'rowellAdminUnlocked';
+
+            var documents = [];
+            var adminUnlocked = false;
+            var sortCol = 'timestamp';
+            var sortDir = -1;
+
+            // --- Parsing ---
+
+            function parseGviz(text) {
+                var inner = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
+                return JSON.parse(inner);
+            }
+
+            function cellVal(row, idx) {
+                if (!row.c || !row.c[idx]) return '';
+                var cell = row.c[idx];
+                if (cell.v != null) return cell.v;
+                if (cell.f != null) return cell.f;
+                return '';
+            }
+
+            function gvizToObjects(table, labels) {
+                var rows = (table && table.rows) || [];
+                return rows.map(function (row) {
+                    var obj = {};
+                    for (var i = 0; i < labels.length; i++) {
+                        obj[labels[i]] = cellVal(row, i);
+                    }
+                    return obj;
+                });
+            }
+
+            var DOC_COLS = ['timestamp', 'uploaded_by', 'title', 'description', 'filename',
+                'mime_type', 'size_bytes', 'drive_url', 'drive_id'];
+
+            // --- Fetch + render documents list ---
+
+            function showError(msg) {
+                var el = document.getElementById('error-banner');
+                el.textContent = msg;
+                el.style.display = 'block';
+            }
+            function hideError() {
+                document.getElementById('error-banner').style.display = 'none';
+            }
+
+            function fetchDocuments() {
+                hideError();
+                fetch(DOCS_URL).then(function (r) { return r.text(); }).then(function (text) {
+                    var data;
+                    try { data = parseGviz(text); } catch (e) {
+                        renderEmpty('No documents yet (or sheet not created — upload your first to initialize it).');
+                        return;
+                    }
+                    if (data.status === 'error') {
+                        renderEmpty('No documents yet (or sheet not created — upload your first to initialize it).');
+                        return;
+                    }
+                    documents = gvizToObjects(data.table, DOC_COLS);
+                    renderTable();
+                    document.getElementById('last-refreshed').textContent =
+                        'Last refreshed: ' + new Date().toLocaleTimeString();
+                }).catch(function () {
+                    renderEmpty('Could not load documents list.');
+                });
+            }
+
+            function renderEmpty(msg) {
+                var tbody = document.getElementById('docs-tbody');
+                while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+                var tr = document.createElement('tr');
+                var td = document.createElement('td');
+                td.setAttribute('colspan', '6');
+                td.className = 'empty-msg';
+                td.textContent = msg;
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+            }
+
+            function formatSize(bytes) {
+                var n = Number(bytes) || 0;
+                if (n < 1024) return n + ' B';
+                if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+                return (n / (1024 * 1024)).toFixed(2) + ' MB';
+            }
+
+            function formatDate(ts) {
+                if (!ts) return '';
+                try {
+                    var d = new Date(ts);
+                    if (isNaN(d.getTime())) return String(ts);
+                    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } catch (e) { return String(ts); }
+            }
+
+            function sortRows(rows) {
+                var col = sortCol;
+                var dir = sortDir;
+                return rows.slice().sort(function (a, b) {
+                    var va = a[col]; var vb = b[col];
+                    if (col === 'size_bytes') { va = Number(va) || 0; vb = Number(vb) || 0; }
+                    if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * dir;
+                    va = String(va).toLowerCase();
+                    vb = String(vb).toLowerCase();
+                    if (va < vb) return -1 * dir;
+                    if (va > vb) return 1 * dir;
+                    return 0;
+                });
+            }
+
+            function renderTable() {
+                var tbody = document.getElementById('docs-tbody');
+                while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+
+                if (!documents || documents.length === 0) {
+                    renderEmpty('No documents uploaded yet.');
+                    return;
+                }
+
+                var rows = sortRows(documents);
+
+                for (var i = 0; i < rows.length; i++) {
+                    var r = rows[i];
+                    var tr = document.createElement('tr');
+
+                    var tdTitle = document.createElement('td');
+                    tdTitle.className = 'col-title';
+                    tdTitle.textContent = r.title || r.filename || '(untitled)';
+                    tr.appendChild(tdTitle);
+
+                    var tdDesc = document.createElement('td');
+                    tdDesc.className = 'col-desc';
+                    tdDesc.textContent = r.description || '';
+                    tr.appendChild(tdDesc);
+
+                    var tdBy = document.createElement('td');
+                    tdBy.textContent = r.uploaded_by || '';
+                    tr.appendChild(tdBy);
+
+                    var tdSize = document.createElement('td');
+                    tdSize.className = 'col-size';
+                    tdSize.textContent = formatSize(r.size_bytes);
+                    tr.appendChild(tdSize);
+
+                    var tdDate = document.createElement('td');
+                    tdDate.className = 'col-date';
+                    tdDate.textContent = formatDate(r.timestamp);
+                    tr.appendChild(tdDate);
+
+                    var tdAct = document.createElement('td');
+                    tdAct.className = 'col-action';
+                    if (r.drive_url) {
+                        var a = document.createElement('a');
+                        a.href = r.drive_url;
+                        a.target = '_blank';
+                        a.rel = 'noopener';
+                        a.textContent = 'Open →';
+                        tdAct.appendChild(a);
+                    }
+                    tr.appendChild(tdAct);
+
+                    tbody.appendChild(tr);
+                }
+            }
+
+            // --- Upload ---
+
+            var uploadForm = document.getElementById('upload-form');
+            var fileInput = document.getElementById('upload-file');
+            var btnUpload = document.getElementById('btn-upload');
+            var statusEl = document.getElementById('upload-status');
+
+            function setStatus(kind, htmlMsg) {
+                statusEl.className = 'upload-status ' + kind;
+                statusEl.innerHTML = htmlMsg;
+            }
+
+            uploadForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (!uploadForm.checkValidity()) { uploadForm.reportValidity(); return; }
+
+                var file = fileInput.files[0];
+                if (!file) { setStatus('error', 'Please pick a file.'); return; }
+                if (file.size > MAX_FILE_BYTES) {
+                    setStatus('error', 'File is ' + formatSize(file.size) + ' — exceeds the 5 MB upload limit. Please use Google Drive directly for larger files.');
+                    return;
+                }
+
+                var title = document.getElementById('upload-title').value.trim();
+                var description = document.getElementById('upload-description').value.trim();
+                var uploadedBy = document.getElementById('upload-uploaded-by').value.trim();
+
+                btnUpload.disabled = true;
+                setStatus('loading', 'Uploading ' + file.name + ' (' + formatSize(file.size) + ')…');
+
+                var reader = new FileReader();
+                reader.onload = function (ev) {
+                    var dataUrl = ev.target.result;
+                    var base64 = dataUrl.split(',')[1];
+
+                    fetch(SHEETS_POST_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            type: 'document_upload',
+                            filename: file.name,
+                            mime_type: file.type || 'application/octet-stream',
+                            file_base64: base64,
+                            title: title,
+                            description: description,
+                            uploaded_by: uploadedBy
+                        })
+                    })
+                    .then(function (r) { return r.json(); })
+                    .then(function (resp) {
+                        if (resp && resp.status === 'success') {
+                            var openLink = resp.drive_url
+                                ? ' <a href="' + resp.drive_url + '" target="_blank" rel="noopener">Open file →</a>'
+                                : '';
+                            setStatus('success', 'Uploaded successfully.' + openLink);
+                            uploadForm.reset();
+                            fetchDocuments();
+                        } else {
+                            setStatus('error', 'Upload failed: ' + ((resp && resp.message) || 'unknown error'));
+                        }
+                    })
+                    .catch(function (err) {
+                        setStatus('error', 'Upload failed: ' + ((err && err.message) || 'network error'));
+                    })
+                    .finally(function () { btnUpload.disabled = false; });
+                };
+                reader.onerror = function () {
+                    setStatus('error', 'Could not read the file.');
+                    btnUpload.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // --- Admin gate + session handling ---
+
+            function enterAdminView() {
+                adminUnlocked = true;
+                document.getElementById('admin-gate').style.display = 'none';
+                document.getElementById('admin-view').style.display = 'block';
+                try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) { /* sessionStorage unavailable */ }
+                fetchDocuments();
+            }
+
+            document.getElementById('btn-unlock').addEventListener('click', function () {
+                var input = document.getElementById('admin-password');
+                var errorEl = document.getElementById('admin-error');
+                if (input.value === ADMIN_PASSWORD) {
+                    errorEl.textContent = '';
+                    enterAdminView();
+                } else {
+                    errorEl.textContent = 'Incorrect password.';
+                }
+            });
+
+            document.getElementById('admin-password').addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') document.getElementById('btn-unlock').click();
+            });
+
+            document.getElementById('btn-lock').addEventListener('click', function () {
+                adminUnlocked = false;
+                document.getElementById('admin-view').style.display = 'none';
+                document.getElementById('admin-gate').style.display = 'block';
+                var input = document.getElementById('admin-password');
+                input.value = '';
+                input.focus();
+                try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* sessionStorage unavailable */ }
+            });
+
+            document.getElementById('btn-refresh').addEventListener('click', fetchDocuments);
+
+            var headers = document.querySelectorAll('.docs-table th');
+            for (var i = 0; i < headers.length; i++) {
+                headers[i].addEventListener('click', function () {
+                    var col = this.getAttribute('data-col');
+                    if (!col) return;
+                    if (sortCol === col) { sortDir *= -1; } else { sortCol = col; sortDir = 1; }
+                    renderTable();
+                });
+            }
+
+            // On load: if session already unlocked (from dashboard), skip gate.
+            try {
+                if (sessionStorage.getItem(SESSION_KEY) === '1') {
+                    enterAdminView();
+                }
+            } catch (e) { /* sessionStorage unavailable */ }
+        })();
+    </script>
+</body>
+</html>

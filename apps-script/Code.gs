@@ -1,7 +1,16 @@
 /**
- * Rowell Reunion Form Handler v4 (REUNION-PAYMENT-CONFIRM-001)
+ * Rowell Reunion Form Handler v5 (REUNION-DOCS-UPLOAD-001)
  *
- * Changes from v3:
+ * Changes from v4:
+ * - Added 'document_upload' type for the admin-documents.html upload form.
+ *   Decodes a base64-encoded file payload, writes it to a Drive folder
+ *   ("Rowell Reunion 2026 Documents"), sets share-by-link permissions, and
+ *   records metadata in a "Documents" sheet tab (auto-created on first
+ *   upload). Returns the Drive URL + file ID to the client.
+ * - Apps Script payload cap (~6 MB JSON) bounds file size to roughly 5 MB
+ *   raw (after base64 inflation). Client enforces this pre-POST.
+ *
+ * Changes in v4:
  * - Added onPaymentStatusEdit(e) handler — fires when the payment_status
  *   column on the Registrations sheet flips to PAID. Auto-generates a
  *   confirmation number (RFR-2026-NNN), writes it to the confirmation_sent
@@ -52,6 +61,8 @@ function doPost(e) {
       return handleFeedback(data);
     } else if (type === 'generations_submission') {
       return handleGenerationsSubmission(data);
+    } else if (type === 'document_upload') {
+      return handleDocumentUpload(data);
     } else {
       return jsonResponse({ status: 'error', message: 'Unknown type: ' + type });
     }
@@ -296,6 +307,92 @@ function onPaymentStatusEdit(e) {
   } catch (err) {
     Logger.log('onPaymentStatusEdit ERROR: ' + err.toString());
   }
+}
+
+/**
+ * Document upload handler — called via doPost when type === 'document_upload'.
+ * Expects payload: { filename, mime_type, file_base64, title, description, uploaded_by }
+ * Behavior:
+ *   - Decode base64 to Blob
+ *   - Find-or-create the "Rowell Reunion 2026 Documents" Drive folder
+ *   - Create file in that folder
+ *   - Set sharing to anyone-with-link can view
+ *   - Find-or-create the "Documents" sheet tab and append a metadata row
+ *   - Return Drive URL + file ID
+ */
+function handleDocumentUpload(data) {
+  if (!data.filename || !data.file_base64) {
+    return jsonResponse({ status: 'error', message: 'Missing filename or file_base64' });
+  }
+
+  // Find or create the Drive folder
+  var folderName = 'Rowell Reunion 2026 Documents';
+  var folder;
+  var folderIter = DriveApp.getFoldersByName(folderName);
+  if (folderIter.hasNext()) {
+    folder = folderIter.next();
+  } else {
+    folder = DriveApp.createFolder(folderName);
+  }
+
+  // Decode + create file
+  var decoded;
+  try {
+    decoded = Utilities.base64Decode(data.file_base64);
+  } catch (err) {
+    return jsonResponse({ status: 'error', message: 'Could not decode file_base64: ' + err.toString() });
+  }
+
+  var blob = Utilities.newBlob(
+    decoded,
+    data.mime_type || 'application/octet-stream',
+    data.filename
+  );
+
+  var file = folder.createFile(blob);
+
+  // Share-by-link: anyone with the URL can view
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (err) {
+    // Sharing failed — file is created but only owner can see it. Surface but don't fail the upload.
+    Logger.log('handleDocumentUpload: setSharing failed for ' + file.getId() + ': ' + err.toString());
+  }
+
+  var fileUrl = file.getUrl();
+  var fileId = file.getId();
+  var sizeBytes = file.getSize();
+
+  // Find or create the Documents sheet tab
+  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var sheet = ss.getSheetByName('Documents');
+  if (!sheet) {
+    sheet = ss.insertSheet('Documents');
+    sheet.appendRow([
+      'timestamp', 'uploaded_by', 'title', 'description', 'filename',
+      'mime_type', 'size_bytes', 'drive_url', 'drive_id'
+    ]);
+  }
+
+  sheet.appendRow([
+    new Date().toISOString(),
+    data.uploaded_by || '',
+    data.title || data.filename,
+    data.description || '',
+    data.filename,
+    data.mime_type || '',
+    sizeBytes,
+    fileUrl,
+    fileId
+  ]);
+
+  return jsonResponse({
+    status: 'success',
+    type: 'document_upload',
+    drive_url: fileUrl,
+    drive_id: fileId,
+    size_bytes: sizeBytes
+  });
 }
 
 function jsonResponse(obj) {
