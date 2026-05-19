@@ -85,7 +85,7 @@ Switch to the reunion-account browser window.
    - **Find & Replace** (Edit menu, or Cmd-E / Ctrl-H):
      - Find: `1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo`
      - Replace: `<NEW_SHEET_ID from Step 3>`
-     - Replace **All** (should match 5 occurrences — confirm in the replace dialog)
+     - Replace **All** (should match 6 occurrences — confirm in the replace dialog)
    - Second Find & Replace:
      - Find: `1CWQ5sDfQHbMtcrSERK-58Gv5SBGsqtEn`
      - Replace: `<NEW_UPLOAD_FOLDER_ID from Step 4>`
@@ -179,7 +179,7 @@ Time spent: <X minutes>
 ```
 
 The orchestrator will then:
-- Swap `NEW_EXEC_URL` into 5 site files (`dashboard.html`, `admin-documents.html`, `register.html`, `feedback.html`, `generations.html`, `script.js`) in a single commit
+- Swap `NEW_EXEC_URL` into 6 site files (`dashboard.html`, `admin-documents.html`, `register.html`, `feedback.html`, `generations.html`, `script.js`) in a single commit
 - Update the dashboard's Budget Tracker constants to `NEW_BUDGET_SHEET_ID`
 - Smoke-test the full site against the new backend
 - Keep the old `lorenzo.slay@slaycorp.co`-owned assets running in parallel for 48h as a fallback
