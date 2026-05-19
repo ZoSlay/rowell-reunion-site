@@ -1,6 +1,6 @@
 (function () {
     var STORAGE_KEY = 'rowellRsvp';
-    var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxQ3C2_EIwWM3pcUe5QJDO71EZYpM3UXQnscKDqQZgjJ23Oms14dWFkrVb250luUnKm_Q/exec';
+    var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwT49cqzH6CK8Z4whoDYOl-qpVYfS4GuNW2Xsw4bSSheB91I3INSXeAyT3L_-fcShiAcA/exec';
 
     var form = document.getElementById('rsvp-form');
     var confirmation = document.getElementById('rsvp-confirmation');
