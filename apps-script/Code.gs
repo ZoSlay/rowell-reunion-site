@@ -80,6 +80,8 @@ function doPost(e) {
       return handleStatusUpdateCreate(data);
     } else if (type === 'status_update_delete') {
       return handleStatusUpdateDelete(data);
+    } else if (type === 'roll_call_delete') {
+      return handleRollCallDelete(data);
     } else {
       return jsonResponse({ status: 'error', message: 'Unknown type: ' + type });
     }
@@ -231,7 +233,42 @@ function handleGenerationsSubmission(data) {
   }
   MailApp.sendEmail(emailOptions);
 
-  return jsonResponse({ status: 'success', type: 'generations_submission' });
+  // Auto-publish to Roll Call tab so the public generations page picks it up
+  // immediately without operator review. The Generations Submissions tab above
+  // remains the audit trail. Operator can delete a Roll Call entry post-hoc
+  // via admin-roll-call.html if it's wrong / spam.
+  var rcSheet = ss.getSheetByName('Roll Call');
+  if (!rcSheet) {
+    rcSheet = ss.insertSheet('Roll Call');
+    rcSheet.appendRow([
+      'timestamp', 'entry_id', 'name', 'generation', 'parent_name',
+      'birth_date', 'marriage_date', 'death_date', 'spouse_name', 'notes',
+      'source', 'submission_type', 'status'
+    ]);
+  }
+  var entryId = rcSheet.getLastRow() + 1;
+  var resolvedParent = data.parent_name || data.parent_name_text || '';
+  rcSheet.appendRow([
+    new Date().toISOString(),
+    entryId,
+    data.person_full_name || '',
+    data.generation || '',
+    resolvedParent,
+    data.birth_date || '',
+    data.marriage_date || '',
+    data.death_date || '',
+    data.spouse_name || '',
+    data.notes || '',
+    'submission',
+    data.submission_type || '',
+    'active'
+  ]);
+
+  return jsonResponse({
+    status: 'success',
+    type: 'generations_submission',
+    roll_call_entry_id: entryId
+  });
 }
 
 /**
@@ -607,6 +644,38 @@ function handleStatusUpdateDelete(data) {
     status: 'success',
     type: 'status_update_delete',
     update_id: updateId
+  });
+}
+
+/**
+ * Roll Call delete handler — soft delete by setting the status column to 'deleted'.
+ * The row stays in the sheet for audit trail; the public generations page and
+ * admin list filter it out.
+ * Expects payload: { entry_id }
+ */
+function handleRollCallDelete(data) {
+  if (!data || !data.entry_id) {
+    return jsonResponse({ status: 'error', message: 'Missing entry_id' });
+  }
+
+  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var sheet = ss.getSheetByName('Roll Call');
+  if (!sheet) {
+    return jsonResponse({ status: 'error', message: 'Roll Call tab not found' });
+  }
+
+  var entryId = parseInt(data.entry_id, 10);
+  if (!entryId || entryId < 2) {
+    return jsonResponse({ status: 'error', message: 'Invalid entry_id' });
+  }
+
+  // status column is column 13 (M) per the Roll Call schema
+  sheet.getRange(entryId, 13).setValue('deleted');
+
+  return jsonResponse({
+    status: 'success',
+    type: 'roll_call_delete',
+    entry_id: entryId
   });
 }
 

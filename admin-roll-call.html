@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Roll Call — Rowell Family Reunion 2026</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        main { max-width: 1400px; }
+
+        .site-nav { background-color: #6B2D3E; }
+        .hero { background-color: #6B2D3E; padding: 2rem 1.5rem; }
+        .hero h1 { font-size: 1.6rem; }
+        h2 { color: #6B2D3E; font-size: 1.15rem; margin: 1.75rem 0 0.6rem; padding-bottom: 0.25rem; border-bottom: 1px solid #e0dcd3; }
+
+        /* Admin gate */
+        .admin-gate-card { background-color: #f0ece2; border-radius: 6px; padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; max-width: 520px; margin: 2.5rem auto; }
+        .admin-gate-card input[type="password"] { padding: 0.5rem 0.6rem; border: 1px solid #c5bfa7; border-radius: 4px; font-family: inherit; font-size: 1rem; background-color: #faf9f6; flex: 1; min-width: 150px; }
+        .admin-gate-card input:focus { outline: none; border-color: #6B2D3E; box-shadow: 0 0 0 2px rgba(107,45,62,0.2); }
+        .btn-admin { background-color: #6B2D3E; color: #faf9f6; border: none; padding: 0.5rem 1.2rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.95rem; }
+        .btn-admin:hover { background-color: #552230; }
+        .admin-error { color: #a03030; font-size: 0.85rem; width: 100%; }
+
+        /* Admin sub-nav */
+        .admin-subnav { display: flex; gap: 1.5rem; padding: 0.75rem 0; border-bottom: 1px solid #e0dcd3; margin-bottom: 1rem; font-size: 0.95rem; }
+        .admin-subnav a { color: #6B2D3E; text-decoration: none; font-weight: 600; }
+        .admin-subnav a:hover { text-decoration: underline; }
+        .admin-subnav a.subnav-active { border-bottom: 2px solid #C8902A; padding-bottom: 0.2rem; }
+
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.85rem; color: #888; flex-wrap: wrap; gap: 0.5rem; }
+        .topbar .btns { display: flex; gap: 0.5rem; }
+        .btn-refresh { background-color: #6B2D3E; color: #faf9f6; border: none; padding: 0.4rem 1rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+        .btn-refresh:hover { background-color: #552230; }
+
+        .filter-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; font-size: 0.9rem; }
+        .filter-row label { font-weight: 600; color: #2c2c2c; }
+        .filter-row select, .filter-row input { padding: 0.4rem 0.6rem; border: 1px solid #d4ccb8; border-radius: 4px; font-family: inherit; font-size: 0.9rem; }
+
+        .upload-limits { background-color: #FAF3E0; border-left: 4px solid #C8902A; border-radius: 4px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: #5a4520; }
+        .upload-limits strong { color: #2c2c2c; }
+
+        .table-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+        .rc-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .rc-table th { background-color: #6B2D3E; color: #faf9f6; padding: 0.55rem 0.7rem; text-align: left; white-space: nowrap; font-weight: 600; }
+        .rc-table td { padding: 0.5rem 0.7rem; border-bottom: 1px solid #e0dcd3; vertical-align: top; }
+        .rc-table tbody tr:hover { background-color: #f0ece2; }
+        .rc-table .col-name { font-weight: 600; color: #2c2c2c; }
+        .rc-table .col-meta { font-size: 0.85rem; color: #666; }
+        .rc-table .col-source { font-size: 0.8rem; color: #888; }
+        .rc-table .pill { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+        .rc-table .pill.seed { background-color: #e0dcd3; color: #555; }
+        .rc-table .pill.submission { background-color: #C8902A; color: #fff; }
+        .btn-delete { background-color: #fff; color: #a03030; border: 1px solid #a03030; padding: 0.3rem 0.85rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+        .btn-delete:hover { background-color: #a03030; color: #fff; }
+        .empty-msg { text-align: center; padding: 2rem; color: #888; font-style: italic; }
+        .error-banner { background-color: #f0ece2; border-left: 4px solid #a03030; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem; color: #a03030; display: none; }
+        .count-summary { font-size: 0.85rem; color: #666; margin-bottom: 0.5rem; }
+        @media (max-width: 480px) {
+            .admin-gate-card { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register.html">Registration</a></li>
+            <li><a href="updates.html">Updates</a></li>
+            <li><a href="next-steps.html">Next Steps</a></li>
+            <li><a href="family-history.html">Family History</a></li>
+            <li><a href="in-memoriam.html">In Memoriam</a></li>
+            <li><a href="past-reunions.html">Past Reunions</a></li>
+            <li><a href="generations.html">Generations</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="dashboard.html" class="nav-active">Admin</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1>Admin — Roll Call Moderation</h1>
+    </header>
+
+    <main>
+        <section id="admin-gate">
+            <div class="admin-gate-card">
+                <input type="password" id="admin-password" placeholder="Enter admin password" autofocus>
+                <button class="btn-admin" id="btn-unlock">Unlock</button>
+                <div class="admin-error" id="admin-error"></div>
+            </div>
+        </section>
+
+        <section id="admin-view" style="display:none">
+            <div class="admin-subnav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="admin-documents.html">Documents</a>
+                <a href="admin-updates.html">Status Updates</a>
+                <a href="admin-roll-call.html" class="subnav-active">Roll Call</a>
+            </div>
+
+            <div class="topbar">
+                <span id="last-refreshed">Last refreshed: —</span>
+                <div class="btns">
+                    <button class="btn-refresh" id="btn-refresh">Refresh</button>
+                    <button class="btn-admin" id="btn-lock">Lock</button>
+                </div>
+            </div>
+
+            <h2>Active Roll Call Entries</h2>
+
+            <div class="upload-limits">
+                <strong>How this works:</strong> Public Generations form submissions auto-append here. Each row appears on the public <a href="generations.html" target="_blank" rel="noopener">Generations page</a> roll call immediately. Delete any entry that's wrong/spam &mdash; the row is soft-deleted (kept in the Sheet for audit), but disappears from the public page on the next refresh. Seed entries (the 2019-vintage roll call) and submission entries are both deletable.
+            </div>
+
+            <div class="filter-row">
+                <label for="filter-gen">Filter by generation:</label>
+                <select id="filter-gen">
+                    <option value="">All</option>
+                    <option value="1">1st — Children</option>
+                    <option value="2">2nd — Grandchildren</option>
+                    <option value="3">3rd — Great Grandchildren</option>
+                    <option value="4">4th — Great Great Grandchildren</option>
+                    <option value="5">5th — Great-Great-Great Grandchildren</option>
+                    <option value="6">6th</option>
+                </select>
+                <label for="filter-source">Source:</label>
+                <select id="filter-source">
+                    <option value="">All</option>
+                    <option value="seed">Seed (2019-vintage)</option>
+                    <option value="submission">Submission (form)</option>
+                </select>
+                <label for="filter-name">Name contains:</label>
+                <input type="text" id="filter-name" placeholder="e.g. Rowell">
+            </div>
+
+            <div class="count-summary" id="count-summary"></div>
+
+            <div class="error-banner" id="error-banner"></div>
+            <div class="table-wrap">
+                <table class="rc-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Generation</th>
+                            <th>Parent</th>
+                            <th>Dates / Spouse</th>
+                            <th>Source</th>
+                            <th>Submitted</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="rc-tbody">
+                        <tr><td colspan="8" class="empty-msg">Loading&hellip;</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026 — Admin</p>
+    </footer>
+
+    <script>
+    (function () {
+        var SHEETS_ID = '1krj2XFd-YXpwFubbNdLS3N0Bi-ZEhm9J3-PliMjPr1M';
+        var ROLL_CALL_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Roll%20Call';
+        var SHEETS_POST_URL = 'https://script.google.com/macros/s/AKfycbwT49cqzH6CK8Z4whoDYOl-qpVYfS4GuNW2Xsw4bSSheB91I3INSXeAyT3L_-fcShiAcA/exec';
+        var ADMIN_PASSWORD = 'Rowell2026';
+        var SESSION_KEY = 'rfr_admin_unlocked';
+        var COLS = ['timestamp', 'entry_id', 'name', 'generation', 'parent_name', 'birth_date', 'marriage_date', 'death_date', 'spouse_name', 'notes', 'source', 'submission_type', 'status'];
+
+        var allEntries = [];
+
+        function parseGviz(text) {
+            var m = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+            if (!m) throw new Error('gviz parse failed');
+            return JSON.parse(m[1]);
+        }
+        function gvizToObjects(table) {
+            var rows = (table && table.rows) || [];
+            return rows.map(function (r) {
+                var obj = {};
+                var cells = r.c || [];
+                for (var i = 0; i < COLS.length && i < cells.length; i++) {
+                    var c = cells[i];
+                    obj[COLS[i]] = c == null ? '' : (c.f != null ? c.f : (c.v == null ? '' : c.v));
+                }
+                return obj;
+            });
+        }
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+        function formatDateOnly(s) {
+            if (!s) return '';
+            try {
+                var d = new Date(s);
+                if (isNaN(d.getTime())) return String(s);
+                return d.toLocaleDateString();
+            } catch (e) { return String(s); }
+        }
+
+        function showError(msg) {
+            var el = document.getElementById('error-banner');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+        function hideError() {
+            document.getElementById('error-banner').style.display = 'none';
+        }
+
+        function renderTable() {
+            var genFilter = document.getElementById('filter-gen').value;
+            var sourceFilter = document.getElementById('filter-source').value;
+            var nameFilter = (document.getElementById('filter-name').value || '').toLowerCase().trim();
+
+            var filtered = allEntries.filter(function (e) {
+                if (genFilter && String(e.generation) !== String(genFilter)) return false;
+                if (sourceFilter && e.source !== sourceFilter) return false;
+                if (nameFilter && String(e.name).toLowerCase().indexOf(nameFilter) < 0) return false;
+                return true;
+            });
+
+            var tbody = document.getElementById('rc-tbody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-msg">No entries match the current filters.</td></tr>';
+                document.getElementById('count-summary').textContent =
+                    'Showing 0 of ' + allEntries.length + ' active entries.';
+                return;
+            }
+
+            // Sort: generation asc, then name asc
+            filtered.sort(function (a, b) {
+                var ga = parseInt(a.generation, 10) || 99;
+                var gb = parseInt(b.generation, 10) || 99;
+                if (ga !== gb) return ga - gb;
+                return String(a.name).localeCompare(String(b.name));
+            });
+
+            var html = filtered.map(function (e) {
+                var dates = [];
+                if (e.birth_date) dates.push('b. ' + escapeHtml(e.birth_date));
+                if (e.marriage_date) dates.push('m. ' + escapeHtml(e.marriage_date));
+                if (e.death_date) dates.push('d. ' + escapeHtml(e.death_date));
+                if (e.spouse_name) dates.push('spouse: ' + escapeHtml(e.spouse_name));
+                var datesText = dates.length ? dates.join(' · ') : '—';
+                var submittedDate = formatDateOnly(e.timestamp);
+                var sourceLabel = e.source === 'seed' ? 'seed' : 'submission';
+                var subTypeNote = e.submission_type && e.submission_type !== 'seed' ?
+                    ' <span class="col-meta">(' + escapeHtml(e.submission_type) + ')</span>' : '';
+                return '<tr>' +
+                    '<td class="col-meta">#' + escapeHtml(e.entry_id) + '</td>' +
+                    '<td class="col-name">' + escapeHtml(e.name) + '</td>' +
+                    '<td>' + escapeHtml(e.generation) + '</td>' +
+                    '<td class="col-meta">' + escapeHtml(e.parent_name || '—') + '</td>' +
+                    '<td class="col-meta">' + datesText + '</td>' +
+                    '<td><span class="pill ' + sourceLabel + '">' + sourceLabel + '</span>' + subTypeNote + '</td>' +
+                    '<td class="col-source">' + escapeHtml(submittedDate) + '</td>' +
+                    '<td><button class="btn-delete" data-entry-id="' + escapeHtml(e.entry_id) + '">Delete</button></td>' +
+                '</tr>';
+            }).join('');
+            tbody.innerHTML = html;
+
+            document.getElementById('count-summary').textContent =
+                'Showing ' + filtered.length + ' of ' + allEntries.length + ' active entries.';
+
+            // Wire delete buttons
+            var btns = tbody.querySelectorAll('.btn-delete');
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].addEventListener('click', onDeleteClick);
+            }
+        }
+
+        function fetchRollCall() {
+            hideError();
+            fetch(ROLL_CALL_URL).then(function (r) { return r.text(); }).then(function (text) {
+                var data;
+                try { data = parseGviz(text); } catch (e) {
+                    showError('Could not parse roll call data.');
+                    return;
+                }
+                if (data.status === 'error') {
+                    showError('Roll call data unavailable.');
+                    return;
+                }
+                allEntries = gvizToObjects(data.table).filter(function (e) {
+                    return e.status === 'active' && e.name;
+                });
+                renderTable();
+                document.getElementById('last-refreshed').textContent =
+                    'Last refreshed: ' + new Date().toLocaleTimeString();
+            }).catch(function () {
+                showError('Could not load the roll call. Check connectivity and try Refresh.');
+            });
+        }
+
+        function onDeleteClick(e) {
+            var id = e.currentTarget.getAttribute('data-entry-id');
+            if (!id) return;
+            if (!confirm('Delete roll-call entry #' + id + '? It will disappear from the public Generations page on next refresh. (Soft-delete: the row stays in the Sheet for audit.)')) return;
+
+            e.currentTarget.disabled = true;
+            fetch(SHEETS_POST_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ type: 'roll_call_delete', entry_id: id })
+            }).then(function (r) { return r.json(); }).then(function (resp) {
+                if (resp.status !== 'success') {
+                    throw new Error(resp.message || 'Delete failed');
+                }
+                fetchRollCall();
+            }).catch(function (err) {
+                alert('Delete failed: ' + (err && err.message ? err.message : 'unknown error'));
+                e.currentTarget.disabled = false;
+            });
+        }
+
+        function unlock() {
+            document.getElementById('admin-gate').style.display = 'none';
+            document.getElementById('admin-view').style.display = 'block';
+            try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) { /* sessionStorage unavailable */ }
+            fetchRollCall();
+        }
+
+        document.getElementById('btn-unlock').addEventListener('click', function () {
+            var input = document.getElementById('admin-password');
+            var errorEl = document.getElementById('admin-error');
+            if (input.value === ADMIN_PASSWORD) {
+                unlock();
+            } else {
+                errorEl.textContent = 'Incorrect password.';
+            }
+        });
+        document.getElementById('admin-password').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') document.getElementById('btn-unlock').click();
+        });
+        document.getElementById('btn-lock').addEventListener('click', function () {
+            document.getElementById('admin-gate').style.display = 'block';
+            document.getElementById('admin-view').style.display = 'none';
+            var input = document.getElementById('admin-password');
+            input.value = '';
+            input.focus();
+            document.getElementById('admin-error').textContent = '';
+            try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* sessionStorage unavailable */ }
+        });
+        document.getElementById('btn-refresh').addEventListener('click', fetchRollCall);
+        document.getElementById('filter-gen').addEventListener('change', renderTable);
+        document.getElementById('filter-source').addEventListener('change', renderTable);
+        document.getElementById('filter-name').addEventListener('input', renderTable);
+
+        // Honor cross-page sessionStorage unlock
+        try {
+            if (sessionStorage.getItem(SESSION_KEY) === '1') unlock();
+        } catch (e) { /* sessionStorage unavailable */ }
+    })();
+    </script>
+</body>
+</html>
