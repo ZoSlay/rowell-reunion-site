@@ -371,7 +371,10 @@ var UPLOAD_FOLDER_ID = '1CWQ5sDfQHbMtcrSERK-58Gv5SBGsqtEn';
  *   - Return Drive URL + file ID
  */
 function handleDocumentUpload(data) {
-  if (!data.filename || !data.file_base64) {
+  // Defensive: data is undefined when handleDocumentUpload is invoked manually
+  // from the Apps Script editor (no doPost wrapper). Real upload traffic always
+  // arrives with a populated `data` object.
+  if (!data || !data.filename || !data.file_base64) {
     return jsonResponse({ status: 'error', message: 'Missing filename or file_base64' });
   }
 
