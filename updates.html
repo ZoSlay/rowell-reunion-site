@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updates — Rowell Family Reunion 2026</title>
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2C2C2C;line-height:1.6;background-color:#FAF3E0}
+        h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif}
+        .site-nav{background-color:#2B3A55;padding:.75rem 1.5rem;text-align:center}
+        .site-nav ul{list-style:none;display:flex;justify-content:center;gap:1.25rem;flex-wrap:wrap}
+        .site-nav a{color:#FAF3E0;text-decoration:none;font-family:Georgia,"Times New Roman",serif;font-size:.95rem;transition:opacity .2s}
+        .site-nav a:hover{opacity:.8}
+        .site-nav .nav-active{font-weight:bold;border-bottom:2px solid #C8902A;padding-bottom:2px}
+        .hero-banner{background-color:#2B3A55;color:#FAF3E0;text-align:center;padding:3.5rem 1.5rem 3rem}
+        .hero-banner h1{font-size:2.4rem;margin-bottom:.5rem}
+        .hero-banner .subtitle{font-size:1.2rem;font-style:italic;opacity:.9}
+        main{max-width:780px;margin:0 auto;padding:2rem 1.5rem}
+        .intro-card{background-color:#fff;border-radius:10px;padding:1.5rem 1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:1.5rem}
+        .intro-card p{font-size:.95rem;color:#555}
+        .update-card{background-color:#fff;border-radius:10px;padding:1.5rem 1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:1.25rem;border-left:4px solid #2E5339}
+        .update-card .update-subject{color:#2B3A55;font-size:1.25rem;margin-bottom:.35rem;font-family:Georgia,"Times New Roman",serif}
+        .update-card .update-date{font-size:.85rem;color:#888;margin-bottom:.85rem;font-style:italic}
+        .update-card .update-body{font-size:1rem;color:#2C2C2C;white-space:pre-wrap;margin-bottom:.85rem}
+        .update-card .attached{font-size:.9rem;background-color:#FAF3E0;border-left:3px solid #C8902A;padding:.6rem .85rem;border-radius:4px;margin-top:.5rem}
+        .update-card .attached a{color:#2E5339;font-weight:600;text-decoration:none}
+        .update-card .attached a:hover{text-decoration:underline}
+        .empty-state{background-color:#fff;border-radius:10px;padding:3rem 2rem;text-align:center;color:#888;font-style:italic;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+        .error-banner{background-color:#fff;border-left:4px solid #a03030;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#a03030;display:none}
+        footer{text-align:center;padding:1.5rem;font-size:.85rem;color:#888;border-top:1px solid #e0dcd3;margin-top:2rem}
+        @media (max-width:768px){.hero-banner{padding:2.5rem 1rem 2rem}.hero-banner h1{font-size:1.6rem}.hero-banner .subtitle{font-size:1rem}.site-nav ul{gap:.75rem}.update-card,.intro-card,.empty-state{padding:1.25rem}}
+        @media (max-width:375px){.hero-banner h1{font-size:1.4rem}main{padding:1.5rem 1rem}.update-card,.intro-card,.empty-state{padding:1rem}}
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register.html">Registration</a></li>
+            <li><a href="updates.html" class="nav-active">Updates</a></li>
+            <li><a href="next-steps.html">Next Steps</a></li>
+            <li><a href="family-history.html">Family History</a></li>
+            <li><a href="in-memoriam.html">In Memoriam</a></li>
+            <li><a href="past-reunions.html">Past Reunions</a></li>
+            <li><a href="generations.html">Generations</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="dashboard.html">Admin</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-banner">
+        <h1>Updates</h1>
+        <p class="subtitle">News and announcements from the 2026 Reunion Committee</p>
+    </header>
+
+    <main>
+        <div class="intro-card">
+            <p>Latest news from Lorenzo Slay, 2026 Reunion President. Registered members also receive these updates by email. Newest items appear first.</p>
+        </div>
+
+        <div class="error-banner" id="error-banner"></div>
+        <div id="updates-list">
+            <div class="empty-state">Loading updates&hellip;</div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026</p>
+    </footer>
+
+    <script>
+        (function () {
+            var SHEETS_ID = '1krj2XFd-YXpwFubbNdLS3N0Bi-ZEhm9J3-PliMjPr1M';
+            var UPDATES_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Status%20Updates';
+            var COLS = ['timestamp', 'update_id', 'subject', 'message', 'attached_doc_url', 'attached_doc_id', 'sent_to_count', 'status'];
+
+            function parseGviz(text) {
+                var m = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+                if (!m) throw new Error('gviz parse failed');
+                return JSON.parse(m[1]);
+            }
+
+            function gvizToObjects(table) {
+                var rows = (table && table.rows) || [];
+                return rows.map(function (r) {
+                    var obj = {};
+                    var cells = r.c || [];
+                    for (var i = 0; i < COLS.length && i < cells.length; i++) {
+                        var c = cells[i];
+                        obj[COLS[i]] = c == null ? '' : (c.f != null ? c.f : (c.v == null ? '' : c.v));
+                    }
+                    return obj;
+                });
+            }
+
+            function escapeHtml(s) {
+                return String(s == null ? '' : s)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function formatDate(ts) {
+                if (!ts) return '';
+                try {
+                    var d = new Date(ts);
+                    if (isNaN(d.getTime())) return String(ts);
+                    return d.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                        + ' — ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } catch (e) { return String(ts); }
+            }
+
+            function renderEmpty(msg) {
+                document.getElementById('updates-list').innerHTML =
+                    '<div class="empty-state">' + escapeHtml(msg) + '</div>';
+            }
+
+            function renderUpdates(items) {
+                if (items.length === 0) {
+                    renderEmpty('No updates yet. Check back soon — registered members will also receive new updates by email.');
+                    return;
+                }
+                var html = items.map(function (u) {
+                    var attached = '';
+                    if (u.attached_doc_url) {
+                        attached = '<div class="attached">' +
+                            '<a href="' + escapeHtml(u.attached_doc_url) + '" target="_blank" rel="noopener">' +
+                            '📎 View attached document</a></div>';
+                    }
+                    return '<div class="update-card">' +
+                        '<h2 class="update-subject">' + escapeHtml(u.subject) + '</h2>' +
+                        '<p class="update-date">' + escapeHtml(formatDate(u.timestamp)) + '</p>' +
+                        '<div class="update-body">' + escapeHtml(u.message) + '</div>' +
+                        attached +
+                        '</div>';
+                }).join('');
+                document.getElementById('updates-list').innerHTML = html;
+            }
+
+            function showError(msg) {
+                var el = document.getElementById('error-banner');
+                el.textContent = msg;
+                el.style.display = 'block';
+            }
+
+            fetch(UPDATES_URL).then(function (r) { return r.text(); }).then(function (text) {
+                var data;
+                try { data = parseGviz(text); } catch (e) {
+                    renderEmpty('No updates yet. Check back soon — registered members will also receive new updates by email.');
+                    return;
+                }
+                if (data.status === 'error') {
+                    renderEmpty('No updates yet. Check back soon — registered members will also receive new updates by email.');
+                    return;
+                }
+                var items = gvizToObjects(data.table)
+                    .filter(function (u) { return u.status === 'published' && u.subject; })
+                    .sort(function (a, b) {
+                        return String(b.timestamp || '').localeCompare(String(a.timestamp || ''));
+                    });
+                renderUpdates(items);
+            }).catch(function () {
+                showError('Could not load updates. Please refresh the page or contact Lorenzo if this persists.');
+                renderEmpty('Updates are temporarily unavailable.');
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Status Updates — Rowell Family Reunion 2026</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Widen admin page so the updates list fits without horizontal scroll */
+        main { max-width: 1400px; }
+
+        .site-nav { background-color: #6B2D3E; }
+        .hero { background-color: #6B2D3E; padding: 2rem 1.5rem; }
+        .hero h1 { font-size: 1.6rem; }
+        h2 { color: #6B2D3E; font-size: 1.15rem; margin: 1.75rem 0 0.6rem; padding-bottom: 0.25rem; border-bottom: 1px solid #e0dcd3; }
+
+        /* Admin gate (same pattern as dashboard / documents) */
+        .admin-gate-card { background-color: #f0ece2; border-radius: 6px; padding: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; max-width: 520px; margin: 2.5rem auto; }
+        .admin-gate-card input[type="password"] { padding: 0.5rem 0.6rem; border: 1px solid #c5bfa7; border-radius: 4px; font-family: inherit; font-size: 1rem; background-color: #faf9f6; flex: 1; min-width: 150px; }
+        .admin-gate-card input:focus { outline: none; border-color: #6B2D3E; box-shadow: 0 0 0 2px rgba(107,45,62,0.2); }
+        .btn-admin { background-color: #6B2D3E; color: #faf9f6; border: none; padding: 0.5rem 1.2rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.95rem; }
+        .btn-admin:hover { background-color: #552230; }
+        .admin-error { color: #a03030; font-size: 0.85rem; width: 100%; }
+
+        /* Admin sub-nav */
+        .admin-subnav { display: flex; gap: 1.5rem; padding: 0.75rem 0; border-bottom: 1px solid #e0dcd3; margin-bottom: 1rem; font-size: 0.95rem; }
+        .admin-subnav a { color: #6B2D3E; text-decoration: none; font-weight: 600; }
+        .admin-subnav a:hover { text-decoration: underline; }
+        .admin-subnav a.subnav-active { border-bottom: 2px solid #C8902A; padding-bottom: 0.2rem; }
+
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.85rem; color: #888; flex-wrap: wrap; gap: 0.5rem; }
+        .topbar .btns { display: flex; gap: 0.5rem; }
+        .btn-refresh { background-color: #6B2D3E; color: #faf9f6; border: none; padding: 0.4rem 1rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+        .btn-refresh:hover { background-color: #552230; }
+
+        /* Update-create form */
+        .update-form { background-color: #faf9f6; border: 1px solid #e0dcd3; border-radius: 4px; padding: 1.25rem; margin-bottom: 1.5rem; }
+        .update-form label { display: block; font-weight: 600; color: #2c2c2c; margin-bottom: 0.4rem; font-size: 0.9rem; margin-top: 0.85rem; }
+        .update-form label:first-of-type { margin-top: 0; }
+        .update-form .req { color: #a02020; }
+        .update-form input[type="text"], .update-form textarea, .update-form input[type="file"] { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid #d4ccb8; border-radius: 4px; font-size: 0.95rem; font-family: inherit; background-color: #fff; box-sizing: border-box; }
+        .update-form input:focus, .update-form textarea:focus { outline: none; border-color: #6B2D3E; box-shadow: 0 0 0 2px rgba(107,45,62,0.2); }
+        .update-form textarea { resize: vertical; min-height: 120px; }
+        .update-form .form-help { font-size: 0.8rem; color: #888; margin-top: 0.3rem; font-style: italic; }
+        .update-form .checkbox-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+        .update-form .checkbox-row input { width: auto; margin: 0; }
+        .update-form .checkbox-row label { margin: 0; font-weight: 500; font-size: 0.9rem; }
+        .update-form .btn-publish { background-color: #2E5339; color: #faf9f6; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.95rem; font-weight: 600; margin-top: 1rem; }
+        .update-form .btn-publish:hover { background-color: #234229; }
+        .update-form .btn-publish:disabled { opacity: 0.6; cursor: not-allowed; }
+        .publish-status { margin-top: 0.85rem; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.9rem; display: none; }
+        .publish-status.success { display: block; background-color: #e8f5e9; border-left: 4px solid #2E7D32; color: #1B5E20; }
+        .publish-status.error { display: block; background-color: #ffebee; border-left: 4px solid #c62828; color: #b71c1c; }
+        .publish-status.loading { display: block; background-color: #FAF3E0; border-left: 4px solid #C8902A; color: #5a4520; }
+
+        /* Updates list */
+        .updates-list { margin-bottom: 1.5rem; }
+        .update-row { background-color: #fff; border: 1px solid #e0dcd3; border-radius: 6px; padding: 1.15rem 1.35rem; margin-bottom: 0.85rem; }
+        .update-row .row-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+        .update-row .row-subject { font-weight: 600; color: #2c2c2c; font-size: 1.05rem; }
+        .update-row .row-meta { font-size: 0.8rem; color: #888; }
+        .update-row .row-body { font-size: 0.95rem; color: #444; white-space: pre-wrap; margin: 0.5rem 0; }
+        .update-row .row-attached { font-size: 0.85rem; margin-top: 0.4rem; }
+        .update-row .row-attached a { color: #6B2D3E; font-weight: 600; text-decoration: none; }
+        .update-row .row-actions { margin-top: 0.5rem; }
+        .btn-delete { background-color: #fff; color: #a03030; border: 1px solid #a03030; padding: 0.3rem 0.85rem; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+        .btn-delete:hover { background-color: #a03030; color: #fff; }
+        .empty-msg { text-align: center; padding: 2rem; color: #888; font-style: italic; }
+        .error-banner { background-color: #f0ece2; border-left: 4px solid #a03030; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem; color: #a03030; display: none; }
+
+        .upload-limits { background-color: #FAF3E0; border-left: 4px solid #C8902A; border-radius: 4px; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.85rem; color: #5a4520; }
+        .upload-limits strong { color: #2c2c2c; }
+
+        @media (max-width: 480px) {
+            .admin-gate-card { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register.html">Registration</a></li>
+            <li><a href="updates.html">Updates</a></li>
+            <li><a href="next-steps.html">Next Steps</a></li>
+            <li><a href="family-history.html">Family History</a></li>
+            <li><a href="in-memoriam.html">In Memoriam</a></li>
+            <li><a href="past-reunions.html">Past Reunions</a></li>
+            <li><a href="generations.html">Generations</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="dashboard.html" class="nav-active">Admin</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1>Admin — Status Updates</h1>
+    </header>
+
+    <main>
+        <section id="admin-gate">
+            <div class="admin-gate-card">
+                <input type="password" id="admin-password" placeholder="Enter admin password" autofocus>
+                <button class="btn-admin" id="btn-unlock">Unlock</button>
+                <div class="admin-error" id="admin-error"></div>
+            </div>
+        </section>
+
+        <section id="admin-view" style="display:none">
+            <div class="admin-subnav">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="admin-documents.html">Documents</a>
+                <a href="admin-updates.html" class="subnav-active">Status Updates</a>
+            </div>
+
+            <div class="topbar">
+                <span id="last-refreshed">Last refreshed: —</span>
+                <div class="btns">
+                    <button class="btn-refresh" id="btn-refresh">Refresh</button>
+                    <button class="btn-admin" id="btn-lock">Lock</button>
+                </div>
+            </div>
+
+            <h2>Publish a New Update</h2>
+
+            <div class="upload-limits">
+                <strong>Heads up:</strong> When "Email this update to all registered members" is checked, this publishes to every unique email currently in the Registrations sheet. There is no undo on the email send. Deleting the update later does NOT recall sent emails.
+            </div>
+
+            <form id="update-form" class="update-form">
+                <label for="update-subject">Subject <span class="req">*</span></label>
+                <input type="text" id="update-subject" name="subject" placeholder="e.g. Hotel booking deadline reminder" required>
+
+                <label for="update-message">Message <span class="req">*</span></label>
+                <textarea id="update-message" name="message" placeholder="The full text of the update. Line breaks are preserved." required></textarea>
+                <p class="form-help">Plain text. Line breaks become line breaks in the email and on the public updates page.</p>
+
+                <label for="update-doc">Optional document attachment</label>
+                <input type="file" id="update-doc" name="doc">
+                <p class="form-help">PDFs, images, or similar. Lives in the reunion Drive folder and appears as a "View attached document" link in the email and on the updates page.</p>
+
+                <div class="checkbox-row">
+                    <input type="checkbox" id="email-group" name="email_group" checked>
+                    <label for="email-group">Email this update to all registered members</label>
+                </div>
+
+                <button type="submit" id="btn-publish" class="btn-publish">Publish Update</button>
+                <div class="publish-status" id="publish-status"></div>
+            </form>
+
+            <h2>Published Updates</h2>
+
+            <div class="error-banner" id="error-banner"></div>
+            <div class="updates-list" id="updates-list">
+                <div class="empty-msg">Loading&hellip;</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026 — Admin</p>
+    </footer>
+
+    <script>
+        (function () {
+            var SHEETS_ID = '1krj2XFd-YXpwFubbNdLS3N0Bi-ZEhm9J3-PliMjPr1M';
+            var UPDATES_URL = 'https://docs.google.com/spreadsheets/d/' + SHEETS_ID + '/gviz/tq?tqx=out:json&sheet=Status%20Updates';
+            var SHEETS_POST_URL = 'https://script.google.com/macros/s/AKfycbwT49cqzH6CK8Z4whoDYOl-qpVYfS4GuNW2Xsw4bSSheB91I3INSXeAyT3L_-fcShiAcA/exec';
+            var ADMIN_PASSWORD = 'Rowell2026';
+            var SESSION_KEY = 'rfr_admin_unlocked';
+            var COLS = ['timestamp', 'update_id', 'subject', 'message', 'attached_doc_url', 'attached_doc_id', 'sent_to_count', 'status'];
+
+            // ---------- gviz helpers ----------
+            function parseGviz(text) {
+                var m = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+                if (!m) throw new Error('gviz parse failed');
+                return JSON.parse(m[1]);
+            }
+            function gvizToObjects(table) {
+                var rows = (table && table.rows) || [];
+                return rows.map(function (r) {
+                    var obj = {};
+                    var cells = r.c || [];
+                    for (var i = 0; i < COLS.length && i < cells.length; i++) {
+                        var c = cells[i];
+                        obj[COLS[i]] = c == null ? '' : (c.f != null ? c.f : (c.v == null ? '' : c.v));
+                    }
+                    return obj;
+                });
+            }
+            function escapeHtml(s) {
+                return String(s == null ? '' : s)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+            function formatDate(ts) {
+                if (!ts) return '';
+                try {
+                    var d = new Date(ts);
+                    if (isNaN(d.getTime())) return String(ts);
+                    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } catch (e) { return String(ts); }
+            }
+            function readFileAsBase64(file) {
+                return new Promise(function (resolve, reject) {
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        // strip the "data:<mime>;base64," prefix
+                        var s = String(reader.result || '');
+                        var comma = s.indexOf(',');
+                        resolve(comma >= 0 ? s.substring(comma + 1) : s);
+                    };
+                    reader.onerror = function () { reject(reader.error || new Error('read failed')); };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // ---------- list ----------
+            function showError(msg) {
+                var el = document.getElementById('error-banner');
+                el.textContent = msg;
+                el.style.display = 'block';
+            }
+            function hideError() {
+                document.getElementById('error-banner').style.display = 'none';
+            }
+            function renderEmpty(msg) {
+                document.getElementById('updates-list').innerHTML =
+                    '<div class="empty-msg">' + escapeHtml(msg) + '</div>';
+            }
+            function renderList(items) {
+                if (items.length === 0) {
+                    renderEmpty('No updates yet. Publish your first one above.');
+                    return;
+                }
+                var html = items.map(function (u) {
+                    var attached = '';
+                    if (u.attached_doc_url) {
+                        attached = '<div class="row-attached">📎 <a href="' + escapeHtml(u.attached_doc_url) +
+                            '" target="_blank" rel="noopener">View attached document</a></div>';
+                    }
+                    var sent = u.sent_to_count > 0 ?
+                        ('Emailed to ' + u.sent_to_count + ' member' + (u.sent_to_count == 1 ? '' : 's')) :
+                        'Not emailed';
+                    return '<div class="update-row" data-update-id="' + escapeHtml(u.update_id) + '">' +
+                        '<div class="row-head">' +
+                            '<span class="row-subject">' + escapeHtml(u.subject) + '</span>' +
+                            '<span class="row-meta">#' + escapeHtml(u.update_id) + ' · ' + escapeHtml(formatDate(u.timestamp)) + ' · ' + escapeHtml(sent) + '</span>' +
+                        '</div>' +
+                        '<div class="row-body">' + escapeHtml(u.message) + '</div>' +
+                        attached +
+                        '<div class="row-actions"><button class="btn-delete" data-delete-id="' + escapeHtml(u.update_id) + '">Delete</button></div>' +
+                    '</div>';
+                }).join('');
+                document.getElementById('updates-list').innerHTML = html;
+
+                // wire delete buttons
+                var btns = document.querySelectorAll('.btn-delete');
+                for (var i = 0; i < btns.length; i++) {
+                    btns[i].addEventListener('click', onDeleteClick);
+                }
+            }
+            function fetchUpdates() {
+                hideError();
+                fetch(UPDATES_URL).then(function (r) { return r.text(); }).then(function (text) {
+                    var data;
+                    try { data = parseGviz(text); } catch (e) {
+                        renderEmpty('No updates yet. Publish your first one above.');
+                        return;
+                    }
+                    if (data.status === 'error') {
+                        renderEmpty('No updates yet. Publish your first one above.');
+                        return;
+                    }
+                    var items = gvizToObjects(data.table)
+                        .filter(function (u) { return u.status === 'published' && u.subject; })
+                        .sort(function (a, b) {
+                            return String(b.timestamp || '').localeCompare(String(a.timestamp || ''));
+                        });
+                    renderList(items);
+                    document.getElementById('last-refreshed').textContent =
+                        'Last refreshed: ' + new Date().toLocaleTimeString();
+                }).catch(function () {
+                    showError('Could not load the updates list.');
+                    renderEmpty('Updates list temporarily unavailable.');
+                });
+            }
+
+            // ---------- publish ----------
+            function setStatus(kind, msg) {
+                var el = document.getElementById('publish-status');
+                el.className = 'publish-status ' + kind;
+                el.textContent = msg;
+            }
+            function clearStatus() {
+                var el = document.getElementById('publish-status');
+                el.className = 'publish-status';
+                el.textContent = '';
+            }
+
+            function postJson(payload) {
+                return fetch(SHEETS_POST_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                }).then(function (r) { return r.json(); });
+            }
+
+            function onSubmit(e) {
+                e.preventDefault();
+                var subject = document.getElementById('update-subject').value.trim();
+                var message = document.getElementById('update-message').value.trim();
+                var emailGroup = document.getElementById('email-group').checked;
+                var docFile = document.getElementById('update-doc').files[0];
+
+                if (!subject || !message) {
+                    setStatus('error', 'Subject and message are both required.');
+                    return;
+                }
+
+                var btn = document.getElementById('btn-publish');
+                btn.disabled = true;
+
+                var prep;
+                if (docFile) {
+                    setStatus('loading', 'Uploading attached document…');
+                    prep = readFileAsBase64(docFile).then(function (b64) {
+                        return postJson({
+                            type: 'document_upload',
+                            filename: docFile.name,
+                            mime_type: docFile.type || 'application/octet-stream',
+                            file_base64: b64,
+                            title: '[update attachment] ' + subject,
+                            description: 'Attached to status update: ' + subject,
+                            uploaded_by: 'admin-updates'
+                        });
+                    }).then(function (resp) {
+                        if (resp.status !== 'success') {
+                            throw new Error(resp.message || 'Document upload failed');
+                        }
+                        return { attached_doc_url: resp.drive_url, attached_doc_id: resp.drive_id };
+                    });
+                } else {
+                    prep = Promise.resolve({ attached_doc_url: '', attached_doc_id: '' });
+                }
+
+                prep.then(function (attach) {
+                    setStatus('loading', emailGroup ? 'Publishing and emailing the group…' : 'Publishing…');
+                    return postJson({
+                        type: 'status_update_create',
+                        subject: subject,
+                        message: message,
+                        attached_doc_url: attach.attached_doc_url,
+                        attached_doc_id: attach.attached_doc_id,
+                        email_group: emailGroup
+                    });
+                }).then(function (resp) {
+                    if (resp.status !== 'success') {
+                        throw new Error(resp.message || 'Publish failed');
+                    }
+                    var sent = resp.sent_to_count || 0;
+                    setStatus('success', 'Published as #' + resp.update_id +
+                        (sent > 0 ? '. Emailed to ' + sent + ' member' + (sent == 1 ? '' : 's') + '.' : '. Not emailed (checkbox was unchecked).'));
+                    document.getElementById('update-form').reset();
+                    document.getElementById('email-group').checked = true;  // reset re-checks the broadcast default
+                    fetchUpdates();
+                }).catch(function (err) {
+                    setStatus('error', 'Publish failed: ' + (err && err.message ? err.message : 'unknown error'));
+                }).then(function () {
+                    btn.disabled = false;
+                });
+            }
+
+            // ---------- delete ----------
+            function onDeleteClick(e) {
+                var id = e.currentTarget.getAttribute('data-delete-id');
+                if (!id) return;
+                if (!confirm('Delete update #' + id + '? This hides it from the updates page. Any emails already sent are NOT recalled.')) return;
+
+                e.currentTarget.disabled = true;
+                postJson({ type: 'status_update_delete', update_id: id })
+                    .then(function (resp) {
+                        if (resp.status !== 'success') {
+                            throw new Error(resp.message || 'Delete failed');
+                        }
+                        fetchUpdates();
+                    })
+                    .catch(function (err) {
+                        alert('Delete failed: ' + (err && err.message ? err.message : 'unknown error'));
+                        e.currentTarget.disabled = false;
+                    });
+            }
+
+            // ---------- admin gate ----------
+            function unlock() {
+                document.getElementById('admin-gate').style.display = 'none';
+                document.getElementById('admin-view').style.display = 'block';
+                try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) { /* sessionStorage unavailable */ }
+                fetchUpdates();
+            }
+
+            document.getElementById('btn-unlock').addEventListener('click', function () {
+                var input = document.getElementById('admin-password');
+                var errorEl = document.getElementById('admin-error');
+                if (input.value === ADMIN_PASSWORD) {
+                    unlock();
+                } else {
+                    errorEl.textContent = 'Incorrect password.';
+                }
+            });
+            document.getElementById('admin-password').addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') document.getElementById('btn-unlock').click();
+            });
+            document.getElementById('btn-lock').addEventListener('click', function () {
+                document.getElementById('admin-gate').style.display = 'block';
+                document.getElementById('admin-view').style.display = 'none';
+                var input = document.getElementById('admin-password');
+                input.value = '';
+                input.focus();
+                document.getElementById('admin-error').textContent = '';
+                try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* sessionStorage unavailable */ }
+            });
+            document.getElementById('btn-refresh').addEventListener('click', fetchUpdates);
+            document.getElementById('update-form').addEventListener('submit', onSubmit);
+            // clear publish status when user edits form fields
+            ['update-subject', 'update-message', 'update-doc'].forEach(function (id) {
+                document.getElementById(id).addEventListener('input', clearStatus);
+            });
+
+            // On load: if session already unlocked (from dashboard / docs), skip gate.
+            try {
+                if (sessionStorage.getItem(SESSION_KEY) === '1') {
+                    unlock();
+                }
+            } catch (e) { /* sessionStorage unavailable */ }
+        })();
+    </script>
+</body>
+</html>

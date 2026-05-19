@@ -76,6 +76,10 @@ function doPost(e) {
       return handleDocumentUpload(data);
     } else if (type === 'cell_update') {
       return handleCellUpdate(data);
+    } else if (type === 'status_update_create') {
+      return handleStatusUpdateCreate(data);
+    } else if (type === 'status_update_delete') {
+      return handleStatusUpdateDelete(data);
     } else {
       return jsonResponse({ status: 'error', message: 'Unknown type: ' + type });
     }
@@ -522,6 +526,131 @@ function handleCellUpdate(data) {
     column: data.column,
     value: value
   });
+}
+
+/**
+ * Status update create handler — called via doPost when type === 'status_update_create'.
+ * Expects payload: { subject, message, attached_doc_url?, attached_doc_id?, email_group? }
+ *
+ * If email_group is truthy, BCCs every unique non-empty email in Registrations tab.
+ * Appends a row to the Status Updates tab (auto-creates it on first call). Returns
+ * the created update_id (= absolute sheet row number) and count of emails sent.
+ */
+function handleStatusUpdateCreate(data) {
+  if (!data || !data.subject || !data.message) {
+    return jsonResponse({ status: 'error', message: 'Missing subject or message' });
+  }
+
+  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var sheet = ss.getSheetByName('Status Updates');
+  if (!sheet) {
+    sheet = ss.insertSheet('Status Updates');
+    sheet.appendRow([
+      'timestamp', 'update_id', 'subject', 'message',
+      'attached_doc_url', 'attached_doc_id', 'sent_to_count', 'status'
+    ]);
+  }
+
+  // update_id = the absolute row number this new row will land on.
+  // sheet.getLastRow() returns the current bottom; +1 is where appendRow will write.
+  var updateId = sheet.getLastRow() + 1;
+
+  var sentCount = 0;
+  if (data.email_group) {
+    sentCount = broadcastUpdateEmail(ss, data.subject, data.message, data.attached_doc_url || '');
+  }
+
+  sheet.appendRow([
+    new Date().toISOString(),
+    updateId,
+    data.subject,
+    data.message,
+    data.attached_doc_url || '',
+    data.attached_doc_id || '',
+    sentCount,
+    'published'
+  ]);
+
+  return jsonResponse({
+    status: 'success',
+    type: 'status_update_create',
+    update_id: updateId,
+    sent_to_count: sentCount
+  });
+}
+
+/**
+ * Status update delete handler — soft delete by setting the status column to 'deleted'.
+ * The row stays in the sheet for audit trail; the public page and admin list filter it out.
+ * Expects payload: { update_id }
+ */
+function handleStatusUpdateDelete(data) {
+  if (!data || !data.update_id) {
+    return jsonResponse({ status: 'error', message: 'Missing update_id' });
+  }
+
+  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var sheet = ss.getSheetByName('Status Updates');
+  if (!sheet) {
+    return jsonResponse({ status: 'error', message: 'Status Updates tab not found' });
+  }
+
+  var updateId = parseInt(data.update_id, 10);
+  if (!updateId || updateId < 2) {
+    return jsonResponse({ status: 'error', message: 'Invalid update_id' });
+  }
+
+  // status column is column 8 (H) per the Status Updates schema
+  sheet.getRange(updateId, 8).setValue('deleted');
+
+  return jsonResponse({
+    status: 'success',
+    type: 'status_update_delete',
+    update_id: updateId
+  });
+}
+
+/**
+ * Email broadcast helper — BCCs all unique non-empty emails in Registrations tab.
+ * Returns the count of unique recipient emails.
+ *
+ * Apps Script MailApp daily quota is 100 messages for free Google accounts. A single
+ * message with N BCC recipients counts as 1 message regardless of N, so this is safe.
+ */
+function broadcastUpdateEmail(ss, subject, message, attachedDocUrl) {
+  var regSheet = ss.getSheetByName('Registrations');
+  if (!regSheet) return 0;
+
+  var lastRow = regSheet.getLastRow();
+  if (lastRow < 2) return 0;
+
+  // Email column is column E (5) per REG schema. Skip header (row 1).
+  var emails = regSheet.getRange(2, 5, lastRow - 1, 1).getValues();
+  var unique = {};
+  for (var i = 0; i < emails.length; i++) {
+    var e = String(emails[i][0] || '').trim();
+    if (e && e.indexOf('@') > 0) unique[e.toLowerCase()] = e;
+  }
+  var bccList = Object.keys(unique).map(function (k) { return unique[k]; });
+  if (bccList.length === 0) return 0;
+
+  var body = 'Rowell Family Reunion 2026 — Update\n'
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n'
+    + message + '\n\n'
+    + (attachedDocUrl ? 'Attached document: ' + attachedDocUrl + '\n\n' : '')
+    + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
+    + 'View all updates at https://rowell-family-reunion.netlify.app/updates.html\n'
+    + 'Reunion President: Lorenzo Slay <rowellfamilyreunion2026@gmail.com>\n';
+
+  MailApp.sendEmail({
+    to: 'rowellfamilyreunion2026@gmail.com',
+    bcc: bccList.join(','),
+    subject: 'Rowell Reunion 2026 — ' + subject,
+    body: body,
+    replyTo: 'rowellfamilyreunion2026@gmail.com'
+  });
+
+  return bccList.length;
 }
 
 function jsonResponse(obj) {
