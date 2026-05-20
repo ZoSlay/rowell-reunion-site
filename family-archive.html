@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Archive</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .archive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .archive-card {
+            background: #faf9f6;
+            border: 1px solid #e0dcd3;
+            border-radius: 10px;
+            padding: 1rem 1.1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .archive-card h3 {
+            margin: 0 0 0.5rem 0;
+            color: #6B2D3E;
+            font-size: 1rem;
+        }
+        .archive-card p {
+            margin: 0;
+            color: #4c4c4c;
+            line-height: 1.55;
+            font-size: 0.95rem;
+        }
+        .archive-panel {
+            background: #ffffff;
+            border: 1px solid #e0dcd3;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .archive-panel h2 {
+            margin-top: 0;
+        }
+        .archive-note {
+            background: #FAF3E0;
+            border-left: 4px solid #C8902A;
+            border-radius: 6px;
+            padding: 0.9rem 1rem;
+            color: #5a4520;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .archive-form {
+            background: #faf9f6;
+            border: 1px solid #e0dcd3;
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+        .archive-form label {
+            display: block;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin: 0.9rem 0 0.4rem;
+            font-size: 0.95rem;
+        }
+        .archive-form label:first-of-type { margin-top: 0; }
+        .archive-form .req { color: #a02020; }
+        .archive-form input[type="text"],
+        .archive-form input[type="email"],
+        .archive-form select,
+        .archive-form textarea,
+        .archive-form input[type="file"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.6rem 0.7rem;
+            border: 1px solid #d4ccb8;
+            border-radius: 6px;
+            background: #fff;
+            font: inherit;
+        }
+        .archive-form textarea { min-height: 110px; resize: vertical; }
+        .archive-form input:focus,
+        .archive-form select:focus,
+        .archive-form textarea:focus {
+            outline: none;
+            border-color: #6B2D3E;
+            box-shadow: 0 0 0 2px rgba(107,45,62,0.18);
+        }
+        .archive-help {
+            margin: 0.4rem 0 0;
+            color: #666;
+            font-size: 0.84rem;
+            font-style: italic;
+            line-height: 1.45;
+        }
+        .archive-submit {
+            margin-top: 1rem;
+            background: #6B2D3E;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.3rem;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .archive-submit:hover { background: #552230; }
+        .archive-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+        .archive-status {
+            margin-top: 0.9rem;
+            padding: 0.85rem 1rem;
+            border-radius: 6px;
+            display: none;
+            line-height: 1.45;
+        }
+        .archive-status.success { display: block; background: #e8f5e9; border-left: 4px solid #2E7D32; color: #1B5E20; }
+        .archive-status.error { display: block; background: #ffebee; border-left: 4px solid #c62828; color: #b71c1c; }
+        .archive-status.loading { display: block; background: #FAF3E0; border-left: 4px solid #C8902A; color: #5a4520; }
+        .inline-pill {
+            display: inline-block;
+            background: #efe6d5;
+            color: #5a4520;
+            border-radius: 999px;
+            padding: 0.2rem 0.65rem;
+            font-size: 0.8rem;
+            margin-right: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+        @media (max-width: 768px) {
+            .archive-panel, .archive-form { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="register.html">Registration</a></li>
+            <li><a href="updates.html">Updates</a></li>
+            <li><a href="next-steps.html">Next Steps</a></li>
+            <li><a href="family-history.html">Family History</a></li>
+            <li><a href="in-memoriam.html">In Memoriam</a></li>
+            <li><a href="past-reunions.html">Past Reunions</a></li>
+            <li><a href="generations.html">Generations</a></li>
+            <li><a href="family-archive.html" class="nav-active">Family Archive</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="dashboard.html">Admin</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1>Family Archive</h1>
+        <p class="tagline">A living repository for the Rowell family’s photographs, documents, and shared history</p>
+    </header>
+
+    <main>
+        <section class="archive-panel">
+            <h2>What belongs here</h2>
+            <div class="archive-grid">
+                <div class="archive-card">
+                    <h3>Photos</h3>
+                    <p>Reunion pictures, portraits, candid moments, scanned albums, and other family images worth preserving.</p>
+                </div>
+                <div class="archive-card">
+                    <h3>Historical documents</h3>
+                    <p>Programs, letters, family tree notes, church records, newspaper clippings, certificates, and scans of old papers.</p>
+                </div>
+                <div class="archive-card">
+                    <h3>Family announcements</h3>
+                    <p>Wedding announcements, birth announcements, graduation notices, memorial cards, and death announcements.</p>
+                </div>
+                <div class="archive-card">
+                    <h3>Theme-matching keepsakes</h3>
+                    <p>Anything that helps tell the family story for a reunion theme or special occasion — past, present, or future.</p>
+                </div>
+            </div>
+
+            <div class="archive-note">
+                <strong>How it works:</strong> upload a file, add a title and context, and we’ll store it with the family archive. If the file is too large for the form, send the link by email instead. Please avoid anything private that the family should not share more widely.
+            </div>
+
+            <div>
+                <span class="inline-pill">Photos</span>
+                <span class="inline-pill">Scans</span>
+                <span class="inline-pill">Announcements</span>
+                <span class="inline-pill">Programs</span>
+                <span class="inline-pill">Obituaries</span>
+                <span class="inline-pill">Letters</span>
+            </div>
+        </section>
+
+        <section class="archive-form">
+            <h2>Contribute an Item</h2>
+            <p class="archive-note" style="margin-top:0">Use this form to add a family artifact to the archive. It’s designed for reunion memories now, and it can also be used for weddings, memorials, or other family milestones later.</p>
+
+            <form id="archive-form" novalidate>
+                <label for="contributor-name">Your name <span class="req">*</span></label>
+                <input type="text" id="contributor-name" name="uploaded_by" required placeholder="Who is submitting this item?">
+
+                <label for="contributor-email">Your email</label>
+                <input type="email" id="contributor-email" name="submitter_email" placeholder="Optional, but helpful if we have questions">
+
+                <label for="artifact-type">Artifact type <span class="req">*</span></label>
+                <select id="artifact-type" name="artifact_type" required>
+                    <option value="">— choose a type —</option>
+                    <option value="photo">Photo</option>
+                    <option value="historical_document">Historical document</option>
+                    <option value="wedding_announcement">Wedding announcement</option>
+                    <option value="death_announcement">Death announcement / memorial item</option>
+                    <option value="reunion_program">Reunion program or handout</option>
+                    <option value="family_story">Family story / note</option>
+                    <option value="other">Other family artifact</option>
+                </select>
+
+                <label for="theme">Theme or occasion <span class="req">*</span></label>
+                <select id="theme" name="event_theme" required>
+                    <option value="">— choose a theme —</option>
+                    <option value="reunion">Reunion memory</option>
+                    <option value="wedding">Wedding or anniversary</option>
+                    <option value="memorial">Memorial / in memoriam</option>
+                    <option value="family-history">Family history / genealogy</option>
+                    <option value="holiday">Holiday or family gathering</option>
+                    <option value="other">Other family occasion</option>
+                </select>
+
+                <label for="artifact-title">Title <span class="req">*</span></label>
+                <input type="text" id="artifact-title" name="title" required placeholder="e.g. 2019 Reunion Group Photo or Aunt Mary’s Wedding Announcement">
+
+                <label for="artifact-year">Year or era</label>
+                <input type="text" id="artifact-year" name="year_or_era" placeholder="e.g. 1984, late 1960s, circa 1912">
+
+                <label for="artifact-description">Description / context</label>
+                <textarea id="artifact-description" name="description" placeholder="Who is in it? Where did it come from? Why does it matter?"></textarea>
+
+                <label for="artifact-file">File <span class="req">*</span></label>
+                <input type="file" id="artifact-file" name="file" required>
+                <p class="archive-help">PDFs, JPG/PNG photos, scans, and other common document formats. Keep files under about 5 MB if possible.</p>
+
+                <button type="submit" id="archive-submit" class="archive-submit">Upload to Family Archive</button>
+                <div id="archive-status" class="archive-status" aria-live="polite"></div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>Rowell Family Reunion 2026 · Family Archive</p>
+    </footer>
+
+    <script>
+    (function () {
+        var SHEETS_POST_URL = 'https://script.google.com/macros/s/AKfycbwT49cqzH6CK8Z4whoDYOl-qpVYfS4GuNW2Xsw4bSSheB91I3INSXeAyT3L_-fcShiAcA/exec';
+        var MAX_FILE_BYTES = 5 * 1024 * 1024;
+        var form = document.getElementById('archive-form');
+        var fileInput = document.getElementById('artifact-file');
+        var submitBtn = document.getElementById('archive-submit');
+        var statusEl = document.getElementById('archive-status');
+
+        function setStatus(kind, htmlMsg) {
+            statusEl.className = 'archive-status ' + kind;
+            statusEl.innerHTML = htmlMsg;
+        }
+
+        fileInput.addEventListener('change', function () {
+            var titleInput = document.getElementById('artifact-title');
+            if (titleInput.value.trim()) return;
+            var f = fileInput.files[0];
+            if (!f) return;
+            var name = f.name || '';
+            var dot = name.lastIndexOf('.');
+            var base = (dot > 0) ? name.substring(0, dot) : name;
+            base = base.replace(/[_\-]+/g, ' ').trim();
+            titleInput.value = base;
+        });
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!form.checkValidity()) { form.reportValidity(); return; }
+
+            var file = fileInput.files[0];
+            if (!file) { setStatus('error', 'Please pick a file to upload.'); return; }
+            if (file.size > MAX_FILE_BYTES) {
+                setStatus('error', 'That file is ' + formatSize(file.size) + ', which is too large for the upload form. Please email a share link instead.');
+                return;
+            }
+
+            var fd = new FormData(form);
+            var uploadedBy = (fd.get('uploaded_by') || '').toString().trim();
+            var submitterEmail = (fd.get('submitter_email') || '').toString().trim();
+            var artifactType = (fd.get('artifact_type') || '').toString().trim();
+            var eventTheme = (fd.get('event_theme') || '').toString().trim();
+            var yearOrEra = (fd.get('year_or_era') || '').toString().trim();
+            var title = (fd.get('title') || '').toString().trim();
+            var description = (fd.get('description') || '').toString().trim();
+            var combinedDescription = description;
+
+            var extras = [];
+            if (artifactType) extras.push('Type: ' + artifactType.replace(/_/g, ' '));
+            if (eventTheme) extras.push('Theme: ' + eventTheme.replace(/-/g, ' '));
+            if (yearOrEra) extras.push('Year/Era: ' + yearOrEra);
+            if (submitterEmail) extras.push('Submitter email: ' + submitterEmail);
+            if (extras.length) {
+                combinedDescription = combinedDescription ? combinedDescription + '\n\n' + extras.join(' • ') : extras.join(' • ');
+            }
+
+            submitBtn.disabled = true;
+            setStatus('loading', 'Uploading ' + file.name + '…');
+
+            var reader = new FileReader();
+            reader.onload = function (ev) {
+                var base64 = String(ev.target.result || '').split(',')[1] || '';
+                fetch(SHEETS_POST_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        type: 'document_upload',
+                        collection: 'family_archive',
+                        source_page: 'family-archive',
+                        filename: file.name,
+                        mime_type: file.type || 'application/octet-stream',
+                        file_base64: base64,
+                        title: title,
+                        description: combinedDescription,
+                        uploaded_by: uploadedBy,
+                        submitter_email: submitterEmail,
+                        artifact_type: artifactType,
+                        event_theme: eventTheme,
+                        year_or_era: yearOrEra
+                    })
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (resp) {
+                    if (resp && resp.status === 'success') {
+                        var openLink = resp.drive_url ? ' <a href="' + resp.drive_url + '" target="_blank" rel="noopener">Open file →</a>' : '';
+                        setStatus('success', 'Added to the family archive.' + openLink);
+                        form.reset();
+                    } else {
+                        setStatus('error', 'Upload failed: ' + ((resp && resp.message) || 'unknown error'));
+                    }
+                })
+                .catch(function (err) {
+                    setStatus('error', 'Upload failed: ' + ((err && err.message) || 'network error'));
+                })
+                .finally(function () {
+                    submitBtn.disabled = false;
+                });
+            };
+            reader.onerror = function () {
+                setStatus('error', 'Could not read the file.');
+                submitBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+    })();
+    </script>
+</body>
+</html>
