@@ -822,13 +822,32 @@
                 };
             }
 
+            function buildThankYouUrl(data) {
+                var url = new URL('thank-you.html', window.location.href);
+                var fullName = (data.fullName || '').trim();
+                var nameParts = fullName.split(/\s+/).filter(Boolean);
+                var firstName = nameParts[0] || '';
+                var memoName = nameParts.slice(1).join(' ') || fullName || 'Family';
+
+                url.searchParams.set('amount', Number(data.totalDue || 0).toFixed(2));
+                if (firstName) {
+                    url.searchParams.set('firstName', firstName);
+                }
+                if (memoName) {
+                    url.searchParams.set('memoName', memoName);
+                }
+                return url.toString();
+            }
+
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
                 if (!validate()) {
                     return;
                 }
-                // Save to localStorage
+                // Save to localStorage and build a robust Venmo handoff URL.
                 var data = getData();
+                var thankYouUrl = buildThankYouUrl(data);
+
                 // Populate hidden total field
                 document.getElementById('total-due-field').value = data.totalDue;
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -858,14 +877,16 @@
                 })
                 .catch(function () { /* Sheets write failed — silent per REUNION-011 AC4 */ })
                 .finally(function () {
-                    // Submit to Netlify Forms (backup) and redirect to thank-you.html
+                    // Submit to Netlify Forms (backup) and redirect to thank-you.html with
+                    // payment details in the URL so the Venmo button survives page/device changes.
+                    form.action = thankYouUrl;
                     form.submit();
                 });
             });
 
             // On load: clear any prior registration data so every visitor sees a fresh,
             // empty form. The submit handler re-saves on send so thank-you.html can read
-            // it for the Venmo deep-link, but it does not persist past this page leave.
+            // the payment details from the URL and localStorage fallback.
             try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* localStorage unavailable */ }
         })();
     </script>

@@ -301,53 +301,95 @@
     (function () {
         var STORAGE_KEY = 'rowellRegistration';
         var VENMO_HANDLE = 'Rowell-Family-Reunion';
-
-        var raw = null;
-        try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { /* localStorage unavailable */ }
-
-        var data = null;
-        if (raw) {
-            try { data = JSON.parse(raw); } catch (e) { /* corrupt -- ignore */ }
-        }
-
-        if (!data || !data.totalDue) {
-            // No registration data on this device -- hide the pay-block, keep generic thank-you.
-            var pb = document.getElementById('pay-block');
-            if (pb) pb.style.display = 'none';
-            document.getElementById('registration-greeting').textContent =
-                'Thank you for registering. Please complete your payment via Venmo to @Rowell-Family-Reunion using the family total shown during registration.';
-            return;
-        }
-
-        var fullName = (data.fullName || '').trim();
-        var firstName = fullName.split(/\s+/)[0] || '';
-        var lastName = fullName.split(/\s+/).slice(1).join(' ') || '';
-        var memoName = lastName || fullName || 'Family';
-        var memo = 'Rowell Reunion - ' + memoName;
-        var amount = Number(data.totalDue) || 0;
-
-        // Personalize greeting
-        if (firstName) {
-            document.getElementById('registration-greeting').textContent =
-                'Thanks, ' + firstName + '. Your registration for the ' + memoName + ' family is recorded.';
-        }
-
-        // Fill amount
-        document.getElementById('pay-amount').textContent = '$' + amount;
-
-        // Fill memo
-        document.getElementById('pay-memo').textContent = memo;
-
-        // Build Venmo deep-link: opens app on mobile, profile page on desktop
-        // Format: https://venmo.com/<handle>?txn=pay&amount=N&note=URL_ENCODED
-        var venmoUrl = 'https://venmo.com/' + VENMO_HANDLE
-            + '?txn=pay'
-            + '&amount=' + encodeURIComponent(amount.toFixed(2))
-            + '&note=' + encodeURIComponent(memo);
-
+        var payBlock = document.getElementById('pay-block');
+        var greetingEl = document.getElementById('registration-greeting');
+        var amountEl = document.getElementById('pay-amount');
+        var memoEl = document.getElementById('pay-memo');
         var btn = document.getElementById('pay-venmo-btn');
-        btn.href = venmoUrl;
-        btn.textContent = 'Pay $' + amount + ' via Venmo';
+        var params = new URLSearchParams(window.location.search);
+
+        function readStoredRegistration() {
+            var raw = null;
+            try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) { /* localStorage unavailable */ }
+            if (!raw) return null;
+            try { return JSON.parse(raw); } catch (e) { return null; }
+        }
+
+        function parseAmount(value) {
+            var num = Number(value);
+            return isFinite(num) && num > 0 ? num : null;
+        }
+
+        function formatAmount(value) {
+            return (Math.round(value) === value) ? String(value.toFixed(0)) : String(value.toFixed(2));
+        }
+
+        function buildMemo(firstName, memoName) {
+            var target = (memoName || '').trim();
+            if (!target) {
+                return 'Rowell Reunion';
+            }
+            return 'Rowell Reunion - ' + target;
+        }
+
+        var queryAmount = parseAmount(params.get('amount'));
+        var queryFirstName = (params.get('firstName') || '').trim();
+        var queryMemoName = (params.get('memoName') || '').trim();
+        var data = queryAmount ? {
+            firstName: queryFirstName,
+            memoName: queryMemoName,
+            totalDue: queryAmount
+        } : null;
+
+        if (!data) {
+            var stored = readStoredRegistration();
+            if (stored && stored.totalDue) {
+                data = {
+                    firstName: (stored.fullName || '').trim().split(/\s+/)[0] || '',
+                    memoName: (stored.fullName || '').trim().split(/\s+/).slice(1).join(' ') || (stored.fullName || '').trim() || 'Family',
+                    totalDue: Number(stored.totalDue) || 0
+                };
+            }
+        }
+
+        var amount = data && data.totalDue ? Number(data.totalDue) : null;
+        var memoName = data && data.memoName ? data.memoName : '';
+        var firstName = data && data.firstName ? data.firstName : '';
+        var memo = buildMemo(firstName, memoName);
+
+        if (amountEl) {
+            amountEl.textContent = amount ? ('$' + formatAmount(amount)) : 'Use your registration total';
+        }
+
+        if (memoEl) {
+            memoEl.textContent = memo;
+        }
+
+        if (firstName) {
+            greetingEl.textContent =
+                'Thanks, ' + firstName + '. Your registration for the ' + (memoName || 'family') + ' family is recorded.';
+        } else if (data) {
+            greetingEl.textContent = 'Your registration has been recorded.';
+        } else {
+            greetingEl.textContent =
+                'Thank you for registering. Please complete your payment via Venmo to @Rowell-Family-Reunion using the family total shown during registration.';
+        }
+
+        if (amount) {
+            var venmoUrl = 'https://venmo.com/' + VENMO_HANDLE
+                + '?txn=pay'
+                + '&amount=' + encodeURIComponent(amount.toFixed(2))
+                + '&note=' + encodeURIComponent(memo);
+            btn.href = venmoUrl;
+            btn.textContent = 'Pay ' + '$' + formatAmount(amount) + ' via Venmo';
+        } else {
+            btn.href = 'https://venmo.com/u/Rowell-Family-Reunion';
+            btn.textContent = 'Open Venmo';
+        }
+
+        // Keep the payment block visible even when we have no stored/query data so users
+        // always have a clear place to go next.
+        if (payBlock) payBlock.style.display = '';
     })();
     </script>
 </body>
