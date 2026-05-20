@@ -316,25 +316,10 @@
         if (!VENMO_ENABLED) {
             if (greetingEl) {
                 greetingEl.textContent =
-                    'Your registration has been recorded. Thank you.';
+                    'Your registration has been recorded. Payment instructions will follow by email from our Treasurer, Cassandra Rowell Miller.';
             }
             if (payBlock) {
-                payBlock.innerHTML =
-                    '<div class="pay-label" style="color:#5a4520;">Payment Instructions On Hold</div>' +
-                    '<p class="pay-followup" style="margin-top:0.75rem;">' +
-                      'Please <strong>do not send a Venmo payment yet</strong>. ' +
-                      'Our Treasurer, Cassandra Rowell Miller, is reconciling payments that have already arrived. ' +
-                      'You will receive an email with payment instructions once that is complete.' +
-                    '</p>' +
-                    '<p class="pay-followup">' +
-                      'Questions in the meantime? Contact Lorenzo Slay at ' +
-                      '<a href="mailto:rowellfamilyreunion2026@gmail.com" style="color:#2E5339;">rowellfamilyreunion2026@gmail.com</a>.' +
-                    '</p>';
-                payBlock.style.background = '#FAF3E0';
-                payBlock.style.borderLeft = '4px solid #C8902A';
-                payBlock.style.borderRadius = '6px';
-                payBlock.style.padding = '1rem 1.25rem';
-                payBlock.style.display = '';
+                payBlock.style.display = 'none';
             }
             return;
         }
