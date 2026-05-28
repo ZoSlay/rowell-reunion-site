@@ -90,14 +90,99 @@ function doPost(e) {
   }
 }
 
+function normalizeRegistrationText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function normalizeRegistrationPhone(value) {
+  return String(value || '').replace(/\D+/g, '');
+}
+
+function normalizeRegistrationNumber(value) {
+  var num = Number(value || 0);
+  return isNaN(num) ? 0 : num;
+}
+
+function buildRegistrationSignatureFromData(data) {
+  return [
+    normalizeRegistrationText(data.family_name),
+    normalizeRegistrationText(data.first_name),
+    normalizeRegistrationText(data.last_name),
+    normalizeRegistrationText(data.email),
+    normalizeRegistrationPhone(data.phone),
+    normalizeRegistrationNumber(data.num_adults),
+    normalizeRegistrationNumber(data.num_children),
+    normalizeRegistrationNumber(data.num_under5),
+    normalizeRegistrationText(data.dietary_notes),
+    normalizeRegistrationText(data.payment_method),
+    normalizeRegistrationNumber(data.total_due),
+    normalizeRegistrationText(data.notes)
+  ].join('|');
+}
+
+function buildRegistrationSignatureFromRow(row) {
+  return [
+    normalizeRegistrationText(row[1]),
+    normalizeRegistrationText(row[2]),
+    normalizeRegistrationText(row[3]),
+    normalizeRegistrationText(row[4]),
+    normalizeRegistrationPhone(row[5]),
+    normalizeRegistrationNumber(row[6]),
+    normalizeRegistrationNumber(row[7]),
+    normalizeRegistrationNumber(row[8]),
+    normalizeRegistrationText(row[9]),
+    normalizeRegistrationText(row[10]),
+    normalizeRegistrationNumber(row[11]),
+    normalizeRegistrationText(row[15])
+  ].join('|');
+}
+
+function findRecentDuplicateRegistrationRow(sheet, data, nowIso) {
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 1) return 0;
+
+  var lookbackRows = Math.min(25, lastRow);
+  var startRow = Math.max(1, lastRow - lookbackRows + 1);
+  var values = sheet.getRange(startRow, 1, lookbackRows, 16).getValues();
+  var targetSignature = buildRegistrationSignatureFromData(data);
+  var nowMs = new Date(nowIso).getTime();
+  var dedupeWindowMs = 15 * 60 * 1000;
+
+  for (var i = values.length - 1; i >= 0; i--) {
+    var row = values[i];
+    var timestampMs = new Date(row[0]).getTime();
+    if (isNaN(timestampMs)) continue;
+    if ((nowMs - timestampMs) > dedupeWindowMs) continue;
+    if (buildRegistrationSignatureFromRow(row) === targetSignature) {
+      return startRow + i;
+    }
+  }
+
+  return 0;
+}
+
 function handleRegistration(data) {
   var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
   var sheet = ss.getSheetByName('Registrations');
+  var nowIso = new Date().toISOString();
+  var duplicateRow = findRecentDuplicateRegistrationRow(sheet, data, nowIso);
+
+  if (duplicateRow) {
+    return jsonResponse({
+      status: 'success',
+      type: 'registration',
+      deduped: true,
+      duplicate_row: duplicateRow
+    });
+  }
 
   // REUNION-019 schema: removed hotel_intent, breakfast_count, museum_count, estimated_total
   // Added total_due. Server-managed fields: amount_paid, payment_status, confirmation_sent
   sheet.appendRow([
-    new Date().toISOString(),      // timestamp
+    nowIso,                         // timestamp
     data.family_name || '',        // family_name
     data.first_name || '',         // first_name
     data.last_name || '',          // last_name
@@ -115,7 +200,7 @@ function handleRegistration(data) {
     data.notes || ''               // notes
   ]);
 
-  return jsonResponse({ status: 'success', type: 'registration' });
+  return jsonResponse({ status: 'success', type: 'registration', deduped: false });
 }
 
 function handleRsvp(data) {

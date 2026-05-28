@@ -251,6 +251,10 @@
             min-height: 80px;
         }
 
+        .form-group textarea[aria-disabled="true"] {
+            background-color: #f8f5ee;
+        }
+
         .form-group input[readonly] {
             background-color: #f0ece2;
             color: #666;
@@ -282,6 +286,41 @@
             font-size: 0.8rem;
             margin-top: 0.25rem;
             min-height: 1rem;
+        }
+
+        .submit-status {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 6px;
+            font-size: 0.92rem;
+        }
+
+        .submit-status.is-visible {
+            display: block;
+        }
+
+        .submit-status.status-info {
+            background-color: #eef5f1;
+            border: 1px solid #b8d0c1;
+            color: #214231;
+        }
+
+        .submit-status.status-error {
+            background-color: #fff1f1;
+            border: 1px solid #e2b4b4;
+            color: #7f1d1d;
+        }
+
+        .correction-help {
+            margin-top: 1rem;
+            font-size: 0.92rem;
+            color: #555;
+        }
+
+        .correction-help a {
+            color: #2E5339;
+            font-weight: 600;
         }
 
         /* Radio group */
@@ -426,6 +465,11 @@
 
         .btn-submit:hover {
             background-color: #1f6060;
+        }
+
+        .btn-submit[disabled] {
+            opacity: 0.7;
+            cursor: wait;
         }
 
         /* Confirmation */
@@ -702,6 +746,8 @@
                 </div>
 
                 <button type="submit" class="btn-submit">Submit Registration</button>
+                <div class="submit-status" id="submit-status" role="status" aria-live="polite"></div>
+                <p class="correction-help">Need to correct something after you submit? Email <a href="mailto:rowellfamilyreunion2026@gmail.com?subject=Registration%20Correction">rowellfamilyreunion2026@gmail.com</a> with your name and the change you need. Please do not submit the form a second time unless the reunion team asks you to.</p>
             </form>
         </div>
     </main>
@@ -715,6 +761,10 @@
             var STORAGE_KEY = 'rowellRegistration';
             var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwT49cqzH6CK8Z4whoDYOl-qpVYfS4GuNW2Xsw4bSSheB91I3INSXeAyT3L_-fcShiAcA/exec';
             var form = document.getElementById('reg-form');
+            var submitButton = form.querySelector('.btn-submit');
+            var submitStatus = document.getElementById('submit-status');
+            var originalSubmitLabel = submitButton ? submitButton.textContent : 'Submit Registration';
+            var isSubmitting = false;
 
             var adultsInput = document.getElementById('adults');
             var childrenInput = document.getElementById('children');
@@ -759,6 +809,40 @@
                 var msgs = form.querySelectorAll('.error-msg');
                 for (var j = 0; j < msgs.length; j++) {
                     msgs[j].textContent = '';
+                }
+            }
+
+            function setSubmitStatus(message, kind) {
+                if (!submitStatus) {
+                    return;
+                }
+                submitStatus.textContent = message || '';
+                submitStatus.className = 'submit-status';
+                if (message) {
+                    submitStatus.classList.add('is-visible');
+                    submitStatus.classList.add(kind === 'error' ? 'status-error' : 'status-info');
+                }
+            }
+
+            function setSubmitting(nextState) {
+                isSubmitting = nextState;
+                if (submitButton) {
+                    submitButton.disabled = nextState;
+                    submitButton.setAttribute('aria-disabled', nextState ? 'true' : 'false');
+                    submitButton.textContent = nextState ? 'Submitting…' : originalSubmitLabel;
+                }
+                form.setAttribute('aria-busy', nextState ? 'true' : 'false');
+
+                var fields = form.querySelectorAll('input, textarea, select, button');
+                for (var k = 0; k < fields.length; k++) {
+                    if (fields[k] === submitButton) {
+                        continue;
+                    }
+                    if (nextState) {
+                        fields[k].setAttribute('aria-disabled', 'true');
+                    } else {
+                        fields[k].removeAttribute('aria-disabled');
+                    }
                 }
             }
 
@@ -841,9 +925,18 @@
 
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
+                if (isSubmitting) {
+                    return;
+                }
+
+                setSubmitStatus('', 'info');
                 if (!validate()) {
                     return;
                 }
+
+                setSubmitting(true);
+                setSubmitStatus('Submitting your registration. Please wait…', 'info');
+
                 // Save to localStorage and build a robust Venmo handoff URL.
                 var data = getData();
                 var thankYouUrl = buildThankYouUrl(data);
@@ -875,7 +968,9 @@
                         notes: ''
                     })
                 })
-                .catch(function () { /* Sheets write failed — silent per REUNION-011 AC4 */ })
+                .catch(function () {
+                    setSubmitStatus('We had trouble reaching the registration service, but we are still sending you to the confirmation page so you can review the next steps. If anything looks incorrect after you submit, email rowellfamilyreunion2026@gmail.com.', 'error');
+                })
                 .finally(function () {
                     // Submit to Netlify Forms (backup) and redirect to thank-you.html with
                     // payment details in the URL so the Venmo button survives page/device changes.
