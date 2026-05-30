@@ -19,6 +19,11 @@
         main{max-width:780px;margin:0 auto;padding:2rem 1.5rem}
         .intro-card{background-color:#fff;border-radius:10px;padding:1.5rem 1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:1.5rem}
         .intro-card p{font-size:.95rem;color:#555}
+        .announcement-card{background-color:#fffdf7;border:1px solid rgba(200,144,42,.35);border-radius:10px;padding:1.5rem 1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:1.5rem}
+        .announcement-card h2{color:#2B3A55;font-size:1.2rem;margin-bottom:.75rem;font-family:Georgia,"Times New Roman",serif}
+        .announcement-card p,.announcement-card li{color:#2C2C2C}
+        .announcement-card ul{padding-left:1.2rem;margin:.75rem 0}
+        .announcement-card a{color:#2E5339;font-weight:600}
         .update-card{background-color:#fff;border-radius:10px;padding:1.5rem 1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:1.25rem;border-left:4px solid #2E5339}
         .update-card .update-subject{color:#2B3A55;font-size:1.25rem;margin-bottom:.35rem;font-family:Georgia,"Times New Roman",serif}
         .update-card .update-date{font-size:.85rem;color:#888;margin-bottom:.85rem;font-style:italic}
@@ -29,8 +34,8 @@
         .empty-state{background-color:#fff;border-radius:10px;padding:3rem 2rem;text-align:center;color:#888;font-style:italic;box-shadow:0 2px 12px rgba(0,0,0,.06)}
         .error-banner{background-color:#fff;border-left:4px solid #a03030;border-radius:6px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#a03030;display:none}
         footer{text-align:center;padding:1.5rem;font-size:.85rem;color:#888;border-top:1px solid #e0dcd3;margin-top:2rem}
-        @media (max-width:768px){.hero-banner{padding:2.5rem 1rem 2rem}.hero-banner h1{font-size:1.6rem}.hero-banner .subtitle{font-size:1rem}.site-nav ul{gap:.75rem}.update-card,.intro-card,.empty-state{padding:1.25rem}}
-        @media (max-width:375px){.hero-banner h1{font-size:1.4rem}main{padding:1.5rem 1rem}.update-card,.intro-card,.empty-state{padding:1rem}}
+        @media (max-width:768px){.hero-banner{padding:2.5rem 1rem 2rem}.hero-banner h1{font-size:1.6rem}.hero-banner .subtitle{font-size:1rem}.site-nav ul{gap:.75rem}.update-card,.intro-card,.announcement-card,.empty-state{padding:1.25rem}}
+        @media (max-width:375px){.hero-banner h1{font-size:1.4rem}main{padding:1.5rem 1rem}.update-card,.intro-card,.announcement-card,.empty-state{padding:1rem}}
     </style>
 </head>
 <body>
@@ -58,6 +63,18 @@
     <main>
         <div class="intro-card">
             <p>Latest news from Lorenzo Slay, 2026 Reunion President. Registered members also receive these updates by email. Newest items appear first.</p>
+        </div>
+
+        <div class="announcement-card">
+            <h2>Registration + hotel reminders</h2>
+            <p>A family member has generously offered to cover the registration fee for one adult or one child anonymously.</p>
+            <ul>
+                <li><strong>Registration payment deadline:</strong> June 15, 2026</li>
+                <li><strong>Hilton room-block cutoff:</strong> June 26, 2026</li>
+                <li><strong>Hotel booking link:</strong> <a href="https://group.hilton.com/sdxms1" target="_blank" rel="noopener">Reserve your room at the Hilton Alexandria Old Town</a></li>
+            </ul>
+            <p><strong>Pay by mail to the treasurer:</strong> 12820 Prairie Dog Ave, San Diego, CA 92129</p>
+            <p>Family members who choose this route are highly encouraged to use their bank's bill pay / pay-by-mail service because it helps guarantee delivery and provides tracking.</p>
         </div>
 
         <div class="error-banner" id="error-banner"></div>
