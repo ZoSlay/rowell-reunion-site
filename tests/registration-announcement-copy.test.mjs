@@ -35,3 +35,10 @@ test('registration page mentions anonymous sponsorship availability and contact 
   expectIncludes(registerHtml, 'rowellfamilyreunion2026@gmail.com', 'register.html');
   expectIncludes(registerHtml, 'If anyone else is interested in volunteering to sponsor, please reach me at the website email.', 'register.html');
 });
+
+test('updates page is labeled Announcements in title and navigation', () => {
+  expectIncludes(updatesHtml, '<title>Announcements', 'updates.html');
+  expectIncludes(updatesHtml, '>Announcements</a>', 'updates.html');
+  expectIncludes(updatesHtml, '<h1>Announcements</h1>', 'updates.html');
+  assert.equal(updatesHtml.includes('<title>Updates'), false, 'expected old Updates title to be removed');
+});
