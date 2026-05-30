@@ -11,8 +11,9 @@ function expectIncludes(html, needle, fileLabel) {
 
 test('updates page includes a separate anonymous sponsor announcement with contact email', () => {
   expectIncludes(updatesHtml, 'Anonymous Sponsorship Available', 'updates.html');
-  expectIncludes(updatesHtml, 'A family member has generously offered to cover the registration fee for one adult or one child anonymously.', 'updates.html');
+  expectIncludes(updatesHtml, 'A family member has generously offered to cover the registration fee for one adult or one child.', 'updates.html');
   expectIncludes(updatesHtml, 'rowellfamilyreunion2026@gmail.com', 'updates.html');
+  expectIncludes(updatesHtml, 'If anyone else is interested in volunteering to sponsor, please reach me at the website email.', 'updates.html');
 });
 
 test('updates page still includes hotel and payment deadlines plus treasurer mailing option', () => {
@@ -30,6 +31,7 @@ test('registration page offers pay-by-mail guidance with treasurer mailing addre
 });
 
 test('registration page mentions anonymous sponsorship availability and contact email', () => {
-  expectIncludes(registerHtml, 'A family member has generously offered to cover the registration fee for one adult or one child anonymously.', 'register.html');
+  expectIncludes(registerHtml, 'A family member has generously offered to cover the registration fee for one adult or one child.', 'register.html');
   expectIncludes(registerHtml, 'rowellfamilyreunion2026@gmail.com', 'register.html');
+  expectIncludes(registerHtml, 'If anyone else is interested in volunteering to sponsor, please reach me at the website email.', 'register.html');
 });
