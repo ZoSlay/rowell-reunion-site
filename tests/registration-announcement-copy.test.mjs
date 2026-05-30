@@ -42,3 +42,29 @@ test('updates page is labeled Announcements in title and navigation', () => {
   expectIncludes(updatesHtml, '<h1>Announcements</h1>', 'updates.html');
   assert.equal(updatesHtml.includes('<title>Updates'), false, 'expected old Updates title to be removed');
 });
+
+
+test('all top navigation links label updates.html as Announcements', () => {
+  const pages = [
+    'index.html',
+    'events.html',
+    'register.html',
+    'next-steps.html',
+    'family-history.html',
+    'generations.html',
+    'in-memoriam.html',
+    'past-reunions.html',
+    'family-archive.html',
+    'feedback.html',
+    'thank-you.html',
+    'dashboard.html',
+    'admin-documents.html',
+    'admin-roll-call.html',
+    'admin-updates.html'
+  ];
+  for (const page of pages) {
+    const html = fs.readFileSync(new URL(`../${page}`, import.meta.url), 'utf8');
+    assert.ok(html.includes('href="updates.html">Announcements</a>') || html.includes('href="updates.html" class="nav-active">Announcements</a>'), `expected ${page} top nav to say Announcements`);
+    assert.equal(html.includes('href="updates.html">Updates</a>') || html.includes('href="updates.html" class="nav-active">Updates</a>'), false, `expected ${page} to remove old Updates nav label`);
+  }
+});
