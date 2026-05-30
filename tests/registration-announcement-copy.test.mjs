@@ -20,12 +20,12 @@ test('updates page still includes hotel and payment deadlines plus treasurer mai
   expectIncludes(updatesHtml, 'https://group.hilton.com/sdxms1', 'updates.html');
   expectIncludes(updatesHtml, 'June 15, 2026', 'updates.html');
   expectIncludes(updatesHtml, 'June 26, 2026', 'updates.html');
-  expectIncludes(updatesHtml, 'Pay by mail to Treasurer Sandy', 'updates.html');
+  expectIncludes(updatesHtml, 'Pay by mail to Treasurer Cassandra Rowell Miller', 'updates.html');
   expectIncludes(updatesHtml, '12820 Prairie Dog Ave, San Diego, CA 92129', 'updates.html');
 });
 
 test('registration page offers pay-by-mail guidance with treasurer mailing address', () => {
-  expectIncludes(registerHtml, 'Pay by mail to Treasurer Sandy', 'register.html');
+  expectIncludes(registerHtml, 'Pay by mail to Treasurer Cassandra Rowell Miller', 'register.html');
   expectIncludes(registerHtml, '12820 Prairie Dog Ave, San Diego, CA 92129', 'register.html');
   expectIncludes(registerHtml, "Family members who choose this route are highly encouraged to use their bank's bill pay / pay-by-mail service because it helps guarantee delivery and provides tracking.", 'register.html');
 });
