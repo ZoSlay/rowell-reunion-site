@@ -71,6 +71,17 @@
         .empty-msg { text-align: center; padding: 2rem; color: #888; font-style: italic; }
         .error-banner { background-color: #f0ece2; border-left: 4px solid #a03030; border-radius: 4px; padding: 1rem; margin-bottom: 1.5rem; color: #a03030; display: none; }
 
+        /* Committee action tracker */
+        .tracker-note { font-size: 0.88rem; color: #666; margin-bottom: 0.75rem; }
+        .tracker-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 980px; }
+        .tracker-table th { background-color: #6B2D3E; color: #faf9f6; padding: 0.55rem 0.7rem; text-align: left; white-space: nowrap; font-weight: 600; }
+        .tracker-table td { padding: 0.55rem 0.7rem; border-bottom: 1px solid #e0dcd3; vertical-align: top; }
+        .tracker-table tbody tr:hover { background-color: #f0ece2; }
+        .tracker-table .tracker-date { white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88rem; }
+        .tracker-table .tracker-disposition { font-weight: 700; white-space: nowrap; }
+        .tracker-table .tracker-disposition.resolved { color: #2E7D32; }
+        .tracker-table .tracker-disposition.unresolved { color: #a03030; }
+
         /* Admin sub-nav */
         .admin-subnav { display: flex; gap: 1.5rem; padding: 0.75rem 0; border-bottom: 1px solid #e0dcd3; margin-bottom: 1rem; font-size: 0.95rem; }
         .admin-subnav a { color: #6B2D3E; text-decoration: none; font-weight: 600; }
@@ -174,6 +185,82 @@
                         </tr>
                     </thead>
                     <tbody id="reg-tbody"></tbody>
+                </table>
+            </div>
+
+
+            <h2>Committee Action Tracker</h2>
+            <p class="tracker-note">Working admin tracker for reunion follow-ups. Dates below are committee target dates so unresolved items stay visible on the dashboard.</p>
+            <div class="table-wrap">
+                <table class="tracker-table" id="committee-tracker-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Issue</th>
+                            <th scope="col">Owner</th>
+                            <th scope="col">Issue Date</th>
+                            <th scope="col">Due Date</th>
+                            <th scope="col">Disposition</th>
+                            <th scope="col">Next Step / Evidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A/V Saturday-only quote follow-up</td>
+                            <td>Lorenzo / hotel A/V</td>
+                            <td class="tracker-date">2026-05-19</td>
+                            <td class="tracker-date">2026-06-06</td>
+                            <td class="tracker-disposition unresolved">Unresolved</td>
+                            <td>Reply to Lee Ortiz with billing address and phone number so he can issue the revised Saturday-only proposal.</td>
+                        </tr>
+                        <tr>
+                            <td>Program / agenda draft</td>
+                            <td>Committee</td>
+                            <td class="tracker-date">2026-05-23</td>
+                            <td class="tracker-date">2026-06-15</td>
+                            <td class="tracker-disposition unresolved">Unresolved</td>
+                            <td>Build the Saturday event flow, including family meeting timing and emcee / segment order.</td>
+                        </tr>
+                        <tr>
+                            <td>Final banquet &amp; breakfast menu selections</td>
+                            <td>Committee / Hilton</td>
+                            <td class="tracker-date">2026-05-23</td>
+                            <td class="tracker-date">2026-06-15</td>
+                            <td class="tracker-disposition unresolved">Unresolved</td>
+                            <td>Lock the actual Hilton menu choices and keep the selected package reflected in budget tracking.</td>
+                        </tr>
+                        <tr>
+                            <td>Gift bag completion beyond tumblers</td>
+                            <td>Committee</td>
+                            <td class="tracker-date">2026-05-23</td>
+                            <td class="tracker-date">2026-06-20</td>
+                            <td class="tracker-disposition unresolved">Unresolved</td>
+                            <td>Finalize the non-tumbler items, confirm assembly timing, and keep Friday distribution plan visible.</td>
+                        </tr>
+                        <tr>
+                            <td>Registration / payment follow-up</td>
+                            <td>Treasurer / outreach</td>
+                            <td class="tracker-date">2026-05-23</td>
+                            <td class="tracker-date">2026-07-03</td>
+                            <td class="tracker-disposition unresolved">Unresolved</td>
+                            <td>Continue outreach to unpaid households and reconcile paid-status tracking with live registrations.</td>
+                        </tr>
+                        <tr>
+                            <td>Final family roll call freeze</td>
+                            <td>Family history / admin</td>
+                            <td class="tracker-date">2026-05-23</td>
+                            <td class="tracker-date">2026-07-10</td>
+                            <td class="tracker-disposition unresolved">Unresolved</td>
+                            <td>Collect final corrections, then freeze the roll call in time for printed or shared reunion materials.</td>
+                        </tr>
+                        <tr>
+                            <td>Mattie &amp; Sylvester Rowell wedding date confirmation</td>
+                            <td>Family history</td>
+                            <td class="tracker-date">2026-05-30</td>
+                            <td class="tracker-date">2026-05-30</td>
+                            <td class="tracker-disposition resolved">Resolved</td>
+                            <td>Confirmed as 12/15/1912 and updated family-history copy to remove the conflicting 12/12/1912 reference.</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
 
