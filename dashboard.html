@@ -348,12 +348,17 @@
                 });
             }
 
+            function isRemovedRegistration(r) {
+                return String(r.payment_status).toUpperCase().trim() === 'REMOVED';
+            }
+
             function renderStats() {
                 var totalRegistered = 0;
                 var totalCollected = 0;
 
                 for (var i = 0; i < registrations.length; i++) {
                     var r = registrations[i];
+                    if (isRemovedRegistration(r)) continue;
                     totalRegistered += parseNum(r.num_adults) + parseNum(r.num_children) + parseNum(r.num_under5);
                     totalCollected += parseNum(r.amount_paid);
                 }
@@ -382,25 +387,27 @@
             }
 
             function getTableData() {
-                return registrations.map(function (r) {
-                    return {
-                        _sheetRow: r._sheetRow,
-                        family_name: String(r.family_name).trim(),
-                        name: (String(r.first_name).trim() + ' ' + String(r.last_name).trim()).trim(),
-                        email: String(r.email).trim(),
-                        phone: String(r.phone).trim(),
-                        adults: parseNum(r.num_adults),
-                        children: parseNum(r.num_children),
-                        under5: parseNum(r.num_under5),
-                        dietary: String(r.dietary_notes).trim(),
-                        method: String(r.payment_method).trim(),
-                        due: parseNum(r.total_due),
-                        paid: parseNum(r.amount_paid),
-                        status: String(r.payment_status).toUpperCase().trim() || 'UNPAID',
-                        confirmation: String(r.confirmation_sent).trim(),
-                        notes: String(r.notes).trim()
-                    };
-                });
+                return registrations
+                    .filter(function (r) { return !isRemovedRegistration(r); })
+                    .map(function (r) {
+                        return {
+                            _sheetRow: r._sheetRow,
+                            family_name: String(r.family_name).trim(),
+                            name: (String(r.first_name).trim() + ' ' + String(r.last_name).trim()).trim(),
+                            email: String(r.email).trim(),
+                            phone: String(r.phone).trim(),
+                            adults: parseNum(r.num_adults),
+                            children: parseNum(r.num_children),
+                            under5: parseNum(r.num_under5),
+                            dietary: String(r.dietary_notes).trim(),
+                            method: String(r.payment_method).trim(),
+                            due: parseNum(r.total_due),
+                            paid: parseNum(r.amount_paid),
+                            status: String(r.payment_status).toUpperCase().trim() || 'UNPAID',
+                            confirmation: String(r.confirmation_sent).trim(),
+                            notes: String(r.notes).trim()
+                        };
+                    });
             }
 
             function applySearch(rows) {
