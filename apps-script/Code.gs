@@ -49,6 +49,10 @@
  *   New version → save. (Keeps the same SHEETS_URL so the site code does not change.)
  */
 
+var REUNION_SHEET_ID = '1krj2XFd-YXpwFubbNdLS3N0Bi-ZEhm9J3-PliMjPr1M';
+var REUNION_GMAIL = 'rowellfamilyreunion2026@gmail.com';
+var REUNION_UPDATES_URL = 'https://rowellfamilyreunion.com/updates';
+
 function doGet(e) {
   return ContentService.createTextOutput(
     JSON.stringify({
@@ -165,7 +169,7 @@ function findRecentDuplicateRegistrationRow(sheet, data, nowIso) {
 }
 
 function handleRegistration(data) {
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName('Registrations');
   var nowIso = new Date().toISOString();
   var duplicateRow = findRecentDuplicateRegistrationRow(sheet, data, nowIso);
@@ -204,7 +208,7 @@ function handleRegistration(data) {
 }
 
 function handleRsvp(data) {
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName('RSVPs');
 
   sheet.appendRow([
@@ -251,7 +255,7 @@ function handleFeedback(data) {
 }
 
 function handleGenerationsSubmission(data) {
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName('Generations Submissions');
   if (!sheet) {
     sheet = ss.insertSheet('Generations Submissions');
@@ -545,7 +549,7 @@ function handleDocumentUpload(data) {
   var sizeBytes = file.getSize();
 
   // Find or create the Documents sheet tab
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName('Documents');
   if (!sheet) {
     sheet = ss.insertSheet('Documents');
@@ -606,7 +610,7 @@ function handleCellUpdate(data) {
     return jsonResponse({ status: 'error', message: 'Invalid row (must be >= 2)' });
   }
 
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName(data.sheet);
   if (!sheet) {
     return jsonResponse({ status: 'error', message: 'Sheet not found: ' + data.sheet });
@@ -663,7 +667,7 @@ function handleStatusUpdateCreate(data) {
     return jsonResponse({ status: 'error', message: 'Missing subject or message' });
   }
 
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName('Status Updates');
   if (!sheet) {
     sheet = ss.insertSheet('Status Updates');
@@ -711,7 +715,7 @@ function handleStatusUpdateDelete(data) {
     return jsonResponse({ status: 'error', message: 'Missing update_id' });
   }
 
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName('Status Updates');
   if (!sheet) {
     return jsonResponse({ status: 'error', message: 'Status Updates tab not found' });
@@ -743,7 +747,7 @@ function handleRollCallDelete(data) {
     return jsonResponse({ status: 'error', message: 'Missing entry_id' });
   }
 
-  var ss = SpreadsheetApp.openById('1YtHlmvUvaP77cbdhgAm_PPcW_ikfz1g9hQCeG11DAeo');
+  var ss = SpreadsheetApp.openById(REUNION_SHEET_ID);
   var sheet = ss.getSheetByName('Roll Call');
   if (!sheet) {
     return jsonResponse({ status: 'error', message: 'Roll Call tab not found' });
@@ -778,12 +782,15 @@ function broadcastUpdateEmail(ss, subject, message, attachedDocUrl) {
   var lastRow = regSheet.getLastRow();
   if (lastRow < 2) return 0;
 
-  // Email column is column E (5) per REG schema. Skip header (row 1).
-  var emails = regSheet.getRange(2, 5, lastRow - 1, 1).getValues();
+  // Columns: E=email (5), N=payment_status (14). Skip header row.
+  var rows = regSheet.getRange(2, 5, lastRow - 1, 10).getValues();
   var unique = {};
-  for (var i = 0; i < emails.length; i++) {
-    var e = String(emails[i][0] || '').trim();
-    if (e && e.indexOf('@') > 0) unique[e.toLowerCase()] = e;
+  for (var i = 0; i < rows.length; i++) {
+    var email = String(rows[i][0] || '').trim();
+    var paymentStatus = String(rows[i][9] || '').trim().toUpperCase();
+    if (!email || email.indexOf('@') <= 0) continue;
+    if (paymentStatus === 'REMOVED') continue;
+    unique[email.toLowerCase()] = email;
   }
   var bccList = Object.keys(unique).map(function (k) { return unique[k]; });
   if (bccList.length === 0) return 0;
@@ -793,15 +800,15 @@ function broadcastUpdateEmail(ss, subject, message, attachedDocUrl) {
     + message + '\n\n'
     + (attachedDocUrl ? 'Attached document: ' + attachedDocUrl + '\n\n' : '')
     + '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'
-    + 'View all updates at https://rowell-family-reunion.netlify.app/updates.html\n'
-    + 'Reunion President: Lorenzo Slay <rowellfamilyreunion2026@gmail.com>\n';
+    + 'View all updates at ' + REUNION_UPDATES_URL + '\n'
+    + 'Reunion Coordinator: Lorenzo Slay <' + REUNION_GMAIL + '>\n';
 
   MailApp.sendEmail({
-    to: 'rowellfamilyreunion2026@gmail.com',
+    to: REUNION_GMAIL,
     bcc: bccList.join(','),
     subject: 'Rowell Reunion 2026 — ' + subject,
     body: body,
-    replyTo: 'rowellfamilyreunion2026@gmail.com'
+    replyTo: REUNION_GMAIL
   });
 
   return bccList.length;
